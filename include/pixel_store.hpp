@@ -13,48 +13,58 @@ namespace risa_gl
 
 		enum 
 		{
-			pixel_size = sizeof(pixel_t);
+			pixel_size = sizeof(pixel_t),
 		};
 
 	private:
 		const int width;
 		const int height;
-		const int allocate_width;
+		const int fragment_length;
 
 		std::vector<pixel_t> pixels;
 
-		static size_t get_alignmented_bytes(const int width_)
+		static size_t get_fragment_size(const int bytes)
 		{
-			return ((width_ * pixel_size) + (alignment - 1)) &
-				~(alignment - 1);
+			return (bytes + (alignment - 1)) & ~(alignment - 1);
 		}
 
-		static size_t get_allocate_width(const int width_)
-		{
-			return (get_alignmented_bytes(width_) + (pixel_size - 1)) &
-				~(pixel_size - 1);
-		}
 	public:
 		pixel_store(const int width_, const int height_):
 				width(width_),
 				height(height_),
-				allocate_width(get_allocate_width(width_))
-				pixels(get_allocate_width(width_) * height_)
+				fragment_length(get_fragment_size(width_ * pixel_size)),
+				pixels(fragment_length / pixel_size * height)
 		{}
 
 		~pixel_store()
 		{}
 
-		const int width() const
+		int get_width() const
 		{
 			return width;
 		}
 
-		const int height() const
+		int get_height() const
 		{
 			return height;
 		}
+
+		int get_fragment_length() const
+		{
+			return fragment_length;
+		}
+
+		pixel_t& operator()(int x, int y)
+		{
+			return pixels[y * fragment_length / pixel_size + x];
+		}
+
+		const pixel_t& operator()(int x, int y) const
+		{
+			return pixels[y * fragment_length / pixel_size + x];
+		}
+
 	};
-}
+};
 
 #endif /* RISA_PIXEL_STORE_HPP_ */

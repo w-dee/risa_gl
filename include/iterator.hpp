@@ -43,6 +43,6 @@ namespace risa_gl
 			return *pointer;
 		}
 	};
-}
+};
 
 #endif /* RISA_ITERATOR_HPP_ */
