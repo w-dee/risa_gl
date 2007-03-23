@@ -3,29 +3,34 @@
 
 namespace risa_gl
 {
+	/**
+	 * シーケンシャルイテレータ。
+	 * イントリンシクスに渡すにはこのタイプである必要がある。
+	 */
 	template <typename pixel_type>
-	class forward_iterator
+	class sequencial_iterator
 	{
 	public:
 		typedef pixel_type pixel_t;
+		typedef pixel_type* pointer_t;
 
 	private:
 		const pixel_t* pointer;
 
 	public:
-		forward_iterator():
+		sequencial_iterator():
 			pointer()
 		{}
 
-		forward_iterator(const forward_iterator& source):
+		sequencial_iterator(const sequencial_iterator& source):
 			pointer(source.pointer)
 		{}
 
-		forward_iterator(const pixel_t* source):
+		sequencial_iterator(const pixel_t* source):
 			pointer(source)
 		{}
 
-		~forward_iterator()
+		~sequencial_iterator()
 		{}
 
 		const pixel_t& operator*() const
