@@ -17,7 +17,9 @@ public:
 		
 		CPPUNIT_ASSERT(pixels1.get_width() == 257);
 		CPPUNIT_ASSERT(pixels1.get_height() == 100);
-		CPPUNIT_ASSERT(pixels1.get_allocate_width() == 280);
+
+		CPPUNIT_ASSERT(pixels1.get_fragment_length() ==
+					   (260 * sizeof(pixel)));
 
 	}
 };

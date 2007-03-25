@@ -2,13 +2,14 @@
 OBJS= test_main.o \
 	pixel_store_test.o
 
-TARGET= unit_test
+TARGET = unit_test
+EXT = .exe
+DEPENDS = $(OBJS:.o=.d)
+INCLUDES = ../include
+CXXFLAGS += -I$(INCLUDES) -g -Wall -Wunused -fno-default-inline
+LIBS +=-lcppunit
 
-DEPENDS= $(OBJS:.o=.d)
-CXXFLAGS+= -I../include -g -Wall -Wunused -fno-default-inline
-LIBS+=-lcppunit
-
-.PHONY: %.d clean depend dependclean
+.PHONY: clean depend test
 
 all: $(TARGET)
 
@@ -19,14 +20,11 @@ $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 
 %.d: %.cpp
-	$(CXX)  -I../include -MM -MT $(<:.cpp=.o) $< > $(<:.cpp=.d)
-
-clean:
-	rm -f $(OBJS) $(TARGET)
+	$(CXX) -I$(INCLUDES) -MM -MT $*.o $< > $@
 
 depend: $(DEPENDS)
 
-dependclean:
-	rm -f $(DEPENDS)
+clean:
+	rm -f $(OBJS) $(TARGET)$(EXT)
 
 include $(DEPENDS)
