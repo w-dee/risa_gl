@@ -2,11 +2,10 @@
 #define RISA_PIXEL_HPP_
 
 #include "static_assert.hpp"
+#include "risa_types.hpp"
 
 namespace risa_gl 
 {
-	typedef unsigned char byte;
-
 	/**
 	 * ピクセルクラス
 	 * @todo PixelFormatを抽象化できる構成にする
