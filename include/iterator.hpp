@@ -63,6 +63,9 @@ namespace risa_gl
 		}
 	};
 
+	/**
+	 * アライメント境界のみを指すイテレータ
+	 */
 	template <typename pixel_type, size_t alignment>
 	class aligned_iterator
 	{

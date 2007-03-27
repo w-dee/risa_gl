@@ -1,6 +1,8 @@
 #ifndef RISA_FRAGMENT_HPP_
 #define RISA_FRAGMENT_HPP_
 
+#include "iterator.hpp"
+
 namespace risa_gl
 {
 	template <typename pixel_store_type>
