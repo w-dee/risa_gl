@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-napespace risa_gl
+namespace risa_gl
 {
 	/**
 	 * アライメント例外

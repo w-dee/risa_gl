@@ -1,6 +1,8 @@
 #ifndef RISA_ITERATOR_TRAITS_HPP_
 #define RISA_ITERATOR_TRAITS_HPP_
 
+#include "exception.hpp"
+
 namespace risa_gl
 {
 	/**
@@ -17,10 +19,9 @@ namespace risa_gl
 		typedef sequencial_iterator<pixel_t>  seq_itor_t;
 		typedef aligned_iterator<pixel_t, alignment> align_itor_t;
 
-		template <size_t alignment>
-		bool is_alignment(void* ptr)
+		static bool is_alignment(const void* ptr)
 		{
-			return (ptr % alignment) == 0;
+			return (reinterpret_cast<size_t>(ptr) % alignment) == 0;
 		}
 
 		static seq_itor_t to_sequencial(align_itor_t& itor)
@@ -30,10 +31,11 @@ namespace risa_gl
 
 		static align_itor_t to_alignment(seq_itor_t& itor)
 		{
-			if (!is_alignment<seq_itor_t::alignment>(&*itor))
+			if (!is_alignment(&*itor))
 				throw alignment_error("bad iterator alignment.");
 
-			return align_itor_t(&*itor);
+			return align_itor_t(
+				reinterpret_cast<typename align_itor_t::pointer_t>(&*itor));
 		}
 	};
 };

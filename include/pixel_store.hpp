@@ -11,7 +11,8 @@ namespace risa_gl
 	public:
 		typedef pixel_type pixel_t;
 		enum {
-			alignment_size = alignment;
+			alignment_size = alignment,
+			pixel_size = sizeof(pixel_type)
 		};
 
 	private:

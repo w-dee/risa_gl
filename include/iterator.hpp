@@ -39,6 +39,19 @@ namespace risa_gl
 			return this->pointer != rhs.pointer;
 		}
 
+		bool operator==(const sequencial_iterator& rhs) const
+		{
+			return !this->operator!=(rhs);
+		}
+
+		sequencial_iterator& operator=(const sequencial_iterator& rhs)
+		{
+			if (this != &rhs)
+				this->pointer = rhs.pointer;
+
+			return *this;
+		}
+
 		const pixel_t& operator*() const
 		{
 			return *pointer;
@@ -49,15 +62,15 @@ namespace risa_gl
 			return *pointer;
 		}
 
-		iterator& operator++()
+		sequencial_iterator& operator++()
 		{
 			++pointer;
 			return *this;
 		}
 
-		iterator operator++(int)
+		sequencial_iterator operator++(int)
 		{
-			iterator result(*this);
+			sequencial_iterator result(*this);
 			++pointer;
 			return result;
 		}
@@ -70,7 +83,7 @@ namespace risa_gl
 	class aligned_iterator
 	{
 	public:
-		typedef poxel_type pixel_t;
+		typedef pixel_type pixel_t;
 		typedef byte* pointer_t;
 
 	private:
@@ -95,6 +108,19 @@ namespace risa_gl
 		bool operator!=(const aligned_iterator& rhs) const
 		{
 			return this->pointer != rhs;
+		}
+
+		bool operator==(const aligned_iterator& rhs) const
+		{
+			return !this->operator!=(rhs);
+		}
+
+		aligned_iterator& operator=(const aligned_iterator& rhs)
+		{
+			if (this != &rhs)
+				this->pointer = rhs.pointer;
+
+			return *this;
 		}
 
 		pixel_t& operator*()

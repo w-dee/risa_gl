@@ -20,7 +20,7 @@ namespace risa_gl
 
 	public:
 		pixel():
-			r(), g(), b(), a()
+			r(), g(), b(), a(255)
 		{}
 
 		pixel(byte r_, byte g_, byte b_, byte a_ = 255):

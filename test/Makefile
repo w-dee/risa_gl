@@ -1,6 +1,9 @@
 
-OBJS= test_main.o \
-	pixel_store_test.o
+OBJS= \
+	test_main.o \
+	pixel_test.o \
+	pixel_store_test.o \
+# 	iterator_test.o
 
 TARGET = unit_test
 EXT = .exe
@@ -9,7 +12,7 @@ INCLUDES = ../include
 CXXFLAGS += -I$(INCLUDES) -g -Wall -Wunused -fno-default-inline
 LIBS +=-lcppunit
 
-.PHONY: clean depend test
+.PHONY: clean depend test version
 
 all: $(TARGET)
 
@@ -26,5 +29,8 @@ depend: $(DEPENDS)
 
 clean:
 	rm -f $(OBJS) $(TARGET)$(EXT)
+
+version:
+	$(CXX) --version
 
 include $(DEPENDS)
