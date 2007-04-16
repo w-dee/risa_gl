@@ -23,8 +23,11 @@ public:
 
 		std::vector<seq_iterator > vec;
 		for (int offset = 0; offset <= 16; ++offset)
-			vec.push_back(seq_iterator(
-							  reinterpret_cast<pixel*>(offset)));
+		{
+			seq_iterator::pointer_t ptr = 
+				reinterpret_cast<seq_iterator::pointer_t>(offset);
+			vec.push_back(seq_iterator(ptr));
+		}
 
 		assert(vec.size() == 17);
 		for (int offset = 0; offset <= 16; ++offset)

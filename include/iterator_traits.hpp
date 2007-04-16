@@ -31,7 +31,7 @@ namespace risa_gl
 
 		static align_itor_t to_alignment(seq_itor_t& itor)
 		{
-			if (!is_alignment(&*itor))
+			if (!is_alignment(itor.get()))
 				throw alignment_error("bad iterator alignment.");
 
 			return align_itor_t(
