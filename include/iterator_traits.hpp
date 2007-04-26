@@ -3,6 +3,7 @@
 
 #include "exception.hpp"
 
+#if 0
 namespace risa_gl
 {
 	/**
@@ -39,5 +40,5 @@ namespace risa_gl
 		}
 	};
 };
-
+#endif
 #endif /* RISA_ITERATOR_TRAITS_HPP_ */
