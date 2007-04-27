@@ -17,7 +17,7 @@ LIBS +=-lcppunit
 all: $(TARGET)
 
 test: all
-	$(TARGET)
+	./$(TARGET)$(EXT)
 
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
