@@ -6,7 +6,7 @@
 namespace risa_gl
 {
 	/**
-	 * アライメント例外
+	 * アラインメント例外
 	 */
 	class alignment_error : public std::runtime_error
 	{

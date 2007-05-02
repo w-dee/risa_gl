@@ -1,9 +1,8 @@
 #ifndef RISA_ITERATOR_TRAITS_HPP_
 #define RISA_ITERATOR_TRAITS_HPP_
 
-#include "exception.hpp"
+#include "iterator.hpp"
 
-#if 0
 namespace risa_gl
 {
 	/**
@@ -12,33 +11,28 @@ namespace risa_gl
 	 * @param ptr 調べる対象ポインタ
 	 * @return 整列されていればtrue
 	 */
-	template <typename pixel_type, size_t alignment>
+	template <typename PixelType, size_t alignment>
 	class iterator_adapter
 	{
 	public:
-		typedef pixel_type pixel_t;
-		typedef sequencial_iterator<pixel_t>  seq_itor_t;
-		typedef aligned_iterator<pixel_t, alignment> align_itor_t;
+		typedef PixelType pixel_type;
+		typedef sequential_iterator<pixel_type> iterator_type;
+		typedef fragments_iterator<pixel_type, alignment> fragments_type;
 
 		static bool is_alignment(const void* ptr)
 		{
 			return (reinterpret_cast<size_t>(ptr) % alignment) == 0;
 		}
 
-		static seq_itor_t to_sequencial(align_itor_t& itor)
+		static iterator_type to_sequential(fragments_type& itor)
 		{
-			return seq_itor(&*itor);
+			return iterator_type(&*itor);
 		}
 
-		static align_itor_t to_alignment(seq_itor_t& itor)
+		static fragments_type to_fragments(iterator_type& itor)
 		{
-			if (!is_alignment(itor.get()))
-				throw alignment_error("bad iterator alignment.");
-
-			return align_itor_t(
-				reinterpret_cast<typename align_itor_t::pointer_t>(&*itor));
+			return fragments_type(&*itor);
 		}
 	};
 };
-#endif
 #endif /* RISA_ITERATOR_TRAITS_HPP_ */

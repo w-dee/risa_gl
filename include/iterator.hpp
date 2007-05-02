@@ -2,6 +2,8 @@
 #define RISA_ITERATOR_HPP_
 
 #include "risa_types.hpp"
+#include "exception.hpp"
+#include <cassert>
 
 namespace risa_gl
 {
@@ -76,7 +78,85 @@ namespace risa_gl
 		}
 
 	};
-	
+
+	template <typename ValueType, size_t FragmentsSize>
+	class fragments_iterator
+	{
+	public:
+		enum {
+			fragments_size = FragmentsSize,
+		};
+
+		typedef ValueType value_type;
+		typedef ValueType* pointer_type;
+		typedef ValueType& reference_type;
+
+	private:
+		pointer_type itor;
+
+	public:
+		fragments_iterator():
+			itor()
+		{}
+
+		fragments_iterator(pointer_type pointer):
+			itor(pointer)
+		{
+			if (reinterpret_cast<size_t>(pointer) % fragments_size)
+				throw alignment_error();
+		}
+			
+		fragments_iterator(const fragments_iterator& source):
+			itor(source.itor)
+		{}
+
+		~fragments_iterator()
+		{}
+
+		reference_type operator*()
+		{
+			return *itor;
+		}
+
+		const reference_type operator*() const
+		{
+			return *itor;
+		}
+
+		pointer_type operator->()
+		{
+			return itor;
+		}
+
+		const pointer_type operator->() const
+		{
+			return itor;
+		}
+
+		fragments_iterator& operator++()
+		{
+			itor = reinterpret_cast<pointer_type>(
+				reinterpret_cast<byte*>(itor) + fragments_size);
+			return *this;
+		}
+
+		fragments_iterator operator++(int)
+		{
+			fragments_iterator result(*this);
+			++itor;
+			return result;
+		}
+
+		bool operator==(const fragments_iterator& rhs) const
+		{
+			return this->itor == rhs.itor;
+		}
+
+		bool operator!=(const fragments_iterator& rhs) const
+		{
+			return !this->operator==(rhs);
+		}
+	};
 };
 
 #endif /* RISA_ITERATOR_HPP_ */
