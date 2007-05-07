@@ -11,11 +11,11 @@ namespace risa_gl
 	 * @param ptr 調べる対象ポインタ
 	 * @return 整列されていればtrue
 	 */
-	template <typename PixelType, size_t alignment>
+	template <typename pixel_t, size_t alignment>
 	class iterator_adapter
 	{
 	public:
-		typedef PixelType pixel_type;
+		typedef pixel_t pixel_type;
 		typedef sequential_iterator<pixel_type> iterator_type;
 		typedef fragments_iterator<pixel_type, alignment> fragments_type;
 

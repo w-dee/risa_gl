@@ -67,6 +67,18 @@ namespace risa_gl
 			return result;
 		}
 
+		sequential_iterator operator+(const int difference)
+		{
+			itor += difference;
+			return *this;
+		}
+
+		sequential_iterator operator-(const int difference)
+		{
+			itor -= difference;
+			return *this;
+		}
+
 		bool operator==(const sequential_iterator& rhs) const
 		{
 			return this->itor == rhs.itor;
