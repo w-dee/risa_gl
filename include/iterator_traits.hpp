@@ -18,22 +18,24 @@ namespace risa_gl
 		typedef pixel_t pixel_type;
 		typedef sequential_iterator<pixel_type> iterator_type;
 		typedef sequential_iterator<const pixel_type> const_iterator_type;
-		typedef alignment_iterator<pixel_type, alignment> fragments_type;
-		typedef alignment_iterator<const pixel_type, alignment> const_fragments_type;
+		typedef alignment_iterator<pixel_type, alignment>
+			alignment_iterator_type;
+		typedef alignment_iterator<const pixel_type, alignment>
+			const_alignment_iterator_type;
 
 		static bool is_alignment(const void* ptr)
 		{
 			return (reinterpret_cast<size_t>(ptr) % alignment) == 0;
 		}
 
-		static iterator_type to_sequential(fragments_type& itor)
+		static iterator_type to_sequential(alignment_iterator_type& itor)
 		{
 			return iterator_type(&*itor);
 		}
 
-		static fragments_type to_fragments(iterator_type& itor)
+		static alignment_iterator_type to_fragments(iterator_type& itor)
 		{
-			return fragments_type(&*itor);
+			return alignment_iterator_type(&*itor);
 		}
 	};
 };
