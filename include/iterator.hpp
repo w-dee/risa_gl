@@ -92,7 +92,7 @@ namespace risa_gl
 	};
 
 	template <typename ValueType, size_t FragmentsSize>
-	class fragments_iterator
+	class alignment_iterator
 	{
 	public:
 		enum {
@@ -107,22 +107,22 @@ namespace risa_gl
 		pointer_type itor;
 
 	public:
-		fragments_iterator():
+		alignment_iterator():
 			itor()
 		{}
 
-		fragments_iterator(pointer_type pointer):
+		alignment_iterator(pointer_type pointer):
 			itor(pointer)
 		{
 			if (reinterpret_cast<size_t>(pointer) % fragments_size)
 				throw alignment_error();
 		}
 			
-		fragments_iterator(const fragments_iterator& source):
+		alignment_iterator(const alignment_iterator& source):
 			itor(source.itor)
 		{}
 
-		~fragments_iterator()
+		~alignment_iterator()
 		{}
 
 		reference_type operator*()
@@ -145,26 +145,26 @@ namespace risa_gl
 			return itor;
 		}
 
-		fragments_iterator& operator++()
+		alignment_iterator& operator++()
 		{
 			itor = reinterpret_cast<pointer_type>(
 				reinterpret_cast<byte*>(itor) + fragments_size);
 			return *this;
 		}
 
-		fragments_iterator operator++(int)
+		alignment_iterator operator++(int)
 		{
-			fragments_iterator result(*this);
+			alignment_iterator result(*this);
 			++itor;
 			return result;
 		}
 
-		bool operator==(const fragments_iterator& rhs) const
+		bool operator==(const alignment_iterator& rhs) const
 		{
 			return this->itor == rhs.itor;
 		}
 
-		bool operator!=(const fragments_iterator& rhs) const
+		bool operator!=(const alignment_iterator& rhs) const
 		{
 			return !this->operator==(rhs);
 		}

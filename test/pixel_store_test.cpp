@@ -16,7 +16,7 @@ public:
 		using namespace risa_gl;
 
 		typedef pixel_store<pixel, 16> pixel_store_type;
-		typedef fragment<pixel_store_type> fragment_type;
+		typedef pixel_store_type::fragment_type fragment_type;
 		typedef fragment_type::iterator frag_itor_type;
 		
 		pixel_store_type store(640, 480);

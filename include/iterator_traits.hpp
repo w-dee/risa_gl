@@ -17,7 +17,9 @@ namespace risa_gl
 	public:
 		typedef pixel_t pixel_type;
 		typedef sequential_iterator<pixel_type> iterator_type;
-		typedef fragments_iterator<pixel_type, alignment> fragments_type;
+		typedef sequential_iterator<const pixel_type> const_iterator_type;
+		typedef alignment_iterator<pixel_type, alignment> fragments_type;
+		typedef alignment_iterator<const pixel_type, alignment> const_fragments_type;
 
 		static bool is_alignment(const void* ptr)
 		{

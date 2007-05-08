@@ -55,7 +55,7 @@ public:
 	{
 		using namespace risa_gl;
 		
-		typedef fragments_iterator<char, 16> frag_iterator_t;
+		typedef alignment_iterator<char, 16> frag_iterator_t;
 		
 		for (int i = 1; i < 16; ++i)
 			CPPUNIT_ASSERT_THROW(

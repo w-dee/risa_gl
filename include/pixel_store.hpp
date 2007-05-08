@@ -20,9 +20,6 @@ namespace risa_gl
 			pixel_size = sizeof(pixel_type)
 		};
 
-		typedef sequential_iterator<pixel_type> iterator;
-		typedef sequential_iterator<const pixel_type> const_iterator;
-
 	private:
 		const int width;
 		const int height;
@@ -30,9 +27,43 @@ namespace risa_gl
 
 		std::vector<pixel_type> pixels;
 
+		typedef sequential_iterator<pixel_type> iterator;
+		typedef sequential_iterator<const pixel_type> const_iterator;
+		typedef alignment_iterator<pixel_type, alignment> align_iterator;
+		typedef alignment_iterator<const pixel_type, alignment> const_align_iterator;
+
+	public:
+		typedef fragment<pixel_type, iterator> fragment_type;
+		typedef fragment<const pixel_type, const_iterator> const_fragment_type;
+		typedef fragment<pixel_type, align_iterator> aligned_fragment_type;
+		typedef fragment<const pixel_type, const_align_iterator>
+			const_aligned_fragment_type;
+
+	private:
+
 		static size_t get_fragment_size(const int bytes)
 		{
 			return (bytes + (alignment - 1)) & ~(alignment - 1);
+		}
+
+		iterator begin()
+		{
+			return &*pixels.begin();
+		}
+
+		const_iterator begin() const
+		{
+			return &*pixels.begin();
+		}
+
+		iterator end()
+		{
+			return &*pixels.end();
+		}
+
+		const_iterator end() const
+		{
+			return &*pixels.end();
 		}
 
 	public:
@@ -71,63 +102,42 @@ namespace risa_gl
 			return pixels[y * width + x];
 		}
 
-		fragment<pixel_store> get_fragment(size_t line)
+		fragment_type get_fragment(size_t line)
 		{
 			assert (line < static_cast<size_t>(height));
 
-			return fragment<pixel_store>(this->begin() + width * line,
-										 this->begin() + (width * (line + 1)));
+			return fragment_type(this->begin() + width * line,
+								 this->begin() + (width * (line + 1)));
 		}
 
-		const_fragment<pixel_store> get_fragment(size_t line) const
+		const_fragment_type get_fragment(size_t line) const
 		{
 			assert (line < static_cast<size_t>(height));
 
-			return fragment<pixel_store>(this->begin() + width * line,
-										 this->begin() + (width * (line + 1)));
+			return const_fragment_type(this->begin() + width * line,
+									   this->begin() + (width * (line + 1)));
 		}
 
-		aligned_fragment<pixel_store> get_aligned_fragment(size_t line)
+		aligned_fragment_type get_aligned_fragment(size_t line)
 		{
 			assert (line < height);
 
 			typedef iterator_adapter<pixel_type, alignment> adapter_type;
 
-			return aligned_fragment<pixel_store>
+			return aligned_fragment_type
 				(adapter_type::to_fragments(this->begin() + width * line),
 				 adapter_type::to_fragments(this->begin() + (width*line + 1)));
 		}
 
-		const aligned_fragment<pixel_store>
-		get_aligned_fragment(size_t line) const
+		const_aligned_fragment_type get_aligned_fragment(size_t line) const
 		{
 			assert (line < height);
 
 			typedef iterator_adapter<pixel_type, alignment> adapter_type;
 
-			return aligned_fragment<pixel_store>
+			return aligned_fragment_type
 				(adapter_type::to_fragments(this->begin() + width * line),
 				 adapter_type::to_fragments(this->begin() + (width*(line+1))));
-		}
-
-		iterator begin()
-		{
-			return &*pixels.begin();
-		}
-
-		const_iterator begin() const
-		{
-			return &*pixels.begin();
-		}
-
-		iterator end()
-		{
-			return &*pixels.end();
-		}
-
-		const_iterator end() const
-		{
-			return &*pixels.end();
 		}
 	};
 };
