@@ -106,38 +106,44 @@ namespace risa_gl
 		{
 			assert (line < static_cast<size_t>(height));
 
-			return fragment_type(this->begin() + width * line,
-								 this->begin() + (width * (line + 1)));
+			iterator head = this->begin() + width * line;
+			iterator tail = this->begin() + (width * (line + 1));
+			return fragment_type(head, tail);
 		}
 
 		const_fragment_type get_fragment(size_t line) const
 		{
 			assert (line < static_cast<size_t>(height));
 
-			return const_fragment_type(this->begin() + width * line,
-									   this->begin() + (width * (line + 1)));
+			const_iterator head = this->begin() + width * line;
+			const_iterator tail = this->begin() + (width * (line + 1));
+			return const_fragment_type(head, tail);
 		}
 
 		aligned_fragment_type get_aligned_fragment(size_t line)
 		{
-			assert (line < height);
+			assert (line < static_cast<size_t>(height));
 
 			typedef iterator_adapter<pixel_type, alignment> adapter_type;
 
+			iterator head(this->begin() + width * line);
+			iterator last(this->begin() + (width*line + 1));
 			return aligned_fragment_type
-				(adapter_type::to_fragments(this->begin() + width * line),
-				 adapter_type::to_fragments(this->begin() + (width*line + 1)));
+				(adapter_type::to_alignment(head),
+				 adapter_type::to_alignment(last));
 		}
 
 		const_aligned_fragment_type get_aligned_fragment(size_t line) const
 		{
-			assert (line < height);
+			assert (line < static_cast<const size_t>(height));
 
 			typedef iterator_adapter<pixel_type, alignment> adapter_type;
 
-			return aligned_fragment_type
-				(adapter_type::to_fragments(this->begin() + width * line),
-				 adapter_type::to_fragments(this->begin() + (width*(line+1))));
+			const_iterator head(this->begin() + width * line);
+			const_iterator last(this->begin() + (width*(line+1)));
+			return const_aligned_fragment_type
+				(adapter_type::to_alignment(head),
+				 adapter_type::to_alignment(last));
 		}
 	};
 };

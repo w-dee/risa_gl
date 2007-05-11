@@ -27,7 +27,7 @@ public:
 		iterator_t itor = adapter_t::to_sequential(align_itor);
 		CPPUNIT_ASSERT(itor == iterator_t((char*)16));
 
-		align_itor = adapter_t::to_fragments(itor);
+		align_itor = adapter_t::to_alignment(itor);
 		CPPUNIT_ASSERT(++align_itor == alignment_t((char*)32));
 
 		for (int i = 17; i < 32; ++i)
