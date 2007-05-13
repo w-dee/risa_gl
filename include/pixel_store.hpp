@@ -21,6 +21,9 @@ namespace risa_gl
 		};
 
 	private:
+		pixel_store(const pixel_store&);
+		pixel_store& operator=(const pixel_store&);
+
 		const int width;
 		const int height;
 		const int fragment_length;

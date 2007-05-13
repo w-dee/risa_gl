@@ -37,7 +37,7 @@ public:
 		}
 		{
 			const_fragment_type frag =
-				((const pixel_store_type)store).get_fragment(0);
+				const_cast<const pixel_store_type&>(store).get_fragment(0);
 			const_frag_itor_type current = frag.begin();
 			const_frag_itor_type last = frag.end();
 			CPPUNIT_ASSERT(&*current == &store(0, 0));
@@ -52,7 +52,7 @@ public:
 		}
 		{
 			const_aligned_fragment_type frag =
-				((const pixel_store_type)store).get_aligned_fragment(0);
+				const_cast<const pixel_store_type&>(store).get_aligned_fragment(0);
 			const_aligned_itor_type current = frag.begin();
 			const_aligned_itor_type last = frag.end();
 			CPPUNIT_ASSERT(&*current == &store(0, 0));
