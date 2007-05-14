@@ -26,9 +26,9 @@ public:
 		typedef aligned_fragment_type::iterator aligned_itor_type;
 		typedef const_aligned_fragment_type::iterator const_aligned_itor_type;
 		
-		pixel_store_type store(640, 480);
 
 		{
+			pixel_store_type store(640, 480);
 			fragment_type frag = store.get_fragment(0);
 			frag_itor_type current = frag.begin();
 			frag_itor_type last = frag.end();
@@ -36,14 +36,15 @@ public:
 			CPPUNIT_ASSERT(&*last == &store(0, 1));
 		}
 		{
-			const_fragment_type frag =
-				const_cast<const pixel_store_type&>(store).get_fragment(0);
+			const pixel_store_type store(640, 480);
+			const_fragment_type frag = store.get_fragment(0);
 			const_frag_itor_type current = frag.begin();
 			const_frag_itor_type last = frag.end();
 			CPPUNIT_ASSERT(&*current == &store(0, 0));
 			CPPUNIT_ASSERT(&*last == &store(0, 1));
 		}
 		{
+			pixel_store_type store(640, 480);
 			aligned_fragment_type frag = store.get_aligned_fragment(0);
 			aligned_itor_type current = frag.begin();
 			aligned_itor_type last = frag.end();
@@ -51,14 +52,13 @@ public:
 			CPPUNIT_ASSERT(&*last == &store(0, 1));
 		}
 		{
-			const_aligned_fragment_type frag =
-				const_cast<const pixel_store_type&>(store).get_aligned_fragment(0);
+			const pixel_store_type store(640, 480);
+			const_aligned_fragment_type frag = store.get_aligned_fragment(0);
 			const_aligned_itor_type current = frag.begin();
 			const_aligned_itor_type last = frag.end();
 			CPPUNIT_ASSERT(&*current == &store(0, 0));
 			CPPUNIT_ASSERT(&*last == &store(0, 1));
 		}
-
 	}
 
 	void allocate_test()
