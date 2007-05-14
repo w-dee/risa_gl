@@ -4,6 +4,7 @@
 #include "iterator.hpp"
 #include "iterator_traits.hpp"
 #include "fragment.hpp"
+#include "allocator.hpp"
 #include <vector>
 
 namespace risa_gl
@@ -28,7 +29,10 @@ namespace risa_gl
 		const int height;
 		const int fragment_length;
 
-		std::vector<pixel_type> pixels;
+		typedef std::vector<pixel_type,
+							aligned_allocator<pixel_type, alignment> > 
+		pixel_vector_type;
+		pixel_vector_type pixels;
 
 		typedef sequential_iterator<pixel_type> iterator;
 		typedef sequential_iterator<const pixel_type> const_iterator;
@@ -130,7 +134,7 @@ namespace risa_gl
 			typedef iterator_adapter<pixel_type, alignment> adapter_type;
 
 			iterator head(this->begin() + width * line);
-			iterator last(this->begin() + (width*line + 1));
+			iterator last(this->begin() + (width * (line + 1)));
 			return aligned_fragment_type
 				(adapter_type::to_alignment(head),
 				 adapter_type::to_alignment(last));
@@ -143,7 +147,7 @@ namespace risa_gl
 			typedef iterator_adapter<pixel_type, alignment> adapter_type;
 
 			const_iterator head(this->begin() + width * line);
-			const_iterator last(this->begin() + (width*(line+1)));
+			const_iterator last(this->begin() + (width * (line+1)));
 			return const_aligned_fragment_type
 				(adapter_type::to_alignment(head),
 				 adapter_type::to_alignment(last));

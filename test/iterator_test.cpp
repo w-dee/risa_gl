@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <pixel.hpp>
+#include "pixel.hpp"
 #include "iterator.hpp"
 #include "iterator_traits.hpp"
 #include "exception.hpp"

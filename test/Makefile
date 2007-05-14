@@ -3,7 +3,8 @@ OBJS= \
 	test_main.o \
 	pixel_test.o \
 	pixel_store_test.o \
-	iterator_test.o
+	iterator_test.o \
+	aligned_allocator_test.o
 
 TARGET = unit_test
 EXT = .exe
