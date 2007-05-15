@@ -2,7 +2,6 @@
 #define RISA_FRAGMENT_HPP_
 
 #include "iterator.hpp"
-#include "pixel_store.hpp"
 
 namespace risa_gl
 {

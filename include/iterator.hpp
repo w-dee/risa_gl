@@ -67,6 +67,19 @@ namespace risa_gl
 			return result;
 		}
 
+		sequential_iterator& operator--()
+		{
+			--itor;
+			return *this;
+		}
+
+		sequential_iterator operator--(int)
+		{
+			sequential_iterator result(*this);
+			--itor;
+			return *this;
+		}
+
 		sequential_iterator operator+(const int difference)
 		{
 			itor += difference;
@@ -156,6 +169,20 @@ namespace risa_gl
 		{
 			alignment_iterator result(*this);
 			++itor;
+			return result;
+		}
+
+		alignment_iterator& operator--()
+		{
+			itor = reinterpret_cast<pointer_type>(
+				reinterpret_cast<byte*>(itor) - fragments_size);
+			return *this;
+		}
+
+		alignment_iterator operator--(int)
+		{
+			alignment_iterator result(*this);
+			--itor;
 			return result;
 		}
 

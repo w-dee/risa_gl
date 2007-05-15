@@ -28,27 +28,28 @@ namespace risa_gl
 			return (reinterpret_cast<size_t>(ptr) % alignment) == 0;
 		}
 
-		static iterator_type to_sequential(alignment_iterator_type& itor)
+		static iterator_type to_sequential(alignment_iterator_type itor)
 		{
 			return iterator_type(&*itor);
 		}
 
 		static const_iterator_type
-		to_sequential(const_alignment_iterator_type& itor)
+		to_sequential(const_alignment_iterator_type itor)
 		{
 			return iterator_type(&*itor);
 		}
 
-		static alignment_iterator_type to_alignment(iterator_type& itor)
+		static alignment_iterator_type to_alignment(iterator_type itor)
 		{
 			return alignment_iterator_type(&*itor);
 		}
 
 		static const_alignment_iterator_type
-		to_alignment(const_iterator_type& itor)
+		to_alignment(const_iterator_type itor)
 		{
 			return const_alignment_iterator_type(&*itor);
 		}
+
 	};
 };
 #endif /* RISA_ITERATOR_TRAITS_HPP_ */
