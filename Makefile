@@ -1,5 +1,5 @@
 all:
-	cd tests; make all
+	cd test; make all
 
 %:
-	cd tests; make $@
+	cd test; make $@
