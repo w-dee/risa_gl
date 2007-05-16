@@ -14,11 +14,11 @@ INCLUDES = ../include
 CXXFLAGS += -I$(INCLUDES) -g -Wall -Wunused -fno-default-inline
 LIBS +=-lcppunit
 
-.PHONY: clean depend test version
+.PHONY: clean depend version
 
 all: $(TARGET)
 
-test: all
+tests: all
 	./$(TARGET)$(EXT)
 
 $(TARGET): $(OBJS)

@@ -1,5 +1,5 @@
-#ifndef RISA_ITERATOR_TRAITS_HPP_
-#define RISA_ITERATOR_TRAITS_HPP_
+#ifndef RISA_ITERATOR_ADAPTER_HPP_
+#define RISA_ITERATOR_ADAPTER_HPP_
 
 #include "iterator.hpp"
 
@@ -52,4 +52,4 @@ namespace risa_gl
 
 	};
 };
-#endif /* RISA_ITERATOR_TRAITS_HPP_ */
+#endif /* RISA_ITERATOR_ADAPTER_HPP_ */

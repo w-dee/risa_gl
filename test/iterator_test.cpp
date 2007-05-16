@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "pixel.hpp"
 #include "iterator.hpp"
-#include "iterator_traits.hpp"
+#include "iterator_adapter.hpp"
 #include "exception.hpp"
 #include <vector>
 #include <cassert>

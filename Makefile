@@ -1,16 +1,5 @@
 all:
-	cd test;
-	make all
+	cd tests; make all
 
-test:
-	cd test;
-	make test
-
-depend:
-	cd test;
-	make depend
-
-clean:
-	cd test;
-	make clean
-
+%:
+	cd tests; make $@

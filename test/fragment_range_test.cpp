@@ -20,14 +20,15 @@ public:
 		pixel_store_t pixels(640, 480);
 		pixel_store_t::fragment_type frag = pixels.get_fragment(0);
 
-		// 0 + 3, 640 * 3 - 3
-		// (3, 1917) - (48, 1872)
-		// 1920 - 1872
+		// 0 + 4, 640 * 4 - 4
+		// (4, 1916) - (16, 1904)
+
+		// (4, 1916)
 		fragment_range_t frag_range(frag.begin() + 1, frag.end() - 1);
 		fragment_range_t::sequential_iterator_type front_boundary =
-			frag.begin() + 48;
+			frag.begin() + 4;
 		fragment_range_t::sequential_iterator_type back_boundary =
-			frag.end() - 48;
+			frag.end() - 4;
 
 		typedef fragment_range_t::iterator_range itor_range;
 		typedef fragment_range_t::aligned_range aligned_range;
@@ -35,16 +36,27 @@ public:
 
 		itor_range itor_r = frag_range.get_front();
 		aligned_range itor_align = frag_range.get_middle();
-		CPPUNIT_ASSERT(itor_r.begin() == itor_r.end());
+
+		CPPUNIT_ASSERT(itor_r.begin() != itor_r.end());
+		fragment_range_t::sequential_iterator_type itor = itor_r.begin();
+		++itor; ++itor; ++itor;
+
+		CPPUNIT_ASSERT(itor == itor_r.end());
 		CPPUNIT_ASSERT(adapter_type::to_alignment(itor_r.end()) ==
 					   itor_align.begin());
 
+		CPPUNIT_ASSERT(reinterpret_cast<size_t>
+					   (&*itor_align.begin()) % 16 == 0);
+		CPPUNIT_ASSERT(reinterpret_cast<size_t>
+					   (&*itor_align.end()) % 16 == 0);
 		CPPUNIT_ASSERT(itor_align.begin() != itor_align.end());
 
 		itor_r = frag_range.get_back();
 		CPPUNIT_ASSERT(adapter_type::to_sequential(itor_align.end()) ==
 					   itor_r.begin());
-		CPPUNIT_ASSERT(itor_r.begin() == itor_r.end());
+		itor = itor_r.begin();
+		++itor; ++itor; ++itor;
+		CPPUNIT_ASSERT(itor == itor_r.end());
 	}
 
 	void just_aligned_test()

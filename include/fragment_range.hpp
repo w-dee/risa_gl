@@ -2,7 +2,7 @@
 #define RISA_FRAGMENT_RANGE_HPP_
 
 #include "fragment.hpp"
-#include "iterator_traits.hpp"
+#include "iterator_adapter.hpp"
 
 namespace risa_gl {
 

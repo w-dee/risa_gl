@@ -2,7 +2,7 @@
 #define RISA_PIXEL_STORE_HPP_
 
 #include "iterator.hpp"
-#include "iterator_traits.hpp"
+#include "iterator_adapter.hpp"
 #include "fragment.hpp"
 #include "allocator.hpp"
 #include <vector>
