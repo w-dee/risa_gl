@@ -25,7 +25,7 @@ namespace risa_gl {
 			x(src.x), y(src.y)
 		{}
 
-		point& operator=(cosnt point& src)
+		point& operator=(const point& src)
 		{
 			if (this != &src)
 			{
@@ -102,51 +102,110 @@ namespace risa_gl {
 	{
 	public:
 		typedef pixel_store_t pixel_store_type;
-		typedef pixel_store_type::fragment_type fragment_type;
-		typedef pixel_store_type::aligned_fragment_type aligned_fragment_type;
+		typedef typename pixel_store_type::fragment_type fragment_type;
+		typedef typename pixel_store_type::aligned_fragment_type aligned_fragment_type;
 		typedef fragment_set<pixel_store_type, fragment_type>
 		fragment_set_type;
 		typedef fragment_set<pixel_store_type, aligned_fragment_type>
 		aligned_fragment_set_type;
 
 	private:
-		point up_left;
-		point down_right;
+		point top_left;
+		point bottom_right;
 		pixel_store_type& obj;
 
 	public:
 		rectangle(pixel_store_type& src):
-			up_left(0, 0),
-			down_right(src.get_width(), src.get_height()),
+			top_left(0, 0),
+			bottom_right(src.get_width(), src.get_height()),
 			obj(src)
 		{}
 
 		rectangle(pixel_store_type& src,
-				 const point& up_left_,
-				 const point& down_right_):
-			up_left(up_left_), down_right(down_right_),
+				 const point& top_left_,
+				 const point& bottom_right_):
+			top_left(top_left_), bottom_right(bottom_right_),
 			obj(src)
 		{}
 
-		rectangle(const rectable& src):
-			up_left(src.up_left), down_right(src.down_right),
+		rectangle(const rectangle& src):
+			top_left(src.top_left), bottom_right(src.bottom_right),
 			obj(src.obj)
 		{}
 
+		rectangle& operator=(const rectangle& src)
+		{
+			if (this != &src)
+			{
+				this->top_left = src.top_left;
+				this->bottom_right = src.bottom_right;
+				this->obj = src.obj;
+			}
+			return *this;
+		}
+
+		~rectangle()
+		{}
+
+		int get_left() const
+		{
+			return top_left.get_x();
+		}
+
+		void set_left(int left)
+		{
+			top_left.set_x(left);
+		}
+
+		int get_top() const
+		{
+			return top_left.get_y();
+		}
+
+		void set_top(int top)
+		{
+			top_left.set_y(top);
+		}
+
+		int get_right() const
+		{
+			return bottom_right.get_x();
+		}
+
+		void set_right(int right)
+		{
+			bottom_right.set_x(right);
+		}
+
+		int get_bottom() const
+		{
+			return bottom_right.get_y();
+		}
+
+		void set_bottom(int bottom)
+		{
+			bottom_right.set_y(bottom);
+		}
+
 		fragment_set_type get_fragments()
 		{
-			point rect = down_right - up_left;
+			point rect = bottom_right - top_left;
 			assert(rect.get_x() >= 0 && rect.get_y() >= 0);
 
-			fragment_set_type::fragment_collection_type
-				fragments(rect.get_y());
+			typename fragment_set_type::fragment_collection_type fragments;
+			fragments.reserve(rect.get_y());
 
-			for (int lines = 0; lines < rect.get_y(); ++lines)
-				fragments.push_back(obj.get_fragment);
-			
+			for (int lines = top_left.get_y();
+				 lines < bottom_right.get_y(); ++lines)
+				fragments.push_back(obj.get_fragment(lines,
+													 top_left.get_x(),
+													 bottom_right.get_x()));
+
+			assert(fragments.size() == static_cast<size_t>(rect.get_y()));
+
 			return fragments;
 		}
-	}
+	};
 };
 
 #endif /* RISA_RECTANGLE_HPP_ */

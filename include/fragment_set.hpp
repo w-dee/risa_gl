@@ -2,6 +2,7 @@
 #define RISA_FRAGMENT_SET_HPP_
 
 #include <vector>
+#include <stdexcept>
 
 namespace risa_gl
 {
@@ -17,20 +18,25 @@ namespace risa_gl
 		fragment_collection_type fragments;
 
 	public:
-		fragment_set(fragments_collection_type& fragments_):
+		fragment_set(fragment_collection_type& fragments_):
 			fragments(fragments_)
 		{}
 
 		~fragment_set()
 		{}
 
-		fragment_type oepartor[](int line)
+		fragment_type get_fragment(int line)
 		{
 			if (line < 0 ||
-				line >= fragments.size())
-				throw std::invalid_argument();
+				static_cast<size_t>(line) >= fragments.size())
+				throw std::invalid_argument("line number is out of range.");
 
 			return fragments[line];
+		}
+
+		size_t size() const
+		{
+			return fragments.size();
 		}
 	};
 };

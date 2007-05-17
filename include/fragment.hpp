@@ -21,6 +21,20 @@ namespace risa_gl
 			head(head_), tail(tail_)
 		{}
 
+		fragment(const fragment& src):
+			head(src.head), tail(src.tail)
+		{}
+
+		fragment& operator=(const fragment& src)
+		{
+			if (this != &src)
+			{
+				this->head = src.head;
+				this->tail = src.tail;
+			}
+			return *this;
+		}
+
 		~fragment()
 		{}
 

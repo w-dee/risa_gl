@@ -5,7 +5,8 @@ OBJS= \
 	pixel_store_test.o \
 	iterator_test.o \
 	aligned_allocator_test.o \
-	fragment_range_test.o
+	fragment_range_test.o \
+	rectangle_test.o
 
 TARGET = unit_test
 EXT = .exe

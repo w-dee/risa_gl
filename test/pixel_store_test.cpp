@@ -34,6 +34,12 @@ public:
 			frag_itor_type last = frag.end();
 			CPPUNIT_ASSERT(&*current == &store(0, 0));
 			CPPUNIT_ASSERT(&*last == &store(0, 1));
+
+			frag = store.get_fragment(0, 100, 200);
+			current = frag.begin();
+			last = frag.end();
+			CPPUNIT_ASSERT(&*current == &store(100, 0));
+			CPPUNIT_ASSERT(&*last == &store(200, 0));
 		}
 		{
 			const pixel_store_type store(640, 480);
@@ -42,6 +48,12 @@ public:
 			const_frag_itor_type last = frag.end();
 			CPPUNIT_ASSERT(&*current == &store(0, 0));
 			CPPUNIT_ASSERT(&*last == &store(0, 1));
+
+			frag = store.get_fragment(0, 100, 200);
+			current = frag.begin();
+			last = frag.end();
+			CPPUNIT_ASSERT(&*current == &store(100, 0));
+			CPPUNIT_ASSERT(&*last == &store(200, 0));
 		}
 		{
 			pixel_store_type store(640, 480);
@@ -50,6 +62,12 @@ public:
 			aligned_itor_type last = frag.end();
 			CPPUNIT_ASSERT(&*current == &store(0, 0));
 			CPPUNIT_ASSERT(&*last == &store(0, 1));
+
+			frag = store.get_aligned_fragment(0, 112, 160);
+			current = frag.begin();
+			last = frag.end();
+			CPPUNIT_ASSERT(&*current == &store(112, 0));
+			CPPUNIT_ASSERT(&*last == &store(160, 0));
 		}
 		{
 			const pixel_store_type store(640, 480);
@@ -58,6 +76,12 @@ public:
 			const_aligned_itor_type last = frag.end();
 			CPPUNIT_ASSERT(&*current == &store(0, 0));
 			CPPUNIT_ASSERT(&*last == &store(0, 1));
+
+			frag = store.get_aligned_fragment(0, 112, 160);
+			current = frag.begin();
+			last = frag.end();
+			CPPUNIT_ASSERT(&*current == &store(112, 0));
+			CPPUNIT_ASSERT(&*last == &store(160, 0));
 		}
 	}
 
