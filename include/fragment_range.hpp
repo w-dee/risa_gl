@@ -6,17 +6,20 @@
 
 namespace risa_gl {
 
-	template <typename pixel_store_t>
+	/**
+	 * @todo l.c.m. g.c.d.を使ったより効率的なアライメント位置の取得
+	 */
+	template <typename pixel_store_t, typename aligned_iterator_t>
 	class fragment_range
 	{
 	public:
 		typedef pixel_store_t pixel_store_type;
 		typedef typename pixel_store_type::fragment_type fragment_type;
 		typedef typename fragment_type::iterator sequential_iterator_type;
-		typedef typename pixel_store_type::aligned_fragment_type
-		aligned_fragment_type;
-		typedef typename aligned_fragment_type::iterator aligned_iterator_type;
-		typedef iterator_adapter<typename pixel_store_type::pixel_type, pixel_store_type::alignment_size> iterator_adapter_type;
+		typedef aligned_iterator_t	aligned_iterator_type;
+		typedef iterator_adapter<typename pixel_store_type::pixel_type,
+								 pixel_store_type::alignment_size>
+		iterator_adapter_type;
 
 		template <typename itor_type>
 		class range

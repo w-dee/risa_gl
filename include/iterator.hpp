@@ -7,6 +7,10 @@
 
 namespace risa_gl
 {
+	/**
+	 * シーケンシャルイテレータ
+	 * @param ValueType デリファレンスの型
+	 */
 	template <typename ValueType>
 	class sequential_iterator
 	{
@@ -14,6 +18,10 @@ namespace risa_gl
 		typedef ValueType  value_type;
 		typedef ValueType* pointer_type;
 		typedef ValueType& reference_type;
+
+		enum {
+			element_size = sizeof(value_type),
+		};
 
 	private:
 		pointer_type itor;
@@ -101,9 +109,13 @@ namespace risa_gl
 		{
 			return !this->operator==(rhs);
 		}
-
 	};
 
+	/**
+	 * アライメント境界にそろえられたイテレータ
+	 * @todo ValueTypeをメモリチャンク型とか作ってそっちをパラメタにし
+	 * たほうがいいかな
+	 */
 	template <typename ValueType, size_t FragmentsSize>
 	class alignment_iterator
 	{
@@ -111,6 +123,10 @@ namespace risa_gl
 		enum {
 			fragments_size = FragmentsSize,
 		};
+		enum {
+			element_size = FragmentSize,
+		};
+
 
 		typedef ValueType value_type;
 		typedef ValueType* pointer_type;

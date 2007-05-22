@@ -14,12 +14,15 @@ public:
 	{
 		using namespace risa_gl;
 		typedef pixel_store<pixel, 16> pixel_store_type;
-		typedef rectangle<pixel_store_type> rectangle_type;
+		typedef rectangle<pixel_store_type,
+			alignment_iterator<pixel_store_type,
+			pixel_store_type::alignment_size> > rectangle_type;
 		typedef rectangle_type::fragment_set_type fragment_set_type;
 		typedef fragment_set_type::fragment_type fragment_type;
 
 		pixel_store_type bitmap(800, 600);
-		rectangle_type rectangle(bitmap, point(120, 240), point(150, 320));
+		rectangle_type rectangle(bitmap, point(120, 240),
+								 point(150, 320));
 
 		fragment_set_type fragments = rectangle.get_fragments();
 		

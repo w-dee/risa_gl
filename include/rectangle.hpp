@@ -97,13 +97,13 @@ namespace risa_gl {
 		}
 	};
 
-	template <typename pixel_store_t>
+	template <typename pixel_store_t, typename aligned_iterator_t>
 	class rectangle
 	{
 	public:
 		typedef pixel_store_t pixel_store_type;
 		typedef typename pixel_store_type::fragment_type fragment_type;
-		typedef typename pixel_store_type::aligned_fragment_type aligned_fragment_type;
+		typedef aligned_iterator_t aligned_fragment_type;
 		typedef fragment_set<pixel_store_type, fragment_type>
 		fragment_set_type;
 		typedef fragment_set<pixel_store_type, aligned_fragment_type>

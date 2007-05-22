@@ -34,17 +34,12 @@ namespace risa_gl
 		pixel_vector_type;
 		pixel_vector_type pixels;
 
+	public:
 		typedef sequential_iterator<pixel_type> iterator;
 		typedef sequential_iterator<const pixel_type> const_iterator;
-		typedef alignment_iterator<pixel_type, alignment> align_iterator;
-		typedef alignment_iterator<const pixel_type, alignment> const_align_iterator;
 
-	public:
 		typedef fragment<pixel_type, iterator> fragment_type;
 		typedef fragment<const pixel_type, const_iterator> const_fragment_type;
-		typedef fragment<pixel_type, align_iterator> aligned_fragment_type;
-		typedef fragment<const pixel_type, const_align_iterator>
-			const_aligned_fragment_type;
 
 	private:
 
@@ -146,60 +141,6 @@ namespace risa_gl
 			const_iterator head = this->begin() + width * line + left;
 			const_iterator tail = this->begin() + width * line + right;
 			return const_fragment_type(head, tail);
-		}
-
-		aligned_fragment_type get_aligned_fragment(size_t line)
-		{
-			assert (line < static_cast<size_t>(height));
-
-			typedef iterator_adapter<pixel_type, alignment> adapter_type;
-
-			iterator head(this->begin() + width * line);
-			iterator last(this->begin() + (width * (line + 1)));
-			return aligned_fragment_type
-				(adapter_type::to_alignment(head),
-				 adapter_type::to_alignment(last));
-		}
-
-		aligned_fragment_type
-		get_aligned_fragment(size_t line, int left, int right)
-		{
-			assert (line < static_cast<size_t>(height));
-
-			typedef iterator_adapter<pixel_type, alignment> adapter_type;
-
-			iterator head(this->begin() + width * line + left);
-			iterator last(this->begin() + width * line + right);
-			return aligned_fragment_type
-				(adapter_type::to_alignment(head),
-				 adapter_type::to_alignment(last));
-		}
-
-		const_aligned_fragment_type get_aligned_fragment(size_t line) const
-		{
-			assert (line < static_cast<const size_t>(height));
-
-			typedef iterator_adapter<pixel_type, alignment> adapter_type;
-
-			const_iterator head(this->begin() + width * line);
-			const_iterator last(this->begin() + (width * (line+1)));
-			return const_aligned_fragment_type
-				(adapter_type::to_alignment(head),
-				 adapter_type::to_alignment(last));
-		}
-
-		const_aligned_fragment_type
-		get_aligned_fragment(size_t line, int left, int right) const
-		{
-			assert (line < static_cast<size_t>(height));
-
-			typedef iterator_adapter<pixel_type, alignment> adapter_type;
-
-			const_iterator head(this->begin() + width * line + left);
-			const_iterator last(this->begin() + width * line + right);
-			return const_aligned_fragment_type
-				(adapter_type::to_alignment(head),
-				 adapter_type::to_alignment(last));
 		}
 	};
 };

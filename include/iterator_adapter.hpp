@@ -5,12 +5,6 @@
 
 namespace risa_gl
 {
-	/**
-	 * 対象ポインタがアライメント境界に整列されているかを調べる
-	 * @param alignment 境界バイト数
-	 * @param ptr 調べる対象ポインタ
-	 * @return 整列されていればtrue
-	 */
 	template <typename pixel_t, size_t alignment>
 	class iterator_adapter
 	{
@@ -19,9 +13,9 @@ namespace risa_gl
 		typedef sequential_iterator<pixel_type> iterator_type;
 		typedef sequential_iterator<const pixel_type> const_iterator_type;
 		typedef alignment_iterator<pixel_type, alignment>
-			alignment_iterator_type;
+		alignment_iterator_type;
 		typedef alignment_iterator<const pixel_type, alignment>
-			const_alignment_iterator_type;
+		const_alignment_iterator_type;
 
 		static bool is_alignment(const void* ptr)
 		{
@@ -49,7 +43,6 @@ namespace risa_gl
 		{
 			return const_alignment_iterator_type(&*itor);
 		}
-
 	};
 };
 #endif /* RISA_ITERATOR_ADAPTER_HPP_ */

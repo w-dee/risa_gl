@@ -2,7 +2,7 @@
 #define RISA_FRAGMENT_SET_HPP_
 
 #include <vector>
-#include <stdexcept>
+#include <cassert>
 
 namespace risa_gl
 {
@@ -27,9 +27,8 @@ namespace risa_gl
 
 		fragment_type get_fragment(int line)
 		{
-			if (line < 0 ||
-				static_cast<size_t>(line) >= fragments.size())
-				throw std::invalid_argument("line number is out of range.");
+			assert (line >= 0 &&
+					static_cast<size_t>(line) < fragments.size());
 
 			return fragments[line];
 		}

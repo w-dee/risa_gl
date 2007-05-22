@@ -15,7 +15,9 @@ public:
 		using namespace risa_gl;
 
 		typedef pixel_store<pixel, 16> pixel_store_t;
-		typedef fragment_range<pixel_store_t> fragment_range_t;
+		typedef fragment_range<pixel_store_t,
+			alignment_iterator<pixel_store_t::pixel_type,
+			pixel_store_t::alignment_size> > fragment_range_t;
 
 		pixel_store_t pixels(640, 480);
 		pixel_store_t::fragment_type frag = pixels.get_fragment(0);
@@ -64,7 +66,9 @@ public:
 		using namespace risa_gl;
 
 		typedef pixel_store<pixel, 32> pixel_store_t;
-		typedef fragment_range<pixel_store_t> fragment_range_t;
+		typedef fragment_range<pixel_store_t,
+			alignment_iterator<pixel_store_t::pixel_type,
+			pixel_store_t::alignment_size> > fragment_range_t;
 
 		pixel_store_t pixels(640, 480);
 		pixel_store_t::fragment_type frag = pixels.get_fragment(0);
