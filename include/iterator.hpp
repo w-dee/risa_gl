@@ -124,7 +124,7 @@ namespace risa_gl
 			fragments_size = FragmentsSize,
 		};
 		enum {
-			element_size = FragmentSize,
+			element_size = FragmentsSize,
 		};
 
 
