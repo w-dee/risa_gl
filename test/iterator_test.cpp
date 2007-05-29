@@ -23,15 +23,16 @@ public:
 		typedef adapter_t::iterator_type iterator_t;
 		typedef adapter_t::alignment_iterator_type alignment_t;
 
-		alignment_t align_itor((char*)16);
+		alignment_t align_itor((alignment_t::pointer_type)16);
 		iterator_t itor = adapter_t::to_sequential(align_itor);
 		CPPUNIT_ASSERT(itor == iterator_t((char*)16));
 
 		align_itor = adapter_t::to_alignment(itor);
-		CPPUNIT_ASSERT(++align_itor == alignment_t((char*)32));
+		CPPUNIT_ASSERT(++align_itor == alignment_t((alignment_t::pointer_type)32));
 
 		for (int i = 17; i < 32; ++i)
-			CPPUNIT_ASSERT_THROW(alignment_t((char*)i), alignment_error);
+			CPPUNIT_ASSERT_THROW(alignment_t((alignment_t::pointer_type)i),
+								 alignment_error);
 	}
 
 	void sequential_test()

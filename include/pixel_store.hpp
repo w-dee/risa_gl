@@ -48,26 +48,6 @@ namespace risa_gl
 			return (bytes + (alignment - 1)) & ~(alignment - 1);
 		}
 
-		iterator begin()
-		{
-			return &*pixels.begin();
-		}
-
-		const_iterator begin() const
-		{
-			return &*pixels.begin();
-		}
-
-		iterator end()
-		{
-			return &*pixels.end();
-		}
-
-		const_iterator end() const
-		{
-			return &*pixels.end();
-		}
-
 	public:
 		pixel_store(const int width_, const int height_):
 				width(width_),
@@ -142,6 +122,27 @@ namespace risa_gl
 			const_iterator tail = this->begin() + width * line + right;
 			return const_fragment_type(head, tail);
 		}
+
+		iterator begin()
+		{
+			return &*pixels.begin();
+		}
+
+		const_iterator begin() const
+		{
+			return &*pixels.begin();
+		}
+
+		iterator end()
+		{
+			return &*pixels.end();
+		}
+
+		const_iterator end() const
+		{
+			return &*pixels.end();
+		}
+
 	};
 };
 

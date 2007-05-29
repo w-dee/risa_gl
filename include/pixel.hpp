@@ -7,6 +7,54 @@
 namespace risa_gl 
 {
 	/**
+	 * 明るさピクセルクラス
+	 */
+	class brightness
+	{
+	public:
+		enum {
+			brightness_position = 0,
+		};
+
+	private:
+		byte y;
+
+	public:
+		brightness():
+			y()
+		{}
+
+		brightness(byte y_):
+			y(y_)
+		{}
+
+		brightness(const brightness& source):
+			y(source.y)
+		{}
+
+		~brightness()
+		{}
+
+		brightness& operator=(const brightness& source)
+		{
+			if (this != &source)
+				this->y = source.y;
+
+			return *this;
+		}
+
+		byte get_y() const
+		{
+			return y;
+		}
+
+		void set_y(byte y_)
+		{
+			y = y_;
+		}
+	};
+
+	/**
 	 * ピクセルコンバータ
 	 */
 	template <typename SrcType, typename DestType>
@@ -101,6 +149,15 @@ namespace risa_gl
 		void set_a(byte a_)
 		{
 			a = a_;
+		}
+
+		bool operator==(const pixel& rhs) const
+		{
+			return
+				this->r == rhs.r &&
+				this->g == rhs.g &&
+				this->b == rhs.b &&
+				this->a == rhs.a;
 		}
 	};
 
@@ -279,54 +336,6 @@ namespace risa_gl
 		void set_a(byte a_)
 		{
 			a = a_;
-		}
-	};
-
-	/**
-	 * 明るさピクセルクラス
-	 */
-	class brightness
-	{
-	public:
-		enum {
-			brightness_position = 0,
-		};
-
-	private:
-		byte y;
-
-	public:
-		brightness():
-			y()
-		{}
-
-		brightness(byte y_):
-			y(y_)
-		{}
-
-		brightness(const brightness& source):
-			y(source.y)
-		{}
-
-		~brightness()
-		{}
-
-		brightness& operator=(const brightness& source)
-		{
-			if (this != &source)
-				this->y = source.y;
-
-			return *this;
-		}
-
-		byte get_y() const
-		{
-			return y;
-		}
-
-		void set_y(byte y_)
-		{
-			y = y_;
 		}
 	};
 };

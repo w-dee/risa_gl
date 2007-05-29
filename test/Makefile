@@ -6,7 +6,9 @@ OBJS= \
 	iterator_test.o \
 	aligned_allocator_test.o \
 	fragment_range_test.o \
-	rectangle_test.o
+	rectangle_test.o \
+	memory_chunk_test.o \
+	universal_transition_test.o \
 
 TARGET = unit_test
 EXT = .exe
