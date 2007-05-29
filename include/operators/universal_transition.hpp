@@ -33,6 +33,8 @@ public:
 
 
 #ifdef __SSE2__
+#include <emmintrin.h>
+
 template <typename src_itor_t, typename alpha_itor_t, typename dest_itor_t>
 class sse2_universal_transition
 {
@@ -41,21 +43,25 @@ public:
 	typedef alpha_itor_t alpha_iterator_type;
 	typedef dest_itor_t destination_iterator_type;
 
-	void operator()(source_iterator_type& head,
-					source_iterator_type& tail,
-					alpha_iterator_type& blend_factor,
-					destination_iterator_type& dest_head)
+	void operator()(source_iterator_type head,
+					source_iterator_type tail,
+					alpha_iterator_type blend_factor,
+					destination_iterator_type dest_head)
 	{
 		while (head != tail)
 		{
 			__m128i packed_blend =
-				_mm_setr_epi16(*blend_factor+0, *blend_factor+0, *blend_factor+0, *blend_factor+0,
-							   *blend_factor+1, *blend_factor+1, *blend_factor+1, *blend_factor+1,
-							   *blend_factor+2, *blend_factor+2, *blend_factor+2, *blend_factor+2,
-							   *blend_factor+3, *blend_factor+3, *blend_factor+3, *blend_factor+3);
-			_m128i src = __mm_load_si128(reinterpret_cast<_m128i*>(&*head));
-			_m128i dest = _mm_mulhi_epu16(src, packed_blend);
-			_mm_store_si128(reinterpret_cast<_m128i*>(&*dest_head), dest);
+				_mm_setr_epi16((blend_factor+0)->get_y(), (blend_factor+0)->get_y(),
+							   (blend_factor+0)->get_y(), (blend_factor+0)->get_y(),
+							   (blend_factor+1)->get_y(), (blend_factor+1)->get_y(),
+							   (blend_factor+1)->get_y(), (blend_factor+1)->get_y(),
+							   (blend_factor+2)->get_y(), (blend_factor+2)->get_y(),
+							   (blend_factor+2)->get_y(), (blend_factor+2)->get_y(),
+							   (blend_factor+3)->get_y(), (blend_factor+3)->get_y(),
+							   (blend_factor+3)->get_y(), (blend_factor+3)->get_y());
+			__m128i src = _mm_load_si128(reinterpret_cast<__m128i*>(&*head));
+			__m128i dest = _mm_mulhi_epu16(src, packed_blend);
+			_mm_store_si128(reinterpret_cast<__m128i*>(&*dest_head), dest);
 			
 			++head;
 			++dest_head;

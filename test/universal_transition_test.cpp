@@ -7,6 +7,7 @@ class universal_transition_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(universal_transition_test);
 	CPPUNIT_TEST(default_transition_test);
+	CPPUNIT_TEST(sse2_transition_test);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void default_transition_test()
@@ -41,6 +42,48 @@ public:
 			  const_cast<const pixel_store_type&>(pixels).end(),
 			  const_cast<const transition_map_type&>(trans_map).begin(),
 			  dest.begin());
+
+		for (int offset = 0; offset <= 256; ++offset)
+		{
+			const int level = offset % 256;
+			CPPUNIT_ASSERT(dest(offset, 0) ==
+						   pixel(level, level, level, level));
+		}
+	}
+
+	void sse2_transition_test()
+	{
+		using namespace risa_gl;
+
+		typedef pixel_store<pixel, 16> pixel_store_type;
+		typedef pixel_store<brightness, 16> transition_map_type;
+
+		pixel_store_type pixels(640, 480);
+		pixel_store_type dest(640, 480);
+		transition_map_type trans_map(640, 480);
+
+		for (pixel_store_type::iterator itor = pixels.begin();
+			 itor != pixels.end(); ++itor)
+			*itor = pixel(255,255,255,255);
+
+		int i = 0;
+		for (transition_map_type::iterator itor = trans_map.begin();
+			 itor != trans_map.end(); ++itor)
+			*itor = brightness(i++%256);
+
+		typedef iterator_adapter<pixel_store_type::pixel_type,
+			pixel_store_type::alignment_size> adapter_type;
+		
+		sse2_universal_transition<
+			adapter_type::alignment_iterator_type,
+			transition_map_type::const_iterator,
+			adapter_type::alignment_iterator_type
+		> trans;
+
+		trans(adapter_type::to_alignment(pixels.begin()),
+			  adapter_type::to_alignment(pixels.end()),
+			  const_cast<const transition_map_type&>(trans_map).begin(),
+			  adapter_type::to_alignment(dest.begin()));
 
 		for (int offset = 0; offset <= 256; ++offset)
 		{
