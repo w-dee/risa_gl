@@ -51,15 +51,23 @@ public:
 		while (head != tail)
 		{
 			__m128i packed_blend =
-				_mm_setr_epi16((blend_factor+0)->get_y(), (blend_factor+0)->get_y(),
-							   (blend_factor+0)->get_y(), (blend_factor+0)->get_y(),
-							   (blend_factor+1)->get_y(), (blend_factor+1)->get_y(),
-							   (blend_factor+1)->get_y(), (blend_factor+1)->get_y(),
-							   (blend_factor+2)->get_y(), (blend_factor+2)->get_y(),
-							   (blend_factor+2)->get_y(), (blend_factor+2)->get_y(),
-							   (blend_factor+3)->get_y(), (blend_factor+3)->get_y(),
-							   (blend_factor+3)->get_y(), (blend_factor+3)->get_y());
-			__m128i src = _mm_load_si128(reinterpret_cast<__m128i*>(&*head));
+				_mm_setr_epi16((blend_factor+0)->get_y(),
+							   (blend_factor+0)->get_y(),
+							   (blend_factor+0)->get_y(),
+							   (blend_factor+0)->get_y(),
+							   (blend_factor+1)->get_y(),
+							   (blend_factor+1)->get_y(),
+							   (blend_factor+1)->get_y(),
+							   (blend_factor+1)->get_y(),
+							   (blend_factor+2)->get_y(),
+							   (blend_factor+2)->get_y(),
+							   (blend_factor+2)->get_y(),
+							   (blend_factor+2)->get_y(),
+							   (blend_factor+3)->get_y(),
+							   (blend_factor+3)->get_y(),
+							   (blend_factor+3)->get_y(),
+							   (blend_factor+3)->get_y());
+			__m128i src = _mm_set1_epi16(reinterpret_cast<__m128i*>(&*head));
 			__m128i dest = _mm_mulhi_epu16(src, packed_blend);
 			_mm_store_si128(reinterpret_cast<__m128i*>(&*dest_head), dest);
 			
