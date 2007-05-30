@@ -27,6 +27,11 @@ namespace risa_gl {
 		{
 			return reinterpret_cast<byte* const>(this);
 		}
+
+		int operator[](int offset) const
+		{
+			return chunk_data[offset];
+		}
 	};
 };
 #endif /* RISA_MEMORY_CHUNK_HPP_ */
