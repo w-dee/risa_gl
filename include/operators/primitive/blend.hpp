@@ -18,6 +18,36 @@ namespace risa_gl {
 		 * 被演算側を完全不透明とみなし、アルファ値を保存してブレンド
 		 */
 		struct unclearly_u_with_save_alpha : public blend_policy {};
+
+		/**
+		 * Uのアルファ値をアルファ合成用のアルファ値と見なしてブレンド
+		 */
+		struct using_u_alpha : public blend_policy {};
+
+		/**
+		 * Uのアルファ値を加算アルファ合成用のアルファ値と見なしてブレンド
+		 */
+		struct using_u_alpha_with_addition : public blend_policy {};
+
+		/**
+		 *
+		 */
+		class blend
+		{
+		public:
+			template <typename src_iterator_t,
+					  typename dest_iterator_t>
+			operator()(src_iterator_t& head,
+					   src_iterator_t& tail,
+					   dest_iterator_t& dest_head)
+			{
+				while (head != tail)
+				{
+					
+				}
+			}
+		};
+	
 	};
 };
 
