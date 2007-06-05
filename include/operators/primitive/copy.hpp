@@ -21,6 +21,24 @@ namespace risa_gl {
 			}
 		};
 
+		/**
+		 * sourceからdestinationへ透明度のみコピーします。
+		 */
+		class copy_transparency
+		{
+		public:
+			template <typename src_iterator_t,
+					  typename dest_iterator_t>
+			void operator()(src_iterator_t& head,
+							src_iterator_t& tail,
+							dest_iterator_t& dest_head)
+			{
+				while (head != tail)
+					head++->set_a(dest_head++->get_a());
+			}
+		};
+
+		
 #ifdef __SSE2__
 		/**
 		 * SSE2命令を使ってsourceからdestinationへコピーします。
