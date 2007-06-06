@@ -14,12 +14,11 @@ public:
 		using namespace risa_gl;
 
 		pixel pic;
-		CPPUNIT_ASSERT(pic.get_r() == 0);
-		CPPUNIT_ASSERT(pic.get_g() == 0);
-		CPPUNIT_ASSERT(pic.get_b() == 0);
-		CPPUNIT_ASSERT(pic.get_a() == 255);
+		CPPUNIT_ASSERT(pic.get_red() == 0);
+		CPPUNIT_ASSERT(pic.get_green() == 0);
+		CPPUNIT_ASSERT(pic.get_blue() == 0);
+		CPPUNIT_ASSERT(pic.get_alpha() == 255);
 	}
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION( pixel_test );
-

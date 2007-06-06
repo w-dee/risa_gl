@@ -43,12 +43,12 @@ namespace risa_gl
 			return *this;
 		}
 
-		byte get_y() const
+		byte get_luminance() const
 		{
 			return y;
 		}
 
-		void set_y(byte y_)
+		void set_luminance(byte y_)
 		{
 			y = y_;
 		}
@@ -60,7 +60,7 @@ namespace risa_gl
 	template <typename SrcType, typename DestType>
 	DestType pixel_convert(const SrcType& src)
 	{
-		return DestType(src.get_r(), src.get_g(), src.get_b(), src.get_a());
+		return DestType(src.get_red(), src.get_green(), src.get_blue(), src.get_alpha());
 	};
 
 	/**
@@ -111,42 +111,42 @@ namespace risa_gl
 			return *this;
 		}
 
-		byte get_r() const
+		byte get_red() const
 		{
 			return r;
 		}
 
-		void set_r(byte r_)
+		void set_red(byte r_)
 		{
 			r = r_;
 		}
 
-		byte get_g() const
+		byte get_green() const
 		{
 			return g;
 		}
 		
-		void set_g(byte g_)
+		void set_green(byte g_)
 		{
 			g = g_;
 		}
 
-		byte get_b() const
+		byte get_blue() const
 		{
 			return b;
 		}
 
-		void set_b(byte b_)
+		void set_blue(byte b_)
 		{
 			b = b_;
 		}
 
-		byte get_a() const
+		byte get_alpha() const
 		{
 			return a;
 		}
 
-		void set_a(byte a_)
+		void set_alpha(byte a_)
 		{
 			a = a_;
 		}
@@ -209,42 +209,42 @@ namespace risa_gl
 			return *this;
 		}
 
-		byte get_r() const
+		byte get_red() const
 		{
 			return r;
 		}
 
-		void set_r(byte r_)
+		void set_red(byte r_)
 		{
 			r = r_;
 		}
 
-		byte get_g() const
+		byte get_green() const
 		{
 			return g;
 		}
 		
-		void set_g(byte g_)
+		void set_green(byte g_)
 		{
 			g = g_;
 		}
 
-		byte get_b() const
+		byte get_blue() const
 		{
 			return b;
 		}
 
-		void set_b(byte b_)
+		void set_blue(byte b_)
 		{
 			b = b_;
 		}
 
-		byte get_a() const
+		byte get_alpha() const
 		{
 			return a;
 		}
 
-		void set_a(byte a_)
+		void set_alpha(byte a_)
 		{
 			a = a_;
 		}
@@ -298,42 +298,42 @@ namespace risa_gl
 			return *this;
 		}
 
-		byte get_r() const
+		byte get_red() const
 		{
 			return r;
 		}
 
-		void set_r(byte r_)
+		void set_red(byte r_)
 		{
 			r = r_;
 		}
 
-		byte get_g() const
+		byte get_green() const
 		{
 			return g;
 		}
 		
-		void set_g(byte g_)
+		void set_green(byte g_)
 		{
 			g = g_;
 		}
 
-		byte get_b() const
+		byte get_blue() const
 		{
 			return b;
 		}
 
-		void set_b(byte b_)
+		void set_blue(byte b_)
 		{
 			b = b_;
 		}
 
-		byte get_a() const
+		byte get_alpha() const
 		{
 			return a;
 		}
 
-		void set_a(byte a_)
+		void set_alpha(byte a_)
 		{
 			a = a_;
 		}

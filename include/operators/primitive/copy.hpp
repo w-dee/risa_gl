@@ -10,14 +10,10 @@ namespace risa_gl {
 		class copy
 		{
 		public:
-			template <typename src_iterator_t,
-					  typename dest_iterator_t>
-			void operator()(src_iterator_t& head,
-							src_iterator_t& tail,
-							dest_iterator_t& dest_head)
+			void operator()(const_sequential_iterator& src,
+							sequential_iterator& dest)
 			{
-				while (head != tail)
-					*head++ = *dest_head++;
+				*dest = *src;
 			}
 		};
 
@@ -27,14 +23,10 @@ namespace risa_gl {
 		class copy_transparency
 		{
 		public:
-			template <typename src_iterator_t,
-					  typename dest_iterator_t>
-			void operator()(src_iterator_t& head,
-							src_iterator_t& tail,
-							dest_iterator_t& dest_head)
+			void operator()(const_sequential_iterator& src,
+							sequential_iterator& dest)
 			{
-				while (head != tail)
-					head++->set_a(dest_head++->get_a());
+				dest->set_alpha(src->get_alpha());
 			}
 		};
 
@@ -48,15 +40,11 @@ namespace risa_gl {
 		class sse2_copy
 		{
 		public:
-			template <typename src_iterator_t,
-					  typename dest_iterator_t>
-			void operator()(src_iterator_t& head,
-							src_iterator_t& tail,
-							dest_iterator_t& dest_head)
+			void operator()(aligned_iterator<const pixel, 16>& src,
+							aligned_iterator<pixel, 16>& dest)
 			{
-				while (head != tail)
-					_mm_store_si128(&*dest_head,
-									_mm_load_si128(&*head));
+					_mm_store_si128(&*dest,
+									_mm_load_si128(&*src));
 			}
 		};
 #endif /* __SSE2__ */
