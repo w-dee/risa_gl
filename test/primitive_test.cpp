@@ -3,12 +3,15 @@
 #include "pixel_store.hpp"
 #include "pixel.hpp"
 
+#include <iostream>
+
 using namespace risa_gl;
 
 class primitive_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(primitive_test);
 	CPPUNIT_TEST(clear_test);
+	CPPUNIT_TEST(blend_test);
 	CPPUNIT_TEST_SUITE_END();
 
 	typedef pixel_store<pixel, 16> pixel_store_t;
@@ -25,17 +28,44 @@ public:
 	{
 		for (pixel_store_t::iterator itor = source.begin();
 			 itor != source.end(); ++itor)
-			*itor = pixel(255, 255, 255, 255);
+			*itor = pixel(255, 255, 255, 256);
 
 		for (pixel_store_t::iterator itor = destination.begin();
 			 itor != destination.end(); ++itor)
-			*itor = pixel(128, 128, 128, 64);
+			*itor = pixel(128, 128, 128, 129);
+	}
+
+	void blend_test()
+	{
+		using namespace risa_gl::primitive;
+		typedef blend<
+			one_minus_destination_alpha_factor,
+			zero_factor,
+			destination_alpha_factor,
+			identity_factor> alpha_blend;
+
+		alpha_blend blender;
+		pixel_store_t::iterator itor_src = source.begin();
+		pixel_store_t::iterator itor_dest = destination.begin();
+		pixel_store_t::iterator itor_result = result.begin();
+		
+		for (; itor_src != source.end();
+			 ++itor_src, ++itor_dest, ++itor_result)
+		{
+			blender(itor_src, itor_dest, itor_result);
+			/**
+			 * c = 255 * 128 + 128 * 128 = (255 + 128)
+			 * a = 0 + 128
+			 * result = (191, 191, 191, 128)
+			 */
+			CPPUNIT_ASSERT(*itor_result == pixel(191, 191, 191, 129));
+		}
 	}
 
 	void clear_test()
 	{
 
-		risa_gl::primitives::clear op;
+		risa_gl::primitive::clear op;
 		
 		for (pixel_store_t::iterator itor = result.begin();
 			 itor != result.end(); ++itor)

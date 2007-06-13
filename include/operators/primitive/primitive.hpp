@@ -1,11 +1,122 @@
 #ifndef RISA_PRIMITIVE_HPP_
 #define RISA_PRIMITIVE_HPP_
 #include "iterator.hpp"
+#include "risa_types.hpp"
 
 namespace risa_gl
 {
-	namespace primitives
+	namespace primitive
 	{
+		/**
+		 * ファクターテンプレート
+		 */
+		class identity_factor
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			word operator()(src_itor_t src,
+							dest_itor_t dest)
+			{
+				return 256;
+			}
+		};
+
+		class zero_factor
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			word operator()(src_itor_t src,
+							dest_itor_t dest)
+			{
+				return 0;
+			}
+		};
+
+		class source_alpha_factor
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			word operator()(src_itor_t src,
+							dest_itor_t)
+			{
+				return src->get_alpha();
+			}			
+		};
+
+		class one_minus_source_alpha_factor
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			word operator()(src_itor_t src,
+							dest_itor_t)
+			{
+				return 256 - src->get_alpha();
+			}			
+		};
+
+		class destination_alpha_factor
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			word operator()(src_itor_t,
+							dest_itor_t destination)
+			{
+				return destination->get_alpha();
+			}
+		};
+
+		class one_minus_destination_alpha_factor
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			word operator()(src_itor_t,
+							dest_itor_t destination)
+			{
+				return 256 - destination->get_alpha();
+			}
+		};
+
+		/**
+		 * ブレンドテンプレート
+		 */
+		template <typename source_factor,
+				  typename source_alpha_factor,
+				  typename destination_factor,
+				  typename destination_alpha_factor>
+		class blend
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				result->set_red((src->get_red() *
+								 source_factor()(src, dest) +
+								 dest->get_red() *
+								 destination_factor()(src, dest)) >> 8);
+				result->set_green((src->get_green() *
+								   source_factor()(src, dest) +
+								   dest->get_green() *
+								   destination_factor()(src, dest)) >> 8);
+				result->set_blue((src->get_blue() *
+								  source_factor()(src, dest) +
+								  dest->get_blue() *
+								  destination_factor()(src, dest)) >> 8);
+				result->set_alpha((src->get_alpha() *
+								   source_alpha_factor()(src, dest) +
+								   dest->get_alpha() *
+								   destination_alpha_factor()(src, dest)) >> 8);
+			}
+		};
 
 		/**
 		 *・clear
@@ -84,14 +195,14 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				const float fd = (255 - src->get_alpha()) / (255.0f * 2.0f);
-				result->set_red((src->get_red() >> 1) +
+				const float fd = (256 - src->get_alpha()) / 256.0f;
+				result->set_red(src->get_red() +
 								dest->get_red() * fd);
-				result->set_green((src->get_green() >> 1) +
+				result->set_green(src->get_green() +
 								  dest->get_green() * fd);
-				result->set_blue((src->get_blue() >> 1) +
+				result->set_blue(src->get_blue() +
 								 dest->get_blue() * fd);
-				result->set_alpha((src->get_alpha() >> 1) +
+				result->set_alpha(src->get_alpha() +
 								  dest->get_alpha() * fd);
 			}
 		};
@@ -99,7 +210,6 @@ namespace risa_gl
 		/**
 		 * ・dest over
 		 * ソースの上にディスティネーションをアルファブレンドでコピー
-		 * src overのパラメータを転置するだけ
 		 * # porter-duff destination over source rule.
 		 * Fs = (1-Ad), Fd=1
 		 * Cd = Cs*(1-Ad) + Cd
@@ -115,15 +225,15 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				const float fs = (255 - dest->get_alpha()) / (255.0f * 2.0f);
+				const float fs = (256 - dest->get_alpha()) / 256.0f;
 				result->set_red(src->get_red() * fs +
-								(dest->get_red() >> 1));
+								dest->get_red());
 				result->set_green(src->get_green() * fs +
-								  (dest->get_green() >> 1));
+								  dest->get_green());
 				result->set_blue(src->get_blue() * fs +
-								 (dest->get_blue() >> 1));
+								 dest->get_blue());
 				result->set_alpha(src->get_alpha() * fs +
-								  (dest->get_alpha() >> 1));
+								  dest->get_alpha());
 			}
 		};
 
@@ -145,7 +255,7 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				const float fs = dest->get_alpha() / 255.0f;
+				const float fs = dest->get_alpha() / 256.0f;
 				result->set_red(src->get_red() * fs);
 				result->set_green(src->get_green() * fs);
 				result->set_blue(src->get_blue() * fs);
@@ -156,7 +266,6 @@ namespace risa_gl
 		/**
 		 * ・dest in
 		 * ディスティネーションをソースのアルファ成分で処理してコピー
-		 * src inのパラメータ置換で実装可能
 		 * # porter-duff destination in source rule.
 		 * Fs = 0, Fd = As
 		 * Cd = Cd*As
@@ -172,7 +281,7 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				const float fd = src->get_alpha() / 255.0f;
+				const float fd = src->get_alpha() / 256.0f;
 				result->set_red(dest->get_red() * fd);
 				result->set_green(dest->get_green() * fd);
 				result->set_blue(dest->get_blue() * fd);
@@ -197,7 +306,7 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				const float fs = (255 - dest->get_alpha()) / 255.0f;
+				const float fs = (256 - dest->get_alpha()) / 256.0f;
 				result->set_red(src->get_red() * fs);
 				result->set_green(src->get_green() * fs);
 				result->set_blue(src->get_blue() * fs);
@@ -222,7 +331,7 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				const float fs = (255 - src->get_alpha()) / 255.0f;
+				const float fs = (256 - src->get_alpha()) / 256.0f;
 				result->set_red(dest->get_red() * fs);
 				result->set_green(dest->get_green() * fs);
 				result->set_blue(dest->get_blue() * fs);
@@ -247,15 +356,15 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				const float fs = dest->get_alpha() / 255.0f;
-				const float fd = (255 - src->get_alpha()) / 255.0f;
+				const float fs = dest->get_alpha() / (256.0f * 2.0f);
+				const float fd = (256 - src->get_alpha()) / (256.0f * 2.0f);
 
-				result->set_red((src->get_red() >> 1) * fs +
-								(dest->get_red() >> 1) * fd);
-				result->set_green((src->get_green() >> 1) * fs +
-								  (dest->get_green() >> 1) * fd);
-				result->set_blue((src->get_blue() >> 1) * fs +
-								 (dest->get_blue() >> 1) * fd);
+				result->set_red(src->get_red() * fs +
+								dest->get_red() * fd);
+				result->set_green(src->get_green() * fs +
+								  dest->get_green() * fd);
+				result->set_blue(src->get_blue() * fs +
+								 dest->get_blue() * fd);
 				result->set_alpha(dest->get_alpha());
 			}
 		};
@@ -277,8 +386,8 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				const float fs = (255 - dest->get_alpha()) / 255.0f;
-				const float fd = src->get_alpha() / 255.0f;
+				const float fs = (256 - dest->get_alpha()) / 256.0f;
+				const float fd = src->get_alpha() / 256.0f;
 
 				result->set_red((src->get_red() >> 1) * fs +
 								(dest->get_red() >> 1) * fd);
@@ -307,8 +416,8 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				const float fs = (255 - dest->get_alpha()) / 255.0f * 2.0f;
-				const float fd = (255 - src->get_alpha()) / 255.0f * 2.0f;
+				const float fs = (256 - dest->get_alpha()) / 256.0f * 2.0f;
+				const float fd = (256 - src->get_alpha()) / 256.0f * 2.0f;
 
 				result->set_red(src->get_red() * fs +
 								dest->get_red() * fd);

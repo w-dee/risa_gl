@@ -4,6 +4,8 @@
 #include "static_assert.hpp"
 #include "risa_types.hpp"
 
+#include <cassert>
+
 namespace risa_gl 
 {
 	/**
@@ -80,15 +82,15 @@ namespace risa_gl
 		byte r;
 		byte g;
 		byte b;
-		byte a;
+		byte a; //! alpha値は1-256に写像して利用される
 
 	public:
 		pixel():
 			r(), g(), b(), a(255)
 		{}
 
-		pixel(byte r_, byte g_, byte b_, byte a_ = 255):
-			r(r_), g(g_), b(b_), a(a_)
+		pixel(byte r_, byte g_, byte b_, byte a_ = 256):
+			r(r_), g(g_), b(b_), a(a_ - 1)
 		{}
 
 		pixel(const pixel& source):
@@ -141,14 +143,15 @@ namespace risa_gl
 			b = b_;
 		}
 
-		byte get_alpha() const
+		word get_alpha() const
 		{
-			return a;
+			return a + 1;
 		}
 
-		void set_alpha(byte a_)
+		void set_alpha(word a_)
 		{
-			a = a_;
+			assert(a_ != 0);
+			a = static_cast<byte>((a_ - 1) & 0xff);
 		}
 
 		bool operator==(const pixel& rhs) const

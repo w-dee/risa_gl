@@ -4,6 +4,8 @@
 namespace risa_gl
 {
 	typedef unsigned char byte;
+	typedef unsigned short word;
+	typedef unsigned int dword;
 };
 
 #endif /* RISA_RISA_TYPES_HPP_ */
