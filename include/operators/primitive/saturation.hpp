@@ -12,6 +12,8 @@ namespace risa_gl {
 		{
 			if (value > 255)
 				return static_cast<byte>(255);
+			else if (value < 0)
+				return static_cast<byte>(0);
 			return static_cast<byte>(value);
 		};
 	};
