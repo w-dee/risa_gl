@@ -149,7 +149,7 @@ namespace risa_gl
 				  typename source_alpha_factor,
 				  typename destination_factor,
 				  typename destination_alpha_factor>
-		class blend
+		class saturation_blend
 		{
 		public:
 			template <typename src_itor_t,
@@ -182,6 +182,19 @@ namespace risa_gl
 			}
 		};
 
+		class clear
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t,
+							dest_itor_t,
+							result_itor_t result) const
+			{
+				*result = typename result_itor_t::value_type(0, 0, 0, 1) ;
+			}
+		};
 	};
 };
 
