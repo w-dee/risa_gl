@@ -8,13 +8,17 @@ namespace risa_gl {
 		 * @param value ‰‰ŽZŒ‹‰Ê
 		 * @return –O˜aˆ—Œã‚Ì”’l
 		 */
-		byte saturation(int value)
+		class saturate
 		{
-			if (value > 255)
-				return static_cast<byte>(255);
-			else if (value < 0)
-				return static_cast<byte>(0);
-			return static_cast<byte>(value);
+		public:
+			byte operator()(int value)
+			{
+				if (value > 255)
+					return static_cast<byte>(255);
+				else if (value < 0)
+					return static_cast<byte>(0);
+				return static_cast<byte>(value);
+			}
 		};
 	};
 };

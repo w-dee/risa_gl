@@ -9,6 +9,7 @@ OBJS= \
 	rectangle_test.o \
 	memory_chunk_test.o \
 	primitive_test.o \
+	colormap_test.o
 
 TARGET = unit_test
 EXT = .exe

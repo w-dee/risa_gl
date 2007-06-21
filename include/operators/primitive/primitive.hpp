@@ -109,7 +109,7 @@ namespace risa_gl
 		{
 		public:
 			template <typename source_type, typename destination_type>
-			source_type& operator()(source_type& src, destination_type&)
+			source_type operator()(source_type src, destination_type)
 			{
 				return src;
 			}
@@ -122,7 +122,7 @@ namespace risa_gl
 		{
 		public:
 			template <typename source_type, typename destination_type>
-			destination_type& operator()(source_type&, destination_type& dest)
+			destination_type operator()(source_type, destination_type dest)
 			{
 				return dest;
 			}
@@ -189,7 +189,7 @@ namespace risa_gl
 			template <typename iterator_type>
 			int operator()(iterator_type itor)
 			{
-				return itor->get_brightness();
+				return itor->get_luminance();
 			}
 		};
 
@@ -215,9 +215,8 @@ namespace risa_gl
 		{
 		public:
 			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_t>
-			result_t operator()(src_itor_t src, dest_itor_t dest) const
+					  typename dest_itor_t>
+			int operator()(src_itor_t src, dest_itor_t dest) const
 			{
 				return method_selecter()(target_selecter()(src, dest));
 			}
@@ -281,22 +280,22 @@ namespace risa_gl
 							result_itor_t result) const
 			{
 				result->set_red(
-					saturation((src->get_red() *
+					saturate()((src->get_red() *
 								source_factor()(src, dest) +
 								dest->get_red() *
 								destination_factor()(src, dest)) >> 8));
 				result->set_green(
-					saturation((src->get_green() *
+					saturate()((src->get_green() *
 								source_factor()(src, dest) +
 								dest->get_green() *
 								destination_factor()(src, dest)) >> 8));
 				result->set_blue(
-					saturation((src->get_blue() *
+					saturate()((src->get_blue() *
 								source_factor()(src, dest) +
 								dest->get_blue() *
 								destination_factor()(src, dest)) >> 8));
 				result->set_alpha(
-					saturation((src->get_alpha() *
+					saturate()((src->get_alpha() *
 								source_alpha_factor()(src, dest) +
 								dest->get_alpha() *
 								destination_alpha_factor()(src, dest)) >> 8));
@@ -306,7 +305,7 @@ namespace risa_gl
 		/**
 		 * 別アルファチャネル混合テンプレート
 		 */
-		template <typename alpha_factor>
+		template <typename alpha_extract_factor>
 		class alternate_alpha_channel_blend
 		{
 		public:
@@ -318,13 +317,13 @@ namespace risa_gl
 							result_itor_t result) const
 			{
 				result->set_red((src->get_red() *
-								 alpha->get_brightness()) >> 8);
+								 alpha->get_luminance()) >> 8);
 				result->set_green((src->get_green() *
-								 alpha->get_brightness()) >> 8);
+								 alpha->get_luminance()) >> 8);
 				result->set_blue((src->get_blue() *
-								 alpha->get_brightness()) >> 8);
+								 alpha->get_luminance()) >> 8);
 				result->set_alpha((src->get_alpha() *
-								   alpha_factor()(src, alpha)) >> 8);
+								   alpha_extract_factor()(src, alpha)) >> 8);
 			}
 		};
 

@@ -23,12 +23,14 @@ namespace risa_gl
 
 	public:
 		brightness():
-			y()
+			y(255)
 		{}
 
-		brightness(byte y_):
-			y(y_)
-		{}
+		brightness(int y_):
+			y(y_ - 1)
+		{
+			assert(y_ > 0);
+		}
 
 		brightness(const brightness& source):
 			y(source.y)
@@ -45,14 +47,15 @@ namespace risa_gl
 			return *this;
 		}
 
-		byte get_luminance() const
+		int get_luminance() const
 		{
-			return y;
+			return y + 1;
 		}
 
-		void set_luminance(byte y_)
+		void set_luminance(int y_)
 		{
-			y = y_;
+			assert(y_ > 0);
+			y = static_cast<byte>((y_ - 1) & 0xff);
 		}
 	};
 
@@ -89,7 +92,7 @@ namespace risa_gl
 			r(), g(), b(), a(255)
 		{}
 
-		pixel(byte r_, byte g_, byte b_, byte a_ = 256):
+		pixel(byte r_, byte g_, byte b_, int a_ = 256):
 			r(r_), g(g_), b(b_), a(a_ - 1)
 		{}
 

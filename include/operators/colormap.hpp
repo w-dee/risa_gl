@@ -6,24 +6,27 @@ namespace risa_gl
 {
 	namespace operators
 	{
-		namespace primitive = risa_gl::primitive;
-
-		template <typename src_itor_t,
-				  typename dest_itor_t,
-				  typename result_itor_t>
 		class colormap_operator
 		{
 		public:
-			typedef alpha_factor<
-				destination_target_selecter,
-				get_brightness_method_selecter>
+			typedef primitive::alpha_factor<
+				primitive::destination_target_selecter,
+				primitive::get_brightness_method_selecter>
 			dest_brightness_factor;
 				
-			typedef primitive::blend<dest_brightness_factor,
-									 identity_factor,
-									 zero_factor,
-									 zero_factor>
+			typedef primitive::alternate_alpha_channel_blend<
+				dest_brightness_factor>
 			colormap;
+
+			template <typename src_itor_t,
+					  typename alpha_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							alpha_itor_t alpha,
+							result_itor_t result) const
+			{
+				colormap()(src, alpha, result);
+			}
 		};
 									 
 	};

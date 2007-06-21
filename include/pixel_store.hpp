@@ -9,7 +9,7 @@
 
 namespace risa_gl
 {
-	template <typename pixel_t, size_t alignment>
+	template <typename pixel_t, size_t alignment = 16>
 	class pixel_store
 	{
 		friend class pixel_store_test;
