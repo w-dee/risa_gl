@@ -103,6 +103,127 @@ namespace risa_gl
 		};
 
 		/**
+		 * sourceを選択するセレクタ
+		 */
+		class source_target_selecter
+		{
+		public:
+			template <typename source_type, typename destination_type>
+			source_type& operator()(source_type& src, destination_type&)
+			{
+				return src;
+			}
+		};
+
+		/**
+		 * destinationを選択するセレクタ
+		 */
+		class destination_target_selecter
+		{
+		public:
+			template <typename source_type, typename destination_type>
+			destination_type& operator()(source_type&, destination_type& dest)
+			{
+				return dest;
+			}
+		};
+
+		/**
+		 * 対象のイテレータから赤色を取り出すセレクタ
+		 */
+		class get_red_method_selecter
+		{
+		public:
+			template <typename iterator_type>
+			int operator()(iterator_type itor)
+			{
+				return itor->get_red();
+			}
+		};
+
+		/**
+		 * 対象のイテレータから緑色を取り出すセレクタ
+		 */
+		class get_green_method_selecter
+		{
+		public:
+			template <typename iterator_type>
+			int operator()(iterator_type itor)
+			{
+				return itor->get_green();
+			}
+		};
+
+		/**
+		 * 対象のイテレータから青色を取り出すセレクタ
+		 */
+		class get_blue_method_selecter
+		{
+		public:
+			template <typename iterator_type>
+			int operator()(iterator_type itor)
+			{
+				return itor->get_blue();
+			}
+		};
+
+		/**
+		 * 対象のイテレータからアルファ値を取り出すセレクタ
+		 */
+		class get_alpha_method_selecter
+		{
+		public:
+			template <typename iterator_type>
+			int operator()(iterator_type itor)
+			{
+				return itor->get_alpha();
+			}
+		};
+
+		/**
+		 * 対象のイテレータから明るさを取り出すセレクタ
+		 */
+		class get_brightness_method_selecter
+		{
+		public:
+			template <typename iterator_type>
+			int operator()(iterator_type itor)
+			{
+				return itor->get_brightness();
+			}
+		};
+
+		template <int min_value, int max_value,
+				  int maped_min = 1, int maped_max = 256>
+		class scaler
+		{
+		public:
+			template <typename iterator_type>
+			int operator()(iterator_type itor)
+			{
+				return (*itor  * (maped_max - maped_min)) /
+					(max_value - min_value);
+			}
+		};
+
+		/**
+		 * 
+		 */
+		template <typename target_selecter,
+				  typename method_selecter>
+		class alpha_factor
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_t>
+			result_t operator()(src_itor_t src, dest_itor_t dest) const
+			{
+				return method_selecter()(target_selecter()(src, dest));
+			}
+		};
+
+		/**
 		 * ブレンドテンプレート
 		 */
 
@@ -179,6 +300,31 @@ namespace risa_gl
 								source_alpha_factor()(src, dest) +
 								dest->get_alpha() *
 								destination_alpha_factor()(src, dest)) >> 8));
+			}
+		};
+
+		/**
+		 * 別アルファチャネル混合テンプレート
+		 */
+		template <typename alpha_factor>
+		class alternate_alpha_channel_blend
+		{
+		public:
+			template <typename src_itor_t,
+					  typename alpha_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							alpha_itor_t alpha,
+							result_itor_t result) const
+			{
+				result->set_red((src->get_red() *
+								 alpha->get_brightness()) >> 8);
+				result->set_green((src->get_green() *
+								 alpha->get_brightness()) >> 8);
+				result->set_blue((src->get_blue() *
+								 alpha->get_brightness()) >> 8);
+				result->set_alpha((src->get_alpha() *
+								   alpha_factor()(src, alpha)) >> 8);
 			}
 		};
 
