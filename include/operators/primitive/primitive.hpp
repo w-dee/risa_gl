@@ -102,6 +102,7 @@ namespace risa_gl
 			}
 		};
 
+		/* セレクタ */
 		/**
 		 * sourceを選択するセレクタ
 		 */
@@ -193,16 +194,20 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * スケーラ
+		 *
+		 */
 		template <int min_value, int max_value,
-				  int maped_min = 1, int maped_max = 256>
+				  int mapped_min = 1, int mapped_max = 256>
 		class scaler
 		{
 		public:
 			template <typename iterator_type>
 			int operator()(iterator_type itor)
 			{
-				return (*itor  * (maped_max - maped_min)) /
-					(max_value - min_value);
+				return (*itor  * (mapped_max - mapped_min)) /
+					(max_value - min_value) + mapped_min;
 			}
 		};
 
