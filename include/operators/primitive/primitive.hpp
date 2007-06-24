@@ -129,6 +129,46 @@ namespace risa_gl
 			}
 		};
 
+		class zero_method_selecter
+		{
+		public:
+			template <typename iterator_type>
+			int operator()(iterator_type) const
+			{
+				return 0;
+			}
+		};
+
+		class one_method_selecter
+		{
+		public:
+			typename <typename iterator_type>
+			int operator()(iterator_type) const
+			{
+				return 1;
+			}
+		};
+
+		class saturate_color_method_selecter
+		{
+		public:
+			typename <typename iterator_type>
+			int operator()(iterator_type) const
+			{
+				return 255;
+			}
+		};
+
+		class saturate_alpha_method_selecter
+		{
+		public:
+			typename <typename iterator_type>
+			int operator()(iterator_type) const
+			{
+				return 256;
+			}
+		};
+
 		/**
 		 * 対象のイテレータから赤色を取り出すセレクタ
 		 */
@@ -136,7 +176,7 @@ namespace risa_gl
 		{
 		public:
 			template <typename iterator_type>
-			int operator()(iterator_type itor)
+			int operator()(iterator_type itor) const
 			{
 				return itor->get_red();
 			}
@@ -221,7 +261,8 @@ namespace risa_gl
 		public:
 			template <typename src_itor_t,
 					  typename dest_itor_t>
-			int operator()(src_itor_t src, dest_itor_t dest) const
+			int operator()(src_itor_t src,
+						   dest_itor_t dest) const
 			{
 				return method_selecter()(target_selecter()(src, dest));
 			}
@@ -329,6 +370,31 @@ namespace risa_gl
 								 alpha->get_luminance()) >> 8);
 				result->set_alpha((src->get_alpha() *
 								   alpha_extract_factor()(src, alpha)) >> 8);
+			}
+		};
+
+		template <typename red_selecter,
+				  typename green_selecter,
+				  typename blue_selecter,
+				  typename alpha_selecter>
+		class channel_copy
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				result->set_red(get_red_method_selecter()(
+									red_selecter()(src, dest)));
+				result->set_green(get_green_method_selecter()(
+									  green_selecter()(src, dest)));
+				result->set_blue(get_blue_method_selecter()(
+									 blue_selecter()(src, dest)));
+				result->set_aplha(get_alpha_method_selecter()(
+									  alpha_selecter()(src, dest)));
 			}
 		};
 
