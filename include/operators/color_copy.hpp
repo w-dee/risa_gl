@@ -1,5 +1,5 @@
-#ifndef RISA_ALPHA_COPY_HPP_
-#define RISA_ALPHA_COPY_HPP_
+#ifndef RISA_COLOR_COPY_HPP_
+#define RISA_COLOR_COPY_HPP_
 
 #include "operators/primitive/primitive.hpp"
 
@@ -7,15 +7,16 @@ namespace risa_gl
 {
 	namespace operators
 	{
-		class alpha_copy_operator
+
+		class color_copy_operator
 		{
 		public:
 			typedef primitive::channel_copy<
-				primitive::destination_target_selecter,
-				primitive::destination_target_selecter,
-				primitive::destination_target_selecter,
-				primitive::source_target_selecter>
-			alpha_copy;
+				primitive::source_target_selecter,
+				primitive::source_target_selecter,
+				primitive::source_target_selecter,
+				primitive::destination_target_selecter>
+			color_copy;
 
 			template <typename src_itor_t,
 					  typename dest_itor_t,
@@ -24,10 +25,10 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				alpha_copy()(src, dest, result);
+				color_copy()(src, dest, result);
 			}
 		};
 	};
 };
 
-#endif /* RISA_ALPHA_COPY_HPP_ */
+#endif /* RISA_COLOR_COPY_HPP_ */

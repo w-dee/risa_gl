@@ -142,7 +142,7 @@ namespace risa_gl
 		class one_method_selecter
 		{
 		public:
-			typename <typename iterator_type>
+			template <typename iterator_type>
 			int operator()(iterator_type) const
 			{
 				return 1;
@@ -152,7 +152,7 @@ namespace risa_gl
 		class saturate_color_method_selecter
 		{
 		public:
-			typename <typename iterator_type>
+			template <typename iterator_type>
 			int operator()(iterator_type) const
 			{
 				return 255;
@@ -162,7 +162,7 @@ namespace risa_gl
 		class saturate_alpha_method_selecter
 		{
 		public:
-			typename <typename iterator_type>
+			template <typename iterator_type>
 			int operator()(iterator_type) const
 			{
 				return 256;
@@ -393,7 +393,7 @@ namespace risa_gl
 									  green_selecter()(src, dest)));
 				result->set_blue(get_blue_method_selecter()(
 									 blue_selecter()(src, dest)));
-				result->set_aplha(get_alpha_method_selecter()(
+				result->set_alpha(get_alpha_method_selecter()(
 									  alpha_selecter()(src, dest)));
 			}
 		};
