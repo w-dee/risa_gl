@@ -398,6 +398,31 @@ namespace risa_gl
 			}
 		};
 
+		template <typename red_selecter,
+				  typename green_selecter,
+				  typename blue_selecter,
+				  typename alpha_selecter>
+		class brightness_channel_copy
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				result->set_red(get_red_method_selecter()(
+									red_selecter()(src, dest)));
+				result->set_green(get_green_method_selecter()(
+									  green_selecter()(src, dest)));
+				result->set_blue(get_blue_method_selecter()(
+									 blue_selecter()(src, dest)));
+				result->set_alpha(get_brightness_method_selecter()(
+									  alpha_selecter()(src, dest)));
+			}
+		};
+
 		class clear
 		{
 		public:

@@ -27,6 +27,31 @@ class alpha_copy_test : public CppUnit::TestFixture
 	};
 
 public:
+	void brightness_copy_blend_test()
+	{
+		using namespace risa_gl;
+		typedef pixel_store<pixel> pixels_store;
+		typedef pixel_store<brightness> brightness_store;
+
+		pixels_store src(640, 480);
+		brightness_store dest(640, 480);
+		pixels_store result(640, 480);
+
+		std::generate(src.begin(), src.end(),
+					  generator<pixel>(pixel(128, 128, 128, 256)));
+		std::generate(dest.begin(), dest.end(),
+					  generator<brightness>(brightness(128)));
+
+		operators::brightness_copy_operator oper;
+		oper(src.begin(), dest.begin(), result.begin());
+		CPPUNIT_ASSERT(*result.begin() == pixel(128, 128, 128, 128));
+		std::generate(dest.begin(), dest.end(),
+					  generator<brightness>(brightness(1)));
+
+		oper(src.begin(), dest.begin(), result.begin());
+		CPPUNIT_ASSERT(*result.begin() == pixel(128, 128, 128, 1));
+	}
+
 	void alpha_copy_blend_test()
 	{
 		using namespace risa_gl;
