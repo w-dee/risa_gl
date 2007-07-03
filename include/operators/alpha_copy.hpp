@@ -12,9 +12,13 @@ namespace risa_gl
 		public:
 			typedef primitive::channel_copy<
 				primitive::destination_target_selecter,
+				primitive::get_red_method_selecter,
 				primitive::destination_target_selecter,
+				primitive::get_green_method_selecter,
 				primitive::destination_target_selecter,
-				primitive::source_target_selecter>
+				primitive::get_blue_method_selecter,
+				primitive::source_target_selecter,
+				primitive::get_alpha_method_selecter>
 			alpha_copy;
 
 			template <typename src_itor_t,
@@ -31,12 +35,16 @@ namespace risa_gl
 		class brightness_copy_operator
 		{
 		public:
-			typedef primitive::brightness_channel_copy<
+			typedef primitive::channel_copy<
 				primitive::source_target_selecter,
+				primitive::get_red_method_selecter,
 				primitive::source_target_selecter,
+				primitive::get_green_method_selecter,
 				primitive::source_target_selecter,
-				primitive::destination_target_selecter>
-			alpha_copy;
+				primitive::get_blue_method_selecter,
+				primitive::destination_target_selecter,
+				primitive::get_brightness_method_selecter>
+			brightness_copy;
 
 			template <typename src_itor_t,
 					  typename dest_itor_t,
@@ -45,7 +53,7 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				alpha_copy()(src, dest, result);
+				brightness_copy()(src, dest, result);
 			}
 		};
 	};

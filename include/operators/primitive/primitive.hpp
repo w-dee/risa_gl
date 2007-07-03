@@ -373,10 +373,14 @@ namespace risa_gl
 			}
 		};
 
-		template <typename red_selecter,
-				  typename green_selecter,
-				  typename blue_selecter,
-				  typename alpha_selecter>
+		template <typename channel1_selecter,
+				  typename channel1_method_selecter,
+				  typename channel2_selecter,
+				  typename channel2_method_selecter,
+				  typename channel3_selecter,
+				  typename channel3_method_selecter,
+				  typename channel4_selecter,
+				  typename channel4_method_selecter>
 		class channel_copy
 		{
 		public:
@@ -387,39 +391,14 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				result->set_red(get_red_method_selecter()(
-									red_selecter()(src, dest)));
-				result->set_green(get_green_method_selecter()(
-									  green_selecter()(src, dest)));
-				result->set_blue(get_blue_method_selecter()(
-									 blue_selecter()(src, dest)));
-				result->set_alpha(get_alpha_method_selecter()(
-									  alpha_selecter()(src, dest)));
-			}
-		};
-
-		template <typename red_selecter,
-				  typename green_selecter,
-				  typename blue_selecter,
-				  typename alpha_selecter>
-		class brightness_channel_copy
-		{
-		public:
-			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							dest_itor_t dest,
-							result_itor_t result) const
-			{
-				result->set_red(get_red_method_selecter()(
-									red_selecter()(src, dest)));
-				result->set_green(get_green_method_selecter()(
-									  green_selecter()(src, dest)));
-				result->set_blue(get_blue_method_selecter()(
-									 blue_selecter()(src, dest)));
-				result->set_alpha(get_brightness_method_selecter()(
-									  alpha_selecter()(src, dest)));
+				result->set_red(channel1_method_selecter()(
+									channel1_selecter()(src, dest)));
+				result->set_green(channel2_method_selecter()(
+									  channel2_selecter()(src, dest)));
+				result->set_blue(channel3_method_selecter()(
+									 channel3_selecter()(src, dest)));
+				result->set_alpha(channel4_method_selecter()(
+									  channel4_selecter()(src, dest)));
 			}
 		};
 

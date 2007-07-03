@@ -13,9 +13,13 @@ namespace risa_gl
 		public:
 			typedef primitive::channel_copy<
 				primitive::source_target_selecter,
+				primitive::get_red_method_selecter,
 				primitive::source_target_selecter,
+				primitive::get_green_method_selecter,
 				primitive::source_target_selecter,
-				primitive::destination_target_selecter>
+				primitive::get_blue_method_selecter,
+				primitive::destination_target_selecter,
+				primitive::get_alpha_method_selecter>
 			color_copy;
 
 			template <typename src_itor_t,
