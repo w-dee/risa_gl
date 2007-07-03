@@ -235,36 +235,36 @@ namespace risa_gl
 		};
 
 		/**
-		 * スケーラ
-		 *
+		 * 写像スケーラ
 		 */
 		template <int min_value, int max_value,
 				  int mapped_min = 1, int mapped_max = 256>
 		class scaler
 		{
 		public:
-			template <typename iterator_type>
-			int operator()(iterator_type itor)
+			int operator()(int value) const
 			{
-				return (*itor  * (mapped_max - mapped_min)) /
+				return ((value - min_value) * (mapped_max - mapped_min)) /
 					(max_value - min_value) + mapped_min;
 			}
 		};
 
 		/**
-		 * 
+		 * アルファ
 		 */
 		template <typename target_selecter,
-				  typename method_selecter>
+				  typename method_selecter,
+				  typename scale_factor>
 		class alpha_factor
 		{
 		public:
 			template <typename src_itor_t,
 					  typename dest_itor_t>
 			int operator()(src_itor_t src,
-						   dest_itor_t dest) const
+							dest_itor_t dest) const
 			{
-				return method_selecter()(target_selecter()(src, dest));
+				return scale_factor()
+					 (method_selecter()(target_selecter()(src, dest)));
 			}
 		};
 
@@ -362,14 +362,11 @@ namespace risa_gl
 							alpha_itor_t alpha,
 							result_itor_t result) const
 			{
-				result->set_red((src->get_red() *
-								 alpha->get_luminance()) >> 8);
-				result->set_green((src->get_green() *
-								 alpha->get_luminance()) >> 8);
-				result->set_blue((src->get_blue() *
-								 alpha->get_luminance()) >> 8);
-				result->set_alpha((src->get_alpha() *
-								   alpha_extract_factor()(src, alpha)) >> 8);
+				const int alpha_value = alpha_extract_factor()(src, alpha);
+				result->set_red((src->get_red() * alpha_value) >> 8);
+				result->set_green((src->get_green() * alpha_value) >> 8);
+				result->set_blue((src->get_blue() * alpha_value) >> 8);
+				result->set_alpha((src->get_alpha() * alpha_value) >> 8);
 			}
 		};
 

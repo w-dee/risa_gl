@@ -6,12 +6,16 @@ namespace risa_gl
 {
 	namespace operators
 	{
-		class colormap_operator
+		/**
+		 * 65階調透明度を拡張して適用するオペレータ
+		 */
+		class colormap_65level_operator
 		{
 		public:
 			typedef primitive::alpha_factor<
 				primitive::destination_target_selecter,
-				primitive::get_brightness_method_selecter>
+				primitive::get_brightness_method_selecter,
+				primitive::scaler<1, 65> >
 			dest_brightness_factor;
 				
 			typedef primitive::alternate_alpha_channel_blend<
@@ -28,7 +32,29 @@ namespace risa_gl
 				colormap()(src, alpha, result);
 			}
 		};
-									 
+
+		/**
+		 * 透明度を適用するオペレータ
+		 */
+		class colormap_operator
+		{
+		public:
+			typedef primitive::alpha_factor<
+				primitive::destination_target_selecter,
+				primitive::get_brightness_method_selecter,
+				primitive::scaler<1, 256> >
+			colormap;
+
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				colormap()(src, dest, result);
+			}
+		};									 
 	};
 };
 

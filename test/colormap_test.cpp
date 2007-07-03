@@ -40,16 +40,21 @@ public:
 		std::generate(pixels.begin(), pixels.end(),
 					  generator<pixel>(pixel(128, 128, 128, 256)));
 		std::generate(color_map.begin(), color_map.end(),
-					  generator<brightness>(brightness(256)));
+					  generator<brightness>(brightness(65)));
 
-		operators::colormap_operator oper;
+		operators::colormap_65level_operator oper;
 		oper(pixels.begin(), color_map.begin(), pixels.begin());
 		CPPUNIT_ASSERT(*pixels.begin() == pixel(128, 128, 128, 256));
 
 		std::generate(color_map.begin(), color_map.end(),
-					  generator<brightness>(brightness(129)));
+					  generator<brightness>(brightness(1)));
 		oper(pixels.begin(), color_map.begin(), pixels.begin());
-		CPPUNIT_ASSERT(*pixels.begin() == pixel(64, 64, 64, 129));
+		CPPUNIT_ASSERT(*pixels.begin() == pixel(0, 0, 0, 1));
+
+		std::generate(color_map.begin(), color_map.end(),
+					  generator<brightness>(brightness(65)));
+		oper(pixels.begin(), color_map.begin(), pixels.begin());
+		CPPUNIT_ASSERT(*pixels.begin() == pixel(0, 0, 0, 1));
 	}
 };
 
