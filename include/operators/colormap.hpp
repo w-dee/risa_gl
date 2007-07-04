@@ -14,7 +14,7 @@ namespace risa_gl
 		public:
 			typedef primitive::alpha_factor<
 				primitive::destination_target_selecter,
-				primitive::get_brightness_method_selecter,
+				primitive::get_opacity_method_selecter,
 				primitive::scaler<1, 65> >
 			dest_brightness_factor;
 				
@@ -41,7 +41,7 @@ namespace risa_gl
 		public:
 			typedef primitive::alpha_factor<
 				primitive::destination_target_selecter,
-				primitive::get_brightness_method_selecter,
+				primitive::get_opacity_method_selecter,
 				primitive::scaler<1, 256> >
 			colormap;
 

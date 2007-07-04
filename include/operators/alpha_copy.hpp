@@ -32,7 +32,7 @@ namespace risa_gl
 			}
 		};
 
-		class brightness_copy_operator
+		class opaque_copy_operator
 		{
 		public:
 			typedef primitive::channel_copy<
@@ -43,7 +43,7 @@ namespace risa_gl
 				primitive::source_target_selecter,
 				primitive::get_blue_method_selecter,
 				primitive::destination_target_selecter,
-				primitive::get_brightness_method_selecter>
+				primitive::get_opacity_method_selecter>
 			brightness_copy;
 
 			template <typename src_itor_t,

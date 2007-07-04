@@ -9,37 +9,37 @@
 namespace risa_gl 
 {
 	/**
-	 * 明るさピクセルクラス
+	 * 不透明度ピクセルクラス
 	 */
-	class brightness
+	class opaque
 	{
 	public:
 		enum {
-			brightness_position = 0,
+			opaque_position = 0,
 		};
 
 	private:
 		byte y;
 
 	public:
-		brightness():
+		opaque():
 			y(255)
 		{}
 
-		brightness(int y_):
+		opaque(int y_):
 			y(y_ - 1)
 		{
 			assert(y_ > 0);
 		}
 
-		brightness(const brightness& source):
+		opaque(const opaque& source):
 			y(source.y)
 		{}
 
-		~brightness()
+		~opaque()
 		{}
 
-		brightness& operator=(const brightness& source)
+		opaque& operator=(const opaque& source)
 		{
 			if (this != &source)
 				this->y = source.y;
@@ -47,12 +47,12 @@ namespace risa_gl
 			return *this;
 		}
 
-		int get_luminance() const
+		int get_opacity() const
 		{
 			return y + 1;
 		}
 
-		void set_luminance(int y_)
+		void set_opacity(int y_)
 		{
 			assert(y_ > 0);
 			y = static_cast<byte>((y_ - 1) & 0xff);
@@ -60,20 +60,10 @@ namespace risa_gl
 	};
 
 	/**
-	 * ピクセルコンバータ
+	 * RGBAピクセルフォーマット構造体
 	 */
-	template <typename SrcType, typename DestType>
-	DestType pixel_convert(const SrcType& src)
+	struct rgba
 	{
-		return DestType(src.get_red(), src.get_green(), src.get_blue(), src.get_alpha());
-	};
-
-	/**
-	 * RGBAピクセルクラス
-	 */
-	class pixel
-	{
-	public:
 		enum {
 			red_position = 0,
 			green_position = 1,
@@ -81,29 +71,111 @@ namespace risa_gl
 			alpha_position = 3,
 		};
 
-	private:
-		byte r;
-		byte g;
-		byte b;
-		byte a; //! alpha値は1-256に写像して利用される
-
-	public:
-		pixel():
+		rgba():
 			r(), g(), b(), a(255)
 		{}
 
-		pixel(byte r_, byte g_, byte b_, int a_ = 256):
-			r(r_), g(g_), b(b_), a(a_ - 1)
+		rgba(byte r_, byte g_, byte b_, byte a_):
+			r(r_), g(g_), b(b_), a(a_)
 		{}
 
-		pixel(const pixel& source):
+		rgba(const rgba& source):
 			r(source.r), g(source.g), b(source.b), a(source.a)
 		{}
 
-		~pixel()
+		rgba& operator=(const rgba& rhs)
+		{
+			if (this != &rhs)
+			{
+				this->r = rhs.r;
+				this->g = rhs.g;
+				this->b = rhs.b;
+				this->a = rhs.a;
+			}
+
+			return *this;
+		}
+
+		byte r;
+		byte g;
+		byte b;
+		byte a;
+	};
+
+	/**
+	 * AGBRピクセルフォーマット構造体
+	 */
+	struct agbr
+	{
+		enum {
+			red_position = 0,
+			green_position = 1,
+			blue_position = 2,
+			alpha_position = 3,
+		};
+
+		agbr():
+			a(255), b(), g(), r()
 		{}
 
-		pixel& operator=(const pixel& source)
+		agbr(byte r_, byte g_, byte b_, byte a_):
+			a(a_), b(b_), g(g_), r(r_)
+		{}
+
+		agbr(const agbr& source):
+			a(source.a), b(source.b), g(source.g), r(source.r)
+		{}
+
+		agbr& operator=(const agbr& rhs)
+		{
+			if (this != &rhs)
+			{
+				this->a = rhs.a;
+				this->b = rhs.b;
+				this->g = rhs.g;
+				this->r = rhs.r;
+			}
+
+			return *this;
+		}
+
+		byte a;
+		byte b;
+		byte g;
+		byte r;
+	};
+
+	/**
+	 * ピクセルテンプレートクラス
+	 */
+	template <typename pixel_format>
+	class pixel_type : private pixel_format
+	{
+	public:
+		enum {
+			red_position = pixel_format::red_position,
+			green_position = pixel_format::green_position,
+			blue_position = pixel_format::blue_position,
+			alpha_position = pixel_format::alpha_position,
+		};
+
+		pixel_type():
+			pixel_format()
+		{}
+
+		pixel_type(byte r_, byte g_, byte b_, int a_ = 256):
+			pixel_format(r_, g_, b_, a_ - 1)
+		{}
+
+		pixel_type(const pixel_type& source):
+//			pixel_format(source.r, source.g, source.b, source.a)
+			pixel_format(source)
+		{}
+
+		~pixel_type()
+		{}
+
+		pixel_type& operator=(const pixel_type& source)
 		{
 			if (this != &source)
 			{
@@ -118,46 +190,56 @@ namespace risa_gl
 
 		byte get_red() const
 		{
-			return r;
+			return pixel_format::r;
 		}
 
 		void set_red(byte r_)
 		{
-			r = r_;
+			pixel_format::r = r_;
 		}
 
 		byte get_green() const
 		{
-			return g;
+			return pixel_format::g;
 		}
 		
 		void set_green(byte g_)
 		{
-			g = g_;
+			pixel_format::g = g_;
 		}
 
 		byte get_blue() const
 		{
-			return b;
+			return pixel_format::b;
 		}
 
 		void set_blue(byte b_)
 		{
-			b = b_;
+			pixel_format::b = b_;
 		}
 
 		word get_alpha() const
 		{
-			return a + 1;
+			return pixel_format::a + 1;
 		}
 
 		void set_alpha(word a_)
 		{
 			assert(a_ != 0);
-			a = static_cast<byte>((a_ - 1) & 0xff);
+			pixel_format::a = static_cast<byte>((a_ - 1) & 0xff);
 		}
 
-		bool operator==(const pixel& rhs) const
+		uint32 get_bit_representaion() const
+		{
+			return reinterpret_cast<const uint32>(*this);
+		}
+
+		void set_bit_representation(uint32 value)
+		{
+			this->operator=(reinterpret_cast<const pixel_type>(value));
+		}
+		
+		bool operator==(const pixel_type& rhs) const
 		{
 			return
 				this->r == rhs.r &&
@@ -168,182 +250,23 @@ namespace risa_gl
 	};
 
 	/**
-	 * BGRAピクセルクラス
+	 * デフォルトピクセルクラスのエイリアス
 	 */
-	class pixel_bgra
-	{
-	public:
-		enum {
-			blue_position = 0,
-			green_position = 1,
-			red_position = 2,
-			alpha_position = 3,
-		};
-
-	private:
-		byte b;
-		byte g;
-		byte r;
-		byte a;
-
-	public:
-		pixel_bgra():
-			b(), g(), r(), a(255)
-		{}
-
-		pixel_bgra(byte r_, byte g_, byte b_, byte a_ = 255):
-			b(b_), g(g_), r(r_), a(a_)
-		{}
-
-		pixel_bgra(const pixel_bgra& source):
-			b(source.b), g(source.g), r(source.r), a(source.a)
-		{}
-
-		~pixel_bgra()
-		{}
-
-		pixel_bgra& operator=(const pixel_bgra& source)
-		{
-			if (this != &source)
-			{
-				this->b = source.b;
-				this->g = source.g;
-				this->r = source.r;
-				this->a = source.a;
-			}
-
-			return *this;
-		}
-
-		byte get_red() const
-		{
-			return r;
-		}
-
-		void set_red(byte r_)
-		{
-			r = r_;
-		}
-
-		byte get_green() const
-		{
-			return g;
-		}
-		
-		void set_green(byte g_)
-		{
-			g = g_;
-		}
-
-		byte get_blue() const
-		{
-			return b;
-		}
-
-		void set_blue(byte b_)
-		{
-			b = b_;
-		}
-
-		byte get_alpha() const
-		{
-			return a;
-		}
-
-		void set_alpha(byte a_)
-		{
-			a = a_;
-		}
-	};
+	typedef class pixel_type<rgba> pixel;
 
 	/**
-	 * ABGRピクセルクラス
+	 * ピクセルコンバータ
 	 */
-	class pixel_abgr
+	template <typename SrcType, typename DestType>
+	DestType pixel_convert(const SrcType& src)
 	{
-	public:
-		enum {
-			alpha_position = 0,
-			blue_position = 1,
-			green_position = 2,
-			red_position = 3,
-		};
-
-	private:
-		byte a;
-		byte b;
-		byte g;
-		byte r;
-
-	public:
-		pixel_abgr():
-			a(255), b(), g(), r()
-		{}
-
-		pixel_abgr(byte r_, byte g_, byte b_, byte a_ = 255):
-			a(a_), b(b_), g(g_), r(r_)
-		{}
-
-		pixel_abgr(const pixel_abgr& source):
-			a(source.a), b(source.b), g(source.g), r(source.r)
-		{}
-
-		~pixel_abgr()
-		{}
-
-		pixel_abgr& operator=(const pixel_abgr& source)
-		{
-			if (this != &source)
-			{
-				this->a = source.a;
-				this->b = source.b;
-				this->g = source.g;
-				this->r = source.r;
-			}
-
-			return *this;
-		}
-
-		byte get_red() const
-		{
-			return r;
-		}
-
-		void set_red(byte r_)
-		{
-			r = r_;
-		}
-
-		byte get_green() const
-		{
-			return g;
-		}
-		
-		void set_green(byte g_)
-		{
-			g = g_;
-		}
-
-		byte get_blue() const
-		{
-			return b;
-		}
-
-		void set_blue(byte b_)
-		{
-			b = b_;
-		}
-
-		byte get_alpha() const
-		{
-			return a;
-		}
-
-		void set_alpha(byte a_)
-		{
-			a = a_;
-		}
+		return DestType(src.get_red(),
+						src.get_green(),
+						src.get_blue(),
+						src.get_alpha());
 	};
+
+
 };
 
 #endif /* RISA_PIXEL_HPP_ */

@@ -24,7 +24,7 @@ LIBS +=-lcppunit
 
 all: $(TARGET)
 
-tests: all
+check: all
 	./$(TARGET)$(EXT)
 
 $(TARGET): $(OBJS)

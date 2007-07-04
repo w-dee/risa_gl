@@ -222,15 +222,15 @@ namespace risa_gl
 		};
 
 		/**
-		 * 対象のイテレータから明るさを取り出すセレクタ
+		 * 対象のイテレータから不透明度を取り出すセレクタ
 		 */
-		class get_brightness_method_selecter
+		class get_opacity_method_selecter
 		{
 		public:
 			template <typename iterator_type>
 			int operator()(iterator_type itor)
 			{
-				return itor->get_luminance();
+				return itor->get_opacity();
 			}
 		};
 
