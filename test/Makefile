@@ -22,13 +22,13 @@ LIBS +=-lcppunit
 
 .PHONY: clean depend version
 
-all: $(TARGET)
+all: $(TARGET)$(EXT)
 
 check: all
 	./$(TARGET)$(EXT)
 
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
+$(TARGET)$(EXT): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET)$(EXT) $(OBJS) $(LIBS)
 
 %.d: %.cpp
 	$(CXX) -I$(INCLUDES) -MM -MT $*.o $< > $@
