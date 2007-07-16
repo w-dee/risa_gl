@@ -1,0 +1,35 @@
+.color = .r + .g + .b
+.all = .r + .g + .b + .a
+.a = opacity
+.r = red
+.g = green
+.b = blue
+.o = 8bpp pixel
+
+* ユニバーサルトランジション
+ * result = src.all * .o + dest.all * (256 - .o)
+ * アルファ値考慮合成
+ * 加算アルファ合成
+
+* カラーマップ
+ * result = src.o * dest.all
+  * src.oを写像するパターンが６４階調と２５６階調
+  * 不透明度によって最適化
+  * result.a = src.a
+  * result.a = non determine
+
+* 不透明度コピー
+ * result = dest.color + src.a
+
+* 色コピー
+ * result = src.color + dest.a
+
+* アルファ合成
+ * result = dest.color * (256 - src.a) + src.color * src.a
+
+* 
+
+* result = dest.color + src.a; 
+* result = src.color + dest.a;
+* reuslt = src.color + dest.o;
+*
