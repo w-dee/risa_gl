@@ -18,6 +18,8 @@ namespace risa_gl
 			opaque_position = 0,
 		};
 
+		typedef opaque self_type;
+
 	private:
 		byte y;
 
@@ -71,6 +73,8 @@ namespace risa_gl
 			alpha_position = 3,
 		};
 
+		typedef rgba self_type;
+
 		rgba():
 			r(), g(), b(), a(255)
 		{}
@@ -113,6 +117,8 @@ namespace risa_gl
 			blue_position = 2,
 			alpha_position = 3,
 		};
+
+		typedef agbr self_type;
 
 		agbr():
 			a(255), b(), g(), r()
@@ -158,6 +164,9 @@ namespace risa_gl
 			blue_position = pixel_format::blue_position,
 			alpha_position = pixel_format::alpha_position,
 		};
+
+		typedef pixel_type self_type;
+		typedef pixel_format base_type;
 
 		pixel_type():
 			pixel_format()

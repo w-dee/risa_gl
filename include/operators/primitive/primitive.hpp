@@ -11,53 +11,50 @@ namespace risa_gl
 	namespace primitive
 	{
 		/**
-		 * 写像スケールマップ
-		 */
-		template <int min_value, int max_value,
-				  int mapped_min = 1, int mapped_max = 256>
-		class scaler
-		{
-		public:
-			int operator()(int value) const
-			{
-				return ((value - min_value) * (mapped_max - mapped_min)) /
-					(max_value - min_value) + mapped_min;
-			}
-		};
-
-		/**
-		 * アルファ
-		 */
-		template <typename target_selecter,
-				  typename method_selecter,
-				  typename scale_factor>
-		class alpha_factor
-		{
-		public:
-			template <typename src_itor_t,
-					  typename dest_itor_t>
-			int operator()(src_itor_t src,
-							dest_itor_t dest) const
-			{
-				return scale_factor()
-					 (method_selecter()(target_selecter()(src, dest)));
-			}
-		};
-
-		/**
 		 * ブレンドテンプレート
 		 */
 
 		/**
-		 * 混合テンプレート(サチュレーションなし)
+		 * 混合テンプレート
+		 *
+		 * @param alpha_policy
+		 *  nopかresultのalpha演算
+		 *  
+		 * @param compute_factor
+		 *  saturationや定数項
+		 *  
+		 * @param src_alpha_factor
+		 *  src color演算時に適用するalpha値演算
+		 * 
+		 * @param dest_alpha_factor
+		 *  dest color演算時に適用するalpha値演算
+		 *  
 		 */
-		template <typename source_factor,
-				  typename source_alpha_factor,
-				  typename destination_factor,
-				  typename destination_alpha_factor>
-		class blend
+		template <typename alpha_policy,
+				  typename compute_factor,
+				  typename src_alpha_factor,
+				  typename dest_alpha_factor>
+		class alpha_blend
 		{
 		public:
+			/**
+			 * Porter-Diff color composite
+			 * Cr = f(Cs*Fs + Cd*Fd)
+			 * Ar = f(As*Fs + Ad*Fd)
+			 *
+			 * Cd演算はbit_representation()からのパック演算で処理
+			 * 各種演算の違いはfactorで埋め合わせ
+			 * f(): saturation, 定数置換
+			 * Cs: source color
+			 * Cd: destination color
+			 * Cr: result color
+			 * As: source alpha
+			 * Ad: destination alpha
+			 * Ar: result alpha
+			 *
+			 *
+			 */
+
 			template <typename src_itor_t,
 					  typename dest_itor_t,
 					  typename result_itor_t>
@@ -65,22 +62,30 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				result->set_red((src->get_red() *
-								 source_factor()(src, dest) +
-								 dest->get_red() *
-								 destination_factor()(src, dest)) >> 8);
-				result->set_green((src->get_green() *
-								   source_factor()(src, dest) +
-								   dest->get_green() *
-								   destination_factor()(src, dest)) >> 8);
-				result->set_blue((src->get_blue() *
-								  source_factor()(src, dest) +
-								  dest->get_blue() *
-								  destination_factor()(src, dest)) >> 8);
-				result->set_alpha((src->get_alpha() *
-								   source_alpha_factor()(src, dest) +
-								   dest->get_alpha() *
-								   destination_alpha_factor()(src, dest)) >> 8);
+
+				const risa_gl::uint32 src_pixel =
+					src->get_bit_representaion();
+				const risa_gl::uint32 dest_pixel =
+					dest->get_bit_representaion();
+
+				// pixelのパック演算
+				risa_gl::uint32 res_pixel =
+					compute_factor()((((src_pixel & 0x00ff00ff) *
+									   src_alpha_factor()(src, dest)) >> 8) +
+									 (((dest_pixel & 0x00ff00ff) *
+									   dest_alpha_factor()(src, dest)) >> 8)) |
+					compute_factor()(((((dest_pixel & 0xff00ff00) >> 8) *
+									   dest_alpha_factor()(src, dest)) >> 8) +
+									 ((((src_pixel & 0xff00ff00) >> 8) *
+									   src_alpha_factor()(src, dest)) >> 8))
+																	  << 8;
+
+				// 結果セット
+				result->set_bit_representation(res_pixel);
+
+				// alpha値をpolicyに従いセット
+				policy
+
 			}
 		};
 
@@ -143,49 +148,6 @@ namespace risa_gl
 				result->set_green((src->get_green() * alpha_value) >> 8);
 				result->set_blue((src->get_blue() * alpha_value) >> 8);
 				result->set_alpha((src->get_alpha() * alpha_value) >> 8);
-			}
-		};
-
-		template <typename channel1_selecter,
-				  typename channel1_method_selecter,
-				  typename channel2_selecter,
-				  typename channel2_method_selecter,
-				  typename channel3_selecter,
-				  typename channel3_method_selecter,
-				  typename channel4_selecter,
-				  typename channel4_method_selecter>
-		class channel_copy
-		{
-		public:
-			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							dest_itor_t dest,
-							result_itor_t result) const
-			{
-				result->set_red(channel1_method_selecter()(
-									channel1_selecter()(src, dest)));
-				result->set_green(channel2_method_selecter()(
-									  channel2_selecter()(src, dest)));
-				result->set_blue(channel3_method_selecter()(
-									 channel3_selecter()(src, dest)));
-				result->set_alpha(channel4_method_selecter()(
-									  channel4_selecter()(src, dest)));
-			}
-		};
-
-		class clear
-		{
-		public:
-			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t,
-							dest_itor_t,
-							result_itor_t result) const
-			{
-				*result = typename result_itor_t::value_type(0, 0, 0, 1) ;
 			}
 		};
 	};
