@@ -2,7 +2,7 @@
 #define RISA_PRIMITIVE_HPP_
 #include "iterator.hpp"
 #include "risa_types.hpp"
-#include "saturation.hpp"
+#include "compute_factor.hpp"
 #include "selecter.hpp"
 #include "factor.hpp"
 
@@ -11,17 +11,16 @@ namespace risa_gl
 	namespace primitive
 	{
 		/**
-		 * ブレンドテンプレート
-		 */
-
-		/**
 		 * 混合テンプレート
 		 *
-		 * @param alpha_policy
-		 *  nopかresultのalpha演算
-		 *  
+		 * @param src_pixel_getter
+		 * src_itorからのピクセル値の取得抽象化
+		 *
+		 * @param dest_pixel_getter
+		 * dest_itorからのピクセル値の取得抽象化
+		 * 
 		 * @param compute_factor
-		 *  saturationや定数項
+		 *  saturationや定数項を導入するためのポイント
 		 *  
 		 * @param src_alpha_factor
 		 *  src color演算時に適用するalpha値演算
@@ -29,12 +28,19 @@ namespace risa_gl
 		 * @param dest_alpha_factor
 		 *  dest color演算時に適用するalpha値演算
 		 *  
+		 * @param alpha_policy
+		 *  nopかresultのalpha演算
+		 *
+		 *  @note 演算後の / 256 である >> 8部分は固定なので即値を返す場合は
+		 *   * 256 した値を与えてください
 		 */
-		template <typename alpha_policy,
+		template <typename src_pixel_getter,
+				  typename dest_pixel_getter,
 				  typename compute_factor,
 				  typename src_alpha_factor,
-				  typename dest_alpha_factor>
-		class alpha_blend
+				  typename dest_alpha_factor,
+				  typename alpha_policy>
+		class blend
 		{
 		public:
 			/**
@@ -44,7 +50,7 @@ namespace risa_gl
 			 *
 			 * Cd演算はbit_representation()からのパック演算で処理
 			 * 各種演算の違いはfactorで埋め合わせ
-			 * f(): saturation, 定数置換
+			 * f(): saturation, constant replacement
 			 * Cs: source color
 			 * Cd: destination color
 			 * Cr: result color
@@ -52,9 +58,10 @@ namespace risa_gl
 			 * Ad: destination alpha
 			 * Ar: result alpha
 			 *
-			 *
+			 * @note コンパイラの定数畳み込み最適化にどっぷり依存しています。
+			 * 畳み込めないコンパイラだとアレなコードが吐き出されますので
+			 * ご注意ください。
 			 */
-
 			template <typename src_itor_t,
 					  typename dest_itor_t,
 					  typename result_itor_t>
@@ -64,9 +71,9 @@ namespace risa_gl
 			{
 
 				const risa_gl::uint32 src_pixel =
-					src->get_bit_representaion();
+					src_pixel_getter()(src, dest);
 				const risa_gl::uint32 dest_pixel =
-					dest->get_bit_representaion();
+					dest_pixel_getter()(src, dest);
 
 				// pixelのパック演算
 				risa_gl::uint32 res_pixel =
@@ -84,7 +91,7 @@ namespace risa_gl
 				result->set_bit_representation(res_pixel);
 
 				// alpha値をpolicyに従いセット
-				policy
+				policy()(
 
 			}
 		};
