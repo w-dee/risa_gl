@@ -7,6 +7,37 @@ namespace risa_gl
 {
 	namespace primitive
 	{
+		class nop_setter
+		{
+		public:
+			template <typename result_itor_t>
+			void operator()(result_itor_t, risa_gl::uint32) const
+			{
+			}
+		};
+
+		template <risa_gl::uint32 value>
+		class constant_setter
+		{
+		public:
+			template <typename result_itor_t>
+			void operator()(result_itor_t result, risa_gl::uint32) const
+			{
+				result->set_bit_representation(value);
+			}
+		};
+
+		class bit_setter
+		{
+		public:
+			template <typename result_itor_t>
+			void operator()(result_itor_t result,
+							risa_gl::uint32 value) const
+			{
+				result->set_bit_representation(value);
+			}
+		};
+
 		class null_getter
 		{
 		public:
@@ -15,6 +46,18 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t, dest_itor_t) const
 			{
 				return 0;
+			}
+		};
+
+		template <risa_gl::uint32 pixel_bits>
+		class constant_getter
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t, dest_itor_t) const
+			{
+				return pixel_bits;
 			}
 		};
 
@@ -29,6 +72,7 @@ namespace risa_gl
 			{
 				return selecter()(src, dest)->get_bits_representation();
 			}
+		};
 	};
 };
 

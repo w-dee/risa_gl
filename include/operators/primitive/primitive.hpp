@@ -12,12 +12,30 @@ namespace risa_gl
 	{
 		/**
 		 * 混合テンプレート
+		 * 
+		 * Porter-Diff color composite
+		 * Cr = f(Cs*Fs + Cd*Fd)
+		 * Ar = f(As*Fs + Ad*Fd)
+		 *
+		 * Cd演算はbit_representation()からのパック演算で処理
+		 * 各種演算の違いはfactorで埋め合わせ
+		 * f(): saturation, constant replacement
+		 * Cs: source color
+		 * Cd: destination color
+		 * Cr: result color
+		 * As: source alpha
+		 * Ad: destination alpha
+		 * Ar: result alpha
+		 *
 		 *
 		 * @param src_pixel_getter
 		 * src_itorからのピクセル値の取得抽象化
 		 *
 		 * @param dest_pixel_getter
 		 * dest_itorからのピクセル値の取得抽象化
+		 *
+		 * @param result_pixel_setter
+		 * 計算されたピクセル値の設定抽象化
 		 * 
 		 * @param compute_factor
 		 *  saturationや定数項を導入するためのポイント
@@ -28,7 +46,7 @@ namespace risa_gl
 		 * @param dest_alpha_factor
 		 *  dest color演算時に適用するalpha値演算
 		 *  
-		 * @param alpha_policy
+		 * @param alpha_calculate_policy
 		 *  nopかresultのalpha演算
 		 *
 		 *  @note 演算後の / 256 である >> 8部分は固定なので即値を返す場合は
@@ -36,31 +54,17 @@ namespace risa_gl
 		 */
 		template <typename src_pixel_getter,
 				  typename dest_pixel_getter,
+				  typename result_pixel_setter,
 				  typename compute_factor,
 				  typename src_alpha_factor,
 				  typename dest_alpha_factor,
-				  typename alpha_policy>
+				  typename alpha_calculate_policy>
 		class blend
 		{
 		public:
 			/**
-			 * Porter-Diff color composite
-			 * Cr = f(Cs*Fs + Cd*Fd)
-			 * Ar = f(As*Fs + Ad*Fd)
-			 *
-			 * Cd演算はbit_representation()からのパック演算で処理
-			 * 各種演算の違いはfactorで埋め合わせ
-			 * f(): saturation, constant replacement
-			 * Cs: source color
-			 * Cd: destination color
-			 * Cr: result color
-			 * As: source alpha
-			 * Ad: destination alpha
-			 * Ar: result alpha
-			 *
-			 * @note コンパイラの定数畳み込み最適化にどっぷり依存しています。
-			 * 畳み込めないコンパイラだとアレなコードが吐き出されますので
-			 * ご注意ください。
+			 * @note コンパイラの定数畳み込み最適化やインライン化にどっ
+			 * ぷり依存しています。
 			 */
 			template <typename src_itor_t,
 					  typename dest_itor_t,
@@ -75,7 +79,17 @@ namespace risa_gl
 				const risa_gl::uint32 dest_pixel =
 					dest_pixel_getter()(src, dest);
 
-				// pixelのパック演算
+				/**
+				 * pixelのパック演算
+				 * @note 最適化なしの一番genericなバージョン。必要なら
+				 * 部分特殊化などで必要なものを用意してください
+				 * 
+				 * @todo
+				 * サチュレーション考えたらビットシフトしてから加算じゃないと
+				 * オーバーフローして情報失ってしまうなぁ・・・
+				 * 用途に応じて実装変えたほうがいいのかもしれない
+				 *
+				 */
 				risa_gl::uint32 res_pixel =
 					compute_factor()((((src_pixel & 0x00ff00ff) *
 									   src_alpha_factor()(src, dest)) >> 8) +
@@ -88,13 +102,12 @@ namespace risa_gl
 																	  << 8;
 
 				// 結果セット
-				result->set_bit_representation(res_pixel);
+				pixel_setter()(result, res_pixel);
 
-				// alpha値をpolicyに従いセット
-				policy()(
-
+				alpha_calculate_policy()(result, src, dest);
 			}
 		};
+		
 
 		/**
 		 * 混合テンプレート(サチュレーションあり)
