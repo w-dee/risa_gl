@@ -5,7 +5,6 @@ namespace risa_gl
 {
 	namespace primitive
 	{
-		/* セレクタ */
 		/**
 		 * sourceを選択するセレクタ
 		 */

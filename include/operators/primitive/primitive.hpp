@@ -11,6 +11,30 @@ namespace risa_gl
 	namespace primitive
 	{
 		/**
+		 * 下位ビット側をマスクするファンクタ
+		 */
+		class lower_mask
+		{
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 value) const
+			{
+				return value & 0x00ff00ffU;
+			}
+		};
+
+		/**
+		 * 上位ビット側をマスクするファンクタ
+		 */
+		class higher_mask
+		{
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 value) const
+			{
+				return value & 0xff00ff00U;
+			}
+		};
+
+		/**
 		 * 混合テンプレート
 		 * 
 		 * Porter-Diff color composite
@@ -49,23 +73,62 @@ namespace risa_gl
 		 * @param alpha_calculate_policy
 		 *  nopかresultのalpha演算
 		 *
-		 *  @note 演算後の / 256 である >> 8部分は固定なので即値を返す場合は
-		 *   * 256 した値を与えてください
+		 * @note 各種テンプレートパラメータファンクタはデフォルトコン
+		 * ストラクタを持つ必要があります。パラメータを受け取る必要が
+		 * あるものに関してはその限りではありませんが、その場合、blend
+		 * ファンクタのインスタンス時にコンストラクタにそのパラメータ
+		 * を含めてやる必要があります。
+		 * 
+		 * @note 演算後の / 256 である >> 8部分は固定なので即値を返す
+		 * 場合は * 256 した値を与えてください
 		 */
-		template <typename src_pixel_getter,
-				  typename dest_pixel_getter,
-				  typename result_pixel_setter,
-				  typename compute_factor,
-				  typename src_alpha_factor,
-				  typename dest_alpha_factor,
-				  typename alpha_calculate_policy>
+		template <typename src_pixel_getter_t,
+				  typename dest_pixel_getter_t,
+				  typename result_pixel_setter_t,
+				  typename compute_factor_t,
+				  typename src_alpha_factor_t,
+				  typename dest_alpha_factor_t,
+				  typename alpha_calculate_policy_t>
 		class blend
 		{
-		public:
-			/**
-			 * @note コンパイラの定数畳み込み最適化やインライン化にどっ
-			 * ぷり依存しています。
+		private:
+			/*
+			 * 実行時にパラメタを与えられるように各種メソッドをメンバ
+			 * として保持。利用されない場合はインライン化と最適化で消
+			 * えるはず
 			 */
+			src_pixel_getter_t src_pixel_getter;
+			dest_pixel_getter_t dest_pixel_getter;
+			result_pixel_setter_t result_pixel_setter;
+			compute_factor_t compute_factor;
+			src_alpha_factor_t src_alpha_factor;
+			dest_alpha_factor_t dest_alpha_factor;
+			alpha_calculate_policy_t alpha_calculate_policy;
+
+		public:
+			blend(src_pixel_getter_t src_pixel_getter_ =
+					src_pixel_getter_t(),
+					dest_pixel_getter_t dest_pixel_getter_ =
+					dest_pixel_getter_t(),
+					result_pixel_setter_t result_pixel_setter_ =
+					result_pixel_setter_t(),
+					compute_factor_t compute_factor_ =
+					compute_factor_t(),
+					src_alpha_factor_t src_alpha_factor_ =
+					src_alpha_factor_t(),
+					dest_alpha_factor_t dest_alpha_factor_ =
+					dest_alpha_factor_t(),
+					alpha_calculate_policy_t alpha_calculate_policy_ =
+					alpha_calculate_policy_t()):
+				src_pixel_getter(src_pixel_getter_),
+				dest_pixel_getter(dest_pixel_getter_),
+				result_pixel_setter(result_pixel_setter_),
+				compute_factor(compute_factor_),
+				src_alpha_factor(src_alpha_factor_),
+				dest_alpha_factor(dest_alpha_factor_),
+				alpha_calculate_policy(alpha_calculate_policy_)
+			{}
+
 			template <typename src_itor_t,
 					  typename dest_itor_t,
 					  typename result_itor_t>
@@ -75,9 +138,9 @@ namespace risa_gl
 			{
 
 				const risa_gl::uint32 src_pixel =
-					src_pixel_getter()(src, dest);
+					src_pixel_getter(src, dest);
 				const risa_gl::uint32 dest_pixel =
-					dest_pixel_getter()(src, dest);
+					dest_pixel_getter(src, dest);
 
 				/**
 				 * pixelのパック演算
@@ -91,83 +154,21 @@ namespace risa_gl
 				 *
 				 */
 				risa_gl::uint32 res_pixel =
-					compute_factor()((((src_pixel & 0x00ff00ff) *
-									   src_alpha_factor()(src, dest)) >> 8) +
-									 (((dest_pixel & 0x00ff00ff) *
-									   dest_alpha_factor()(src, dest)) >> 8)) |
-					compute_factor()(((((dest_pixel & 0xff00ff00) >> 8) *
-									   dest_alpha_factor()(src, dest)) >> 8) +
-									 ((((src_pixel & 0xff00ff00) >> 8) *
-									   src_alpha_factor()(src, dest)) >> 8))
-																	  << 8;
+					compute_factor(((lower_mask()(src_pixel) *
+									   src_alpha_factor(src, dest))>>8) +
+									 ((lower_mask()(dest_pixel) *
+									   dest_alpha_factor(src, dest))>>8)) |
+					(compute_factor((((higher_mask()(dest_pixel)>>8) *
+											 dest_alpha_factor(src, dest))>>8) +
+							(((higher_mask()(src_pixel)>>8) *
+									src_alpha_factor(src, dest))>>8))
+							<<8);
 
 				// 結果セット
-				pixel_setter()(result, res_pixel);
+				pixel_setter(result, res_pixel);
 
-				alpha_calculate_policy()(result, src, dest);
-			}
-		};
-		
-
-		/**
-		 * 混合テンプレート(サチュレーションあり)
-		 */
-		template <typename source_factor,
-				  typename source_alpha_factor,
-				  typename destination_factor,
-				  typename destination_alpha_factor>
-		class saturation_blend
-		{
-		public:
-			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							dest_itor_t dest,
-							result_itor_t result) const
-			{
-				result->set_red(
-					saturate()((src->get_red() *
-								source_factor()(src, dest) +
-								dest->get_red() *
-								destination_factor()(src, dest)) >> 8));
-				result->set_green(
-					saturate()((src->get_green() *
-								source_factor()(src, dest) +
-								dest->get_green() *
-								destination_factor()(src, dest)) >> 8));
-				result->set_blue(
-					saturate()((src->get_blue() *
-								source_factor()(src, dest) +
-								dest->get_blue() *
-								destination_factor()(src, dest)) >> 8));
-				result->set_alpha(
-					saturate()((src->get_alpha() *
-								source_alpha_factor()(src, dest) +
-								dest->get_alpha() *
-								destination_alpha_factor()(src, dest)) >> 8));
-			}
-		};
-
-		/**
-		 * 別アルファチャネル混合テンプレート
-		 */
-		template <typename alpha_extract_factor>
-		class alternate_alpha_channel_blend
-		{
-		public:
-			template <typename src_itor_t,
-					  typename alpha_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							alpha_itor_t alpha,
-							result_itor_t result) const
-			{
-				const int alpha_value = alpha_extract_factor()(src, alpha);
-				result->set_red((src->get_red() * alpha_value) >> 8);
-				result->set_green((src->get_green() * alpha_value) >> 8);
-				result->set_blue((src->get_blue() * alpha_value) >> 8);
-				result->set_alpha((src->get_alpha() * alpha_value) >> 8);
+				// アルファ値の計算
+				alpha_calculate_policy(result, src, dest);
 			}
 		};
 	};

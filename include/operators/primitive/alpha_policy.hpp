@@ -3,7 +3,10 @@ namespace risa_gl
 {
 	namespace primitive
 	{
-		class not_calculate
+		/**
+		 * アルファ値非計算ポリシー
+		 */
+		class not_calculate_policy
 		{
 		public:
 			template <typename result_itor_t,
@@ -15,8 +18,12 @@ namespace risa_gl
 			{}
 		};
 
-		template <typename calulator>
-		class alpha_calculate
+		/**
+		 * アルファ値計算ポリシー
+		 * @param calculator
+		 */
+		template <typename calculator>
+		class alpha_calculate_policy
 		{
 		public:
 			template <typename result_itor_t,

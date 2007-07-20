@@ -7,24 +7,9 @@ namespace risa_gl
 {
 	namespace primitive
 	{
-		class lower_mask_factor
-		{
-		public:
-			risa_gl::uint32 operator()(risa_gl::uint32 value) const
-			{
-				return value & 0x00ff00ffU;
-			}
-		};
-
-		class higher_mask_factor
-		{
-		public:
-			risa_gl::uint32 operator()(risa_gl::uint32 value) const
-			{
-				return value & 0xff00ff00U;
-			}
-		};
-
+		/**
+		 * サチュレーションファクタ
+		 */
 		class saturation_factor
 		{
 		public:
@@ -36,6 +21,9 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * 何もしないファクタ
+		 */
 		class nop_factor
 		{
 		public:

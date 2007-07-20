@@ -7,6 +7,12 @@ namespace risa_gl
 {
 	namespace operators
 	{
+		/**
+		 * アルファブレンディング
+		 * @note destのアルファ値は考慮されない
+		 * @note 計算後のアルファ
+		 *
+		 */
 		class alpha_blend_operator
 		{
 		public:

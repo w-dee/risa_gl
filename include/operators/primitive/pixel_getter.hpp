@@ -7,6 +7,9 @@ namespace risa_gl
 {
 	namespace primitive
 	{
+		/**
+		 * 何もしないsetter
+		 */
 		class nop_setter
 		{
 		public:
@@ -16,6 +19,9 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * コンパイル時定数setter
+		 */
 		template <risa_gl::uint32 value>
 		class constant_setter
 		{
@@ -27,6 +33,33 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * 実行時定数setter
+		 */
+		class dynamic_constant_setter
+		{
+		private:
+			dynamic_constant_setter();
+			const risa_gl::uint32 value;
+		public:
+			dynamic_constant_setter(const dynamic_constant_setter& src):
+				value(src.value)
+			{}
+
+			dynamic_constant_setter(const risa_gl::uint32 value_):
+				value(value_)
+			{}
+
+			template <typename result_itor_t>
+			void operator()(result_itor_t result, risa_gl::unit32)
+			{
+				result->set_bit_representation(value);
+			}
+		};
+
+		/**
+		 * set_bit_representationを使って値を設定する
+		 */
 		class bit_setter
 		{
 		public:
@@ -38,7 +71,10 @@ namespace risa_gl
 			}
 		};
 
-		class null_getter
+		/**
+		 * 0値を取得するgetter
+		 */
+		class zero_getter
 		{
 		public:
 			template <typename src_itor_t,
@@ -49,6 +85,9 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * コンパイル定数値を取得するgetter
+		 */
 		template <risa_gl::uint32 pixel_bits>
 		class constant_getter
 		{
@@ -61,6 +100,34 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * 実行時定数値を取得するgetter
+		 */
+		class dynamic_constant_getter
+		{
+		private:
+			dynamic_constant_getter();
+			const risa_gl::uint32 value;
+		public:
+			dynamic_constant_getter(const dynamic_constant_getter& src):
+				value(src.value)
+			{}
+
+			dynamic_constant_getter(const risa_gl::uint32 value_):
+				value(value_)
+			{}
+
+			template <typename result_itor_t>
+			risa_gl::uint32 operator()(result_itor_t result) const
+			{
+				return result->get_bit_representation(value);
+			}
+		};
+
+		/**
+		 * selectorを利用して対象をbit_representationメソッドを使って
+		 * 値を取得するgetter
+		 */
 		template <typename selector>
 		class bits_getter
 		{

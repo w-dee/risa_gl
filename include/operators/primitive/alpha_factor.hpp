@@ -7,6 +7,9 @@ namespace risa_gl
 {
 	namespace primitive
 	{
+		/**
+		 * 値をそのまま適用するアルファファクタ
+		 */
 		class identity_alpha_factor
 		{
 		public:
@@ -19,6 +22,9 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * アルファ値がゼロとして適用するアルファファクタ
+		 */
 		class zero_alpha_factor
 		{
 		public:
@@ -31,6 +37,11 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * 選択型アルファファクタ
+		 * @param selector srcかdestを指定するselector
+		 * @param method_selector アルファ値を取り出すmethod_selector
+		 */
 		template <typename selector,
 				  typename method_selector>
 		class alpha_factor
@@ -45,6 +56,11 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * 対象のアルファ値の補値をアルファ値として扱うアルファファクタ
+		 * @param selector srcかdestを指定するselector
+		 * @param method_selector アルファ値を取り出すmethod_selector
+		 */
 		template <typename selector,
 				  typename method_selector>
 		class one_minus_alpha_factor
