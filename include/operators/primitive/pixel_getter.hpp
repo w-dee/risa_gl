@@ -1,7 +1,7 @@
 #ifndef RISA_PIXEL_GETTER_HPP_
 #define RISA_PIXEL_GETTER_HPP_
 #include "risa_types.hpp"
-#include "selecter.hpp"
+#include "selector.hpp"
 
 namespace risa_gl
 {
@@ -61,7 +61,7 @@ namespace risa_gl
 			}
 		};
 
-		template <typename selecter>
+		template <typename selector>
 		class bits_getter
 		{
 		public:
@@ -70,7 +70,7 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				return selecter()(src, dest)->get_bits_representation();
+				return selector()(src, dest)->get_bits_representation();
 			}
 		};
 	};

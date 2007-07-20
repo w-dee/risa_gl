@@ -31,8 +31,8 @@ namespace risa_gl
 			}
 		};
 
-		template <typename selecter,
-				  typename method_selecter>
+		template <typename selector,
+				  typename method_selector>
 		class alpha_factor
 		{
 		public:
@@ -41,12 +41,12 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				return method_selecter()(selecter()(src, dest));
+				return method_selector()(selector()(src, dest));
 			}
 		};
 
-		template <typename selecter,
-				  typename method_selecter>
+		template <typename selector,
+				  typename method_selector>
 		class one_minus_alpha_factor
 		{
 		public:
@@ -55,7 +55,7 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				return 256 - method_selecter()(selecter()(src, dest));
+				return 256 - method_selector()(selector()(src, dest));
 			}
 		};
 	};

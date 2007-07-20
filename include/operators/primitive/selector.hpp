@@ -1,5 +1,5 @@
-#ifndef RISA_SELECTER_HPP_
-#define RISA_SELECTER_HPP_
+#ifndef RISA_SELECTOR_HPP_
+#define RISA_SELECTOR_HPP_
 
 namespace risa_gl
 {
@@ -9,7 +9,7 @@ namespace risa_gl
 		/**
 		 * sourceを選択するセレクタ
 		 */
-		class source_selecter
+		class source_selector
 		{
 		public:
 			template <typename source_type, typename destination_type>
@@ -22,7 +22,7 @@ namespace risa_gl
 		/**
 		 * destinationを選択するセレクタ
 		 */
-		class destination_selecter
+		class destination_selector
 		{
 		public:
 			template <typename source_type, typename destination_type>
@@ -34,4 +34,4 @@ namespace risa_gl
 	};
 };
 
-#endif /* RISA_SELECTER_HPP_ */
+#endif /* RISA_SELECTOR_HPP_ */

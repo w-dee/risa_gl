@@ -3,7 +3,7 @@
 #include "iterator.hpp"
 #include "risa_types.hpp"
 #include "compute_factor.hpp"
-#include "selecter.hpp"
+#include "selector.hpp"
 #include "factor.hpp"
 
 namespace risa_gl
