@@ -1,50 +1,64 @@
 #ifndef RISA_OPERATORS_COLORMAP_HPP_
 #define RISA_OPERATORS_COLORMAP_HPP_
 #include "operators/primitive/primitive.hpp"
+#include "operators/building_blocks.hpp"
+#include "pixel.hpp"
 
 namespace risa_gl
 {
 	namespace operators
 	{
 		/**
-		 * 65階調透明度を拡張して適用するオペレータ
+		 * カラーマップオペレータ
+		 * result = src.a * constant color を実行する
+		 *
+		 * * カラーマップ (8bppの不透明度入力を元に特定の色をその不透明
+		 * 度で描画) (以下の2*2*4=16種類)
+		 * * 65階調(文字描画用) と 256階調(通常用) 
+		 * * opacity=255とopacity=255以外の2種類 
+		 *   ? これ、opacity=255だとcolor copyと変わらんのでは?
+		 * * sourceを完全不透明であると見なし、sourceのアルファ値を保
+         *         存して合成
+		 *   r = (s.r * o, s.g * o, s.b * o, s.a)
+		 * * sourceを完全不透明であると見なし、sourceのアルファ値を破
+         *    壊して合成 (上のやつより高速)
+		 *   r = (s.r * o, s.g * o, s.b * o, ?)
+		 * * sourceのアルファ値をアルファ合成用のアルファ値と見なして合成
+		 *   r = r* 1-s.a +
+		 *     (s.r * s.a * o, s.g * s.a * o, s.b * s.a * o, s.a * o(?))
+		 * * sourceのアルファ値を加算アルファ合成用のアルファ値と見なして合成
+		 *   r = sat(r +
+		 *     (s.r * s.a * o, s.g * s.a * o, s.b * s.a * o, s.a * o(?)))
 		 */
-		class colormap_65level_operator
-		{
-		public:
-			typedef primitive::alpha_factor<
-				primitive::destination_target_selecter,
-				primitive::get_opacity_method_selecter,
-				primitive::scaler<1, 65> >
-			dest_brightness_factor;
-				
-			typedef primitive::alternate_alpha_channel_blend<
-				dest_brightness_factor>
-			colormap;
-
-			template <typename src_itor_t,
-					  typename alpha_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							alpha_itor_t alpha,
-							result_itor_t result) const
-			{
-				colormap()(src, alpha, result);
-			}
-		};
 
 		/**
-		 * 透明度を適用するオペレータ
+		 * sourceが65levelの透過性を持つカラーマップ処理。
+		 * destは考慮されない
 		 */
-		class colormap_operator
+		class color_copy_65level_colormap
 		{
-		public:
-			typedef primitive::alpha_factor<
-				primitive::destination_target_selecter,
-				primitive::get_opacity_method_selecter,
-				primitive::scaler<1, 256> >
-			colormap;
+		private:
+			typedef blend<dynamic_constant_getter,
+						  zero_getter,
+						  bit_setter,
+						  nop_factor,
+						  scaled_destination_opacity_getter<1, 65, 1, 256>,
+						  zero_alpha_factor,
+						  not_calculate_policy>
+			colormap_operator_type;
+			colormap_operator_type blender;
 
+			color_copy_65level_colormap();
+		public:
+			color_copy_65level_colormap(const pixel& color):
+				blender(dynamic_constant_getter(color.get_bit_representation()))
+			{}
+			
+			/**
+			 * @param src 混合ソース
+			 * @param dest opaque値
+			 * @param result 結果
+			 */
 			template <typename src_itor_t,
 					  typename dest_itor_t,
 					  typename result_itor_t>
@@ -52,9 +66,9 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				colormap()(src, dest, result);
+				blender(src, dest, result);
 			}
-		};									 
+		};
 	};
 };
 

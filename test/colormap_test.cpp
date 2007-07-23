@@ -8,7 +8,7 @@
 class colormap_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(colormap_test);
-	CPPUNIT_TEST(colormap_blend_test);
+	CPPUNIT_TEST(colormap_copy_65level_test);
 	CPPUNIT_TEST_SUITE_END();
 
 	template <typename container_type>
@@ -27,7 +27,7 @@ class colormap_test : public CppUnit::TestFixture
 	};
 		
 public:
-	void colormap_blend_test()
+	void colormap_copy_65level_test()
 	{
 		using namespace risa_gl;
 
@@ -42,19 +42,11 @@ public:
 		std::generate(color_map.begin(), color_map.end(),
 					  generator<opaque>(opaque(65)));
 
-		operators::colormap_65level_operator oper;
+		operators::color_copy_65level_colormap oper(pixel(128, 128, 128, 129));
 		oper(pixels.begin(), color_map.begin(), pixels.begin());
-		CPPUNIT_ASSERT(*pixels.begin() == pixel(128, 128, 128, 256));
-
-		std::generate(color_map.begin(), color_map.end(),
-					  generator<opaque>(opaque(1)));
-		oper(pixels.begin(), color_map.begin(), pixels.begin());
-		CPPUNIT_ASSERT(*pixels.begin() == pixel(0, 0, 0, 1));
-
-		std::generate(color_map.begin(), color_map.end(),
-					  generator<opaque>(opaque(65)));
-		oper(pixels.begin(), color_map.begin(), pixels.begin());
-		CPPUNIT_ASSERT(*pixels.begin() == pixel(0, 0, 0, 1));
+		CPPUNIT_ASSERT(pixels.begin()->get_red() == 128);
+		CPPUNIT_ASSERT(pixels.begin()->get_green() == 128);
+		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 128);
 	}
 };
 

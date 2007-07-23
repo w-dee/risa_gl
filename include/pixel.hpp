@@ -238,14 +238,14 @@ namespace risa_gl
 			pixel_format::a = static_cast<byte>((a_ - 1) & 0xff);
 		}
 
-		uint32 get_bit_representaion() const
+		uint32 get_bit_representation() const
 		{
-			return reinterpret_cast<const uint32>(*this);
+			return *reinterpret_cast<const uint32* const>(this);
 		}
 
-		void set_bit_representation(uint32 value)
+		void set_bit_representation(const uint32 value)
 		{
-			this->operator=(reinterpret_cast<const pixel_type>(value));
+			*reinterpret_cast<uint32* const>(this) = value;
 		}
 		
 		bool operator==(const pixel_type& rhs) const

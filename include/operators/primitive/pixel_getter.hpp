@@ -51,7 +51,7 @@ namespace risa_gl
 			{}
 
 			template <typename result_itor_t>
-			void operator()(result_itor_t result, risa_gl::unit32)
+			void operator()(result_itor_t result, risa_gl::uint32)
 			{
 				result->set_bit_representation(value);
 			}
@@ -117,10 +117,12 @@ namespace risa_gl
 				value(value_)
 			{}
 
-			template <typename result_itor_t>
-			risa_gl::uint32 operator()(result_itor_t result) const
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t,
+									   dest_itor_t) const
 			{
-				return result->get_bit_representation(value);
+				return value;
 			}
 		};
 
@@ -137,7 +139,20 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				return selector()(src, dest)->get_bits_representation();
+				return selector()(src, dest)->get_bit_representation();
+			}
+		};
+
+		template <typename selector, typename method_selecter>
+		class alpha_getter
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t src,
+									   dest_itor_t dest) const
+			{
+				return method_selecter()(selector()(src, dest));
 			}
 		};
 	};

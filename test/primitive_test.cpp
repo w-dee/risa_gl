@@ -36,17 +36,6 @@ public:
 			*itor = pixel(128, 128, 128, 129);
 	}
 
-	void scaler_test()
-	{
-		using namespace risa_gl::primitive;
-		scaler<0, 64, 1, 256> scale;
-
-		int i = 0;
-		CPPUNIT_ASSERT(scale(i) == 1);
-		i = 64;
-		CPPUNIT_ASSERT(scale(i) == 256);
-	}
-
 	void blend_test()
 	{
 		using namespace risa_gl::primitive;

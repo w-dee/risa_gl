@@ -29,9 +29,9 @@ namespace risa_gl
 			template <typename result_itor_t,
 					  typename src_itor_t,
 					  typename dest_itor_t>
-			void operator()(result_itor_t,
-							src_itor_t,
-							dest_itor_t) const
+			void operator()(result_itor_t result,
+							src_itor_t src,
+							dest_itor_t dest) const
 			{
 				result->set_alpha(calculator()(src, dest));
 			}

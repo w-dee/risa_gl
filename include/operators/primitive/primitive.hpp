@@ -4,7 +4,7 @@
 #include "risa_types.hpp"
 #include "compute_factor.hpp"
 #include "selector.hpp"
-#include "factor.hpp"
+#include "alpha_factor.hpp"
 
 namespace risa_gl
 {
@@ -106,6 +106,16 @@ namespace risa_gl
 			alpha_calculate_policy_t alpha_calculate_policy;
 
 		public:
+			blend(const blend& source):
+				src_pixel_getter(source.src_pixel_getter),
+				dest_pixel_getter(source.dest_pixel_getter),
+				result_pixel_setter(source.result_pixel_setter),
+				compute_factor(source.compute_factor),
+				src_alpha_factor(source.src_alpha_factor),
+				dest_alpha_factor(source.dest_alpha_factor),
+				alpha_calculate_policy(source.alpha_calculate_policy)
+			{}
+				
 			blend(src_pixel_getter_t src_pixel_getter_ =
 					src_pixel_getter_t(),
 					dest_pixel_getter_t dest_pixel_getter_ =
@@ -165,7 +175,7 @@ namespace risa_gl
 							<<8);
 
 				// 結果セット
-				pixel_setter(result, res_pixel);
+				result_pixel_setter(result, res_pixel);
 
 				// アルファ値の計算
 				alpha_calculate_policy(result, src, dest);
