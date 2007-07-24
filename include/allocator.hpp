@@ -25,15 +25,6 @@ namespace risa_gl {
 		typedef void* allocated_pointer_type;
 		typedef void* aligned_ponter_type;
 
-		typedef std::map<allocated_pointer_type, aligned_ponter_type>
-		allocation_mapper_type;
-
-		allocation_mapper_type& get_alloc_map()
-		{
-			static allocation_mapper_type alloc_map;
-			return alloc_map;
-		}
-		
 	public:
 		template <typename U>
 		struct rebind
@@ -54,29 +45,35 @@ namespace risa_gl {
 		pointer allocate(size_type n, const void* = 0) throw(std::bad_alloc)
 		{
 			const size_type aligned_allocate_size =
-				(n * sizeof(value_type)) + aligned_size;
+				aligned_size + (n * sizeof(value_type)) + aligned_size;
 
 			allocated_pointer_type p =
 				reinterpret_cast<allocated_pointer_type>
 				(new byte[aligned_allocate_size]);
 
-			size_type offset = reinterpret_cast<size_type>(p) % aligned_size;
+			size_type offset =
+				(reinterpret_cast<size_type>(p)+aligned_size) % aligned_size;
 
 			aligned_ponter_type aligned_pointer = p;
 			if (offset != 0)
 				aligned_pointer = reinterpret_cast<byte*>(p) +
 					aligned_size - offset;
 			
-			get_alloc_map()[aligned_pointer] = p;
+			/* save original allocation pointer. */
+			size_type* org_pointer =
+				reinterpret_cast<size_type*>(aligned_pointer);
+			--org_pointer;
+			*org_pointer = reinterpret_cast<size_type>(p);
 
 			return reinterpret_cast<pointer>(aligned_pointer);
 		}
 
 		void deallocate(pointer p, size_type /*n*/)
 		{
-			allocated_pointer_type allocate_pointer = get_alloc_map()[p];
-			delete[] reinterpret_cast<byte*>(allocate_pointer);
-			get_alloc_map().erase(p);
+			size_type* org_pointer = reinterpret_cast<size_type*>(p);
+			--org_pointer;
+			byte* allocate_pointer = reinterpret_cast<byte*>(org_pointer);
+			delete[] allocate_pointer;
 		}
 
 		size_type max_size() const
