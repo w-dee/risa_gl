@@ -23,7 +23,7 @@ namespace risa_gl {
 
 	private:
 		typedef void* allocated_pointer_type;
-		typedef void* aligned_ponter_type;
+		typedef void* aligned_pointer_type;
 
 	public:
 		template <typename U>
@@ -54,7 +54,9 @@ namespace risa_gl {
 			size_type offset =
 				(reinterpret_cast<size_type>(p)+aligned_size) % aligned_size;
 
-			aligned_ponter_type aligned_pointer = p;
+			aligned_pointer_type aligned_pointer =
+				reinterpret_cast<aligned_pointer_type>
+				(reinterpret_cast<byte*>(p) + aligned_size);
 			if (offset != 0)
 				aligned_pointer = reinterpret_cast<byte*>(p) +
 					aligned_size - offset;
@@ -72,7 +74,7 @@ namespace risa_gl {
 		{
 			size_type* org_pointer = reinterpret_cast<size_type*>(p);
 			--org_pointer;
-			byte* allocate_pointer = reinterpret_cast<byte*>(org_pointer);
+			byte* allocate_pointer = reinterpret_cast<byte*>(*org_pointer);
 			delete[] allocate_pointer;
 		}
 
