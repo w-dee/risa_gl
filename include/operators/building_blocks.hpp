@@ -4,7 +4,7 @@
 #include "operators/primitive/alpha_policy.hpp"
 #include "operators/primitive/compute_factor.hpp"
 #include "operators/primitive/alpha_factor.hpp"
-#include "operators/primitive/pixel_getter.hpp"
+#include "operators/primitive/pixel_property.hpp"
 #include "operators/primitive/selector.hpp"
 #include "operators/primitive/method_selector.hpp"
 
