@@ -32,10 +32,12 @@ namespace risa_gl
 		 */
 
 		/**
-		 * sourceが65levelの透過性を持つカラーマップ処理。
-		 * destは考慮されない
+		 * destinationが65levelの透過性を持つカラーマップ処理。
+		 * alphaは不定
+		 * destinationはopaqueであること
+		 * r = color.rgba * scale(dest.opaque)
 		 */
-		class color_copy_65level_colormap
+		class colormap_6bpp_transparency
 		{
 		private:
 			typedef blend<dynamic_constant_getter,
@@ -48,16 +50,99 @@ namespace risa_gl
 			colormap_operator_type;
 			colormap_operator_type blender;
 
-			color_copy_65level_colormap();
+			colormap_6bpp_transparency();
 		public:
-			color_copy_65level_colormap(const pixel& color):
+			colormap_6bpp_transparency(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
 			
 			/**
-			 * @param src 混合ソース
+			 * @param src 無視される
 			 * @param dest opaque値
-			 * @param result 結果
+			 * @param result 結果を受け取るイテレータ
+			 */
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+
+		/**
+		 * destinationが65levelの透過性を持つカラーマップ処理。
+		 * alphaは保存
+		 * destinationはopaqueであること
+		 * r = color.rgb * scale(dest.opaque)
+		 */
+		class colormap_6bpp_transparency_save_alpha
+		{
+		private:
+			typedef blend<dynamic_constant_getter,
+						  zero_getter,
+						  bit_setter,
+						  nop_factor,
+						  scaled_destination_opacity_getter<1, 65, 1, 256>,
+						  zero_alpha_factor,
+						  alpha_calculate_policy<
+				scaled_destination_opacity_getter<1, 65, 1, 256> > >
+			colormap_operator_type;
+			colormap_operator_type blender;
+
+			colormap_6bpp_transparency_save_alpha();
+		public:
+			colormap_6bpp_transparency_save_alpha(const pixel& color):
+				blender(dynamic_constant_getter(color.get_bit_representation()))
+			{}
+			
+			/**
+			 * @param src 設定する透過度を持つイテレータ
+			 * @param dest opaque値
+			 * @param result 結果を受け取るイテレータ
+			 */
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+
+		/**
+		 * destinationが65levelの透過性を持つカラーマップ-アルファブレンド処理。
+		 * alphaは今のところ破壊される
+		 * r = color.rgb * scale(dest.opaque) +
+		 *     source.rgb * (1-scale(dest.opaque))
+		 */
+		class colormap_6bpp_alpha_blend
+		{
+		private:
+			typedef blend<dynamic_constant_getter,
+						  source_getter,
+						  bit_setter,
+						  nop_factor,
+						  scaled_destination_opacity_getter<1, 65, 1, 256>,
+						  scaled_invert_destination_opacity_getter<1, 65, 1, 256>,
+						  not_calculate_policy>
+			colormap_operator_type;
+			colormap_operator_type blender;
+
+			colormap_6bpp_alpha_blend();
+		public:
+			colormap_6bpp_alpha_blend(const pixel& color):
+				blender(dynamic_constant_getter(color.get_bit_representation()))
+			{}
+			
+			/**
+			 * @param src 設定する透過度を持つイテレータ
+			 * @param dest opaque値
+			 * @param result 結果を受け取るイテレータ
 			 */
 			template <typename src_itor_t,
 					  typename dest_itor_t,

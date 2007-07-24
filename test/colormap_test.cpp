@@ -8,7 +8,9 @@
 class colormap_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(colormap_test);
-	CPPUNIT_TEST(colormap_copy_65level_test);
+	CPPUNIT_TEST(colormap_6bpp_transparency_test);
+	CPPUNIT_TEST(colormap_6bpp_transparency_save_alpha_test);
+	CPPUNIT_TEST(colormap_6bpp_alpha_blend_test);
 	CPPUNIT_TEST_SUITE_END();
 
 	template <typename container_type>
@@ -27,7 +29,7 @@ class colormap_test : public CppUnit::TestFixture
 	};
 		
 public:
-	void colormap_copy_65level_test()
+	void colormap_6bpp_alpha_blend_test()
 	{
 		using namespace risa_gl;
 
@@ -42,7 +44,58 @@ public:
 		std::generate(color_map.begin(), color_map.end(),
 					  generator<opaque>(opaque(65)));
 
-		operators::color_copy_65level_colormap oper(pixel(128, 128, 128, 129));
+		operators::colormap_6bpp_alpha_blend
+			oper(pixel(255, 255, 255, 129));
+
+		// src(0.5, 0.5, 0.5, 1.0), color(1.0, 1.0, 1.0, 0.5), opacity(1.0)
+		// r = (1.0, 1.0, 1.0, ?)
+
+		oper(pixels.begin(), color_map.begin(), pixels.begin());
+		CPPUNIT_ASSERT(pixels.begin()->get_red() == 255);
+		CPPUNIT_ASSERT(pixels.begin()->get_green() == 255);
+		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 255);
+	}
+
+	void colormap_6bpp_transparency_save_alpha_test()
+	{
+		using namespace risa_gl;
+
+		typedef pixel_store<pixel> pixels_store;
+		typedef pixel_store<opaque> alpha_store;
+
+		pixels_store pixels(640, 480);
+		alpha_store color_map(640, 480);
+
+		std::generate(pixels.begin(), pixels.end(),
+					  generator<pixel>(pixel(128, 128, 128, 256)));
+		std::generate(color_map.begin(), color_map.end(),
+					  generator<opaque>(opaque(65)));
+
+		operators::colormap_6bpp_transparency_save_alpha
+			oper(pixel(128, 128, 128, 129));
+		oper(pixels.begin(), color_map.begin(), pixels.begin());
+		CPPUNIT_ASSERT(pixels.begin()->get_red() == 128);
+		CPPUNIT_ASSERT(pixels.begin()->get_green() == 128);
+		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 128);
+		CPPUNIT_ASSERT(pixels.begin()->get_alpha() == 256);
+	}
+
+	void colormap_6bpp_transparency_test()
+	{
+		using namespace risa_gl;
+
+		typedef pixel_store<pixel> pixels_store;
+		typedef pixel_store<opaque> alpha_store;
+
+		pixels_store pixels(640, 480);
+		alpha_store color_map(640, 480);
+
+		std::generate(pixels.begin(), pixels.end(),
+					  generator<pixel>(pixel(128, 128, 128, 256)));
+		std::generate(color_map.begin(), color_map.end(),
+					  generator<opaque>(opaque(65)));
+
+		operators::colormap_6bpp_transparency oper(pixel(128, 128, 128, 129));
 		oper(pixels.begin(), color_map.begin(), pixels.begin());
 		CPPUNIT_ASSERT(pixels.begin()->get_red() == 128);
 		CPPUNIT_ASSERT(pixels.begin()->get_green() == 128);

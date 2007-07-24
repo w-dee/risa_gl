@@ -35,6 +35,8 @@ namespace risa_gl
 									get_alpha_method_selector>
 		invert_destination_alpha_getter;
 
+		// invert scaled opacity getter
+
 		// opacity getter
 		typedef alpha_factor<source_selector,
 							 get_opacity_method_selector>
@@ -83,13 +85,54 @@ namespace risa_gl
 			}
 		};
 
+		// invert scaled opacity getter
+		template <int min, int max,
+				  int projection_min, int projection_max>
+		class scaled_invert_source_opacity_getter
+		{
+			typedef scaled_invert_alpha_selector<min,
+												 max,
+												 projection_min,
+												 projection_max,
+												 source_selector,
+												 get_opacity_method_selector>
+			scaler_type;
+		public:
+			template <typename src_itor_t, typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t src,
+									   dest_itor_t dest) const
+			{
+				return scaler_type()(src, dest);
+			}
+		};
+
+		template <int min, int max,
+				  int projection_min, int projection_max>
+		class scaled_invert_destination_opacity_getter
+		{
+			typedef scaled_invert_alpha_selector<min,
+												 max,
+												 projection_min,
+												 projection_max,
+												 destination_selector,
+												 get_opacity_method_selector>
+			scaler_type;
+		public:
+			template <typename src_itor_t, typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t src,
+									   dest_itor_t dest) const
+			{
+				return scaler_type()(src, dest);
+			}
+		};
+
 		// invert opacity getter
 		typedef invert_alpha_factor<source_selector,
 									get_opacity_method_selector>
 		invert_source_opacity_getter;
 		typedef invert_alpha_factor<destination_selector,
 									get_opacity_method_selector>
-		incert_destination_opacity_getter;
+		invert_destination_opacity_getter;
 		
 	};
 };
