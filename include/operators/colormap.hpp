@@ -154,6 +154,47 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
+
+		/**
+		 * destinationが65levelの透過性を持つカラーマップ-加色混合処理。
+		 * r = saturation(color.rgb * scale(dest.opaque) +
+		 *                source.rgb * scale(dest.opaque))
+		 */
+		class colormap_6bpp_add_blend
+		{
+		private:
+			typedef blend<dynamic_constant_getter,
+						  source_getter,
+						  bit_setter,
+						  saturation_factor,
+						  scaled_destination_opacity_getter<1, 65, 1, 256>,
+						  scaled_destination_opacity_getter<1, 65, 1, 256>,
+						  alpha_calculate_policy<
+				scaled_destination_opacity_getter<1, 65, 1, 256> > >
+			colormap_operator_type;
+			colormap_operator_type blender;
+
+			colormap_6bpp_add_blend();
+		public:
+			colormap_6bpp_add_blend(const pixel& color):
+				blender(dynamic_constant_getter(color.get_bit_representation()))
+			{}
+			
+			/**
+			 * @param src 設定する透過度を持つイテレータ
+			 * @param dest opaque値
+			 * @param result 結果を受け取るイテレータ
+			 */
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
 	};
 };
 
