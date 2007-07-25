@@ -16,8 +16,12 @@ namespace risa_gl
 			risa_gl::uint32 operator()(risa_gl::uint32 value) const
 			{
 				return
-					(value & 0xff000000U) ? 0x00ff0000U : (value & 0x00ff0000U)|
-					(value & 0x0000ff00U) ? 0x000000ffU : (value & 0x000000ffU);
+					((value & 0xff000000U) ?
+					 0x00ff0000U :
+					 (value & 0x00ff0000U)) |
+					((value & 0x0000ff00U) ?
+					 0x000000ffU :
+					 (value & 0x000000ffU));
 			}
 		};
 
