@@ -5,10 +5,10 @@
 
 #include <algorithm>
 
-class color_copy_test : public CppUnit::TestFixture
+class color_copy_operator_test : public CppUnit::TestFixture
 {
-	CPPUNIT_TEST_SUITE(color_copy_test);
-	CPPUNIT_TEST(color_copy_blend_test);
+	CPPUNIT_TEST_SUITE(color_copy_operator_test);
+	CPPUNIT_TEST(color_copy_test);
 	CPPUNIT_TEST_SUITE_END();
 
 	template <typename container_type>
@@ -27,7 +27,7 @@ class color_copy_test : public CppUnit::TestFixture
 	};
 
 public:
-	void color_copy_blend_test()
+	void color_copy_test()
 	{
 		using namespace risa_gl;
 
@@ -55,4 +55,4 @@ public:
 };
 
 
-CPPUNIT_TEST_SUITE_REGISTRATION( color_copy_test );
+CPPUNIT_TEST_SUITE_REGISTRATION( color_copy_operator_test );
