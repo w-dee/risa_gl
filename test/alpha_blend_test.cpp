@@ -64,9 +64,9 @@ public:
 		 * = (0.75, 0.75, 0.75)
 		 */
 		oper(src.begin(), dest.begin(), result.begin());
-		CPPUNIT_ASSERT(result.begin()->get_red() == 192);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 192); 
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 192);
+		CPPUNIT_ASSERT(result.begin()->get_red() == 190);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 190); 
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 190);
 	}
 };
 

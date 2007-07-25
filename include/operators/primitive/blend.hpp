@@ -167,16 +167,20 @@ namespace risa_gl
 				 *
 				 */
 				risa_gl::uint32 res_pixel =
-					(compute_factor(((lower_mask()(src_pixel) *
-									  src_alpha_factor(src, dest))>>8) +
-									((lower_mask()(dest_pixel) *
-									  dest_alpha_factor(src, dest))>>8)) &
-					 0x00ff00ff) | 
-					((compute_factor((((higher_mask()(dest_pixel)>>8) *
-									   dest_alpha_factor(src, dest))>>8) +
-									 (((higher_mask()(src_pixel)>>8) *
-									   src_alpha_factor(src, dest))>>8))
-					  <<8) & 0xff00ff00);
+					compute_factor(
+						(((lower_mask()(src_pixel) *
+						   src_alpha_factor(src, dest)) &
+						  0xff00ff00) >> 8) +
+						(((lower_mask()(dest_pixel) *
+						   dest_alpha_factor(src, dest)) &
+						  0xff00ff00) >> 8)) |
+					(compute_factor(
+						((((higher_mask()(dest_pixel)>>8) *
+						   dest_alpha_factor(src, dest)) &
+						  0xff00ff00) >> 8) +
+						((((higher_mask()(src_pixel)>>8) *
+						   src_alpha_factor(src, dest)) &
+						  0xff00ff00) >> 8)) << 8);
 
 				// 結果セット
 				result_pixel_setter(result, res_pixel);
