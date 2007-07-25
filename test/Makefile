@@ -11,6 +11,7 @@ OBJS= \
 	colormap_test.o \
 	alpha_copy_test.o \
 	color_copy_test.o \
+	alpha_blend_test.o \
 #	primitive_test.o \
 
 TARGET = unit_test

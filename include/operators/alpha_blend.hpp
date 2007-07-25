@@ -2,6 +2,7 @@
 #define RISA_ALPHA_BLEND_HPP_
 
 #include "operators/primitive/blend.hpp"
+#include "operators/building_blocks.hpp"
 
 namespace risa_gl
 {
@@ -9,51 +10,72 @@ namespace risa_gl
 	{
 		/**
 		 * アルファブレンディング
-		 * @note destのアルファ値は考慮されない
-		 * @note 計算後のアルファ
-		 *
+		 * alphaは破壊される
 		 */
 		class alpha_blend_operator
 		{
-		public:
+		private:
 			typedef primitive::binomial_blend<
-				source_alpha_factor,
-				zero_factor,
-				one_minus_source_alpha_factor,
-				identity_factor>
-			alpha_blend;
+				source_getter,
+				destination_getter,
+				bit_setter,
+				nop_factor,
+				source_alpha_getter,
+				invert_source_alpha_getter,
+				not_calculate_policy>
+			alpha_blend_opeartor_type;
 
+			alpha_blend_opeartor_type blender;
+		public:
+
+			/**
+			 * src.color * src.a + dest.color * (1-src.a)
+			 */
 			template <typename src_itor_t,
-					  typename dest_itor_,
+					  typename dest_itor_t,
 					  typename result_itor_t>
-			void opearator()(src_itor_t src,
-							 dest_itor_t dest,
-							 result_itor_t result) const
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
 			{
-				alpha_blend()(src, dest, result);
+				blender(src, dest, result);
 			}
 		};
 
-		class reverse_alpha_blend_operator
+		/**
+		 * アルファブレンディング
+		 * alphaはsourceのalphaが保存される
+		 */
+		class alpha_blend_save_alpha_operator
 		{
-		public:
+		private:
 			typedef primitive::binomial_blend<
-				one_minus_destination_alpha_factor,
-				identity_factor,
-				destination_alpha_factor,
-				identity_factor>
-			alpha_blend;
+				source_getter,
+				destination_getter,
+				bit_setter,
+				nop_factor,
+				source_alpha_getter,
+				invert_source_alpha_getter,
+				alpha_calculate_policy<source_alpha_getter> >
+			alpha_blend_save_alpha_opeartor_type;
 
+			alpha_blend_save_alpha_opeartor_type blender;
+		public:
+
+			/**
+			 * src.color * src.a + dest.color * (1-src.a)
+			 */
 			template <typename src_itor_t,
-					  typename dest_itor_,
+					  typename dest_itor_t,
 					  typename result_itor_t>
-			void opearator()(src_itor_t src,
-							 dest_itor_t dest,
-							 result_itor_t result) const
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
 			{
-				alpha_blend()(src, dest, result);
+				blender(src, dest, result);
 			}
 		};
+
 	};
 };
 
