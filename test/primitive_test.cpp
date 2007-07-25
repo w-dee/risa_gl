@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "operators/primitive/primitive.hpp"
+#include "operators/primitive/blend.hpp"
 #include "pixel_store.hpp"
 #include "pixel.hpp"
 
@@ -39,7 +39,7 @@ public:
 	void blend_test()
 	{
 		using namespace risa_gl::primitive;
-		typedef blend<
+		typedef binomial_blend<
 			one_minus_destination_alpha_factor,
 			zero_factor,
 			destination_alpha_factor,
@@ -66,7 +66,7 @@ public:
 	void saturation_blend_test()
 	{
 		using namespace risa_gl::primitive;
-		typedef blend<
+		typedef binomial_blend<
 			one_minus_destination_alpha_factor,
 			zero_factor,
 			destination_alpha_factor,

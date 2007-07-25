@@ -1,6 +1,6 @@
 #ifndef RISA_OPERATORS_COLORMAP_HPP_
 #define RISA_OPERATORS_COLORMAP_HPP_
-#include "operators/primitive/primitive.hpp"
+#include "operators/primitive/blend.hpp"
 #include "operators/building_blocks.hpp"
 #include "pixel.hpp"
 
@@ -44,13 +44,14 @@ namespace risa_gl
 		class colormap_6bpp_transparency
 		{
 		private:
-			typedef blend<dynamic_constant_getter,
-						  zero_getter,
-						  bit_setter,
-						  nop_factor,
-						  scaled_destination_opacity_getter<1, 65, 1, 256>,
-						  zero_alpha_factor,
-						  not_calculate_policy>
+			typedef binomial_blend<
+				dynamic_constant_getter,
+				zero_getter,
+				bit_setter,
+				nop_factor,
+				scaled_destination_opacity_getter<1, 65, 1, 256>,
+				zero_alpha_factor,
+				not_calculate_policy>
 			colormap_operator_type;
 			colormap_operator_type blender;
 
@@ -85,13 +86,14 @@ namespace risa_gl
 		class colormap_6bpp_transparency_save_alpha
 		{
 		private:
-			typedef blend<dynamic_constant_getter,
-						  zero_getter,
-						  bit_setter,
-						  nop_factor,
-						  scaled_destination_opacity_getter<1, 65, 1, 256>,
-						  zero_alpha_factor,
-						  alpha_calculate_policy<
+			typedef binomial_blend<
+				dynamic_constant_getter,
+				zero_getter,
+				bit_setter,
+				nop_factor,
+				scaled_destination_opacity_getter<1, 65, 1, 256>,
+				zero_alpha_factor,
+				alpha_calculate_policy<
 				scaled_destination_opacity_getter<1, 65, 1, 256> > >
 			colormap_operator_type;
 			colormap_operator_type blender;
@@ -127,13 +129,14 @@ namespace risa_gl
 		class colormap_6bpp_alpha_blend
 		{
 		private:
-			typedef blend<dynamic_constant_getter,
-						  source_getter,
-						  bit_setter,
-						  nop_factor,
-						  scaled_destination_opacity_getter<1, 65, 1, 256>,
-						  scaled_invert_destination_opacity_getter<1, 65, 1, 256>,
-						  not_calculate_policy>
+			typedef binomial_blend<
+				dynamic_constant_getter,
+				source_getter,
+				bit_setter,
+				nop_factor,
+				scaled_destination_opacity_getter<1, 65, 1, 256>,
+				scaled_invert_destination_opacity_getter<1, 65, 1, 256>,
+				not_calculate_policy>
 			colormap_operator_type;
 			colormap_operator_type blender;
 
@@ -167,13 +170,14 @@ namespace risa_gl
 		class colormap_6bpp_add_blend
 		{
 		private:
-			typedef blend<dynamic_constant_getter,
-						  source_getter,
-						  bit_setter,
-						  saturation_factor,
-						  scaled_destination_opacity_getter<1, 65, 1, 256>,
-						  scaled_destination_opacity_getter<1, 65, 1, 256>,
-						  alpha_calculate_policy<
+			typedef binomial_blend<
+				dynamic_constant_getter,
+				source_getter,
+				bit_setter,
+				saturation_factor,
+				scaled_destination_opacity_getter<1, 65, 1, 256>,
+				scaled_destination_opacity_getter<1, 65, 1, 256>,
+				alpha_calculate_policy<
 				scaled_destination_opacity_getter<1, 65, 1, 256> > >
 			colormap_operator_type;
 			colormap_operator_type blender;
@@ -208,13 +212,14 @@ namespace risa_gl
 		class colormap_transparency
 		{
 		private:
-			typedef blend<dynamic_constant_getter,
-						  zero_getter,
-						  bit_setter,
-						  nop_factor,
-						  destination_alpha_getter,
-						  zero_alpha_factor,
-						  not_calculate_policy>
+			typedef binomial_blend<
+				dynamic_constant_getter,
+				zero_getter,
+				bit_setter,
+				nop_factor,
+				destination_alpha_getter,
+				zero_alpha_factor,
+				not_calculate_policy>
 			colormap_operator_type;
 			colormap_operator_type blender;
 
@@ -248,13 +253,14 @@ namespace risa_gl
 		class colormap_transparency_save_alpha
 		{
 		private:
-			typedef blend<dynamic_constant_getter,
-						  zero_getter,
-						  bit_setter,
-						  nop_factor,
-						  destination_alpha_getter,
-						  zero_alpha_factor,
-						  alpha_calculate_policy<
+			typedef binomial_blend<
+				dynamic_constant_getter,
+				zero_getter,
+				bit_setter,
+				nop_factor,
+				destination_alpha_getter,
+				zero_alpha_factor,
+				alpha_calculate_policy<
 				destination_alpha_getter> >
 			colormap_operator_type;
 			colormap_operator_type blender;
@@ -290,13 +296,14 @@ namespace risa_gl
 		class colormap_alpha_blend
 		{
 		private:
-			typedef blend<dynamic_constant_getter,
-						  source_getter,
-						  bit_setter,
-						  nop_factor,
-						  destination_alpha_getter,
-						  invert_destination_alpha_getter,
-						  not_calculate_policy>
+			typedef binomial_blend<
+				dynamic_constant_getter,
+				source_getter,
+				bit_setter,
+				nop_factor,
+				destination_alpha_getter,
+				invert_destination_alpha_getter,
+				not_calculate_policy>
 			colormap_operator_type;
 			colormap_operator_type blender;
 
@@ -330,13 +337,14 @@ namespace risa_gl
 		class colormap_add_blend
 		{
 		private:
-			typedef blend<dynamic_constant_getter,
-						  source_getter,
-						  bit_setter,
-						  saturation_factor,
-						  destination_alpha_getter,
-						  destination_alpha_getter,
-						  alpha_calculate_policy<
+			typedef binomial_blend<
+				dynamic_constant_getter,
+				source_getter,
+				bit_setter,
+				saturation_factor,
+				destination_alpha_getter,
+				destination_alpha_getter,
+				alpha_calculate_policy<
 				destination_alpha_getter > >
 			colormap_operator_type;
 			colormap_operator_type blender;

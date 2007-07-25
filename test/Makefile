@@ -20,7 +20,7 @@ INCLUDES = ../include
 CXXFLAGS += -I$(INCLUDES) -g -Wall -msse2 -Wunused -fno-default-inline
 LIBS +=-lcppunit
 
-.PHONY: clean depend version
+.PHONY: clean depend version dependclean
 
 all: $(TARGET)$(EXT)
 
@@ -37,6 +37,9 @@ depend: $(DEPENDS)
 
 clean:
 	rm -f $(OBJS) $(TARGET)$(EXT)
+
+dependclean:
+	rm -f $(DEPENDS)
 
 version:
 	$(CXX) --version

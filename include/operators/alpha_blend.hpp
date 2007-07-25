@@ -1,7 +1,7 @@
 #ifndef RISA_ALPHA_BLEND_HPP_
 #define RISA_ALPHA_BLEND_HPP_
 
-#include "operators/primitive/primitive.hpp"
+#include "operators/primitive/blend.hpp"
 
 namespace risa_gl
 {
@@ -16,10 +16,11 @@ namespace risa_gl
 		class alpha_blend_operator
 		{
 		public:
-			typedef primitive::blend<source_alpha_factor,
-									 zero_factor,
-									 one_minus_source_alpha_factor,
-									 identity_factor>
+			typedef primitive::binomial_blend<
+				source_alpha_factor,
+				zero_factor,
+				one_minus_source_alpha_factor,
+				identity_factor>
 			alpha_blend;
 
 			template <typename src_itor_t,
@@ -36,10 +37,11 @@ namespace risa_gl
 		class reverse_alpha_blend_operator
 		{
 		public:
-			typedef primitive::blend<one_minus_destination_alpha_factor,
-									 identity_factor,
-									 destination_alpha_factor,
-									 identity_factor>
+			typedef primitive::binomial_blend<
+				one_minus_destination_alpha_factor,
+				identity_factor,
+				destination_alpha_factor,
+				identity_factor>
 			alpha_blend;
 
 			template <typename src_itor_t,

@@ -82,6 +82,9 @@ namespace risa_gl
 		 * @note 演算後の / 256 である >> 8部分は固定なので即値を返す
 		 * 場合は * 256 した値を与えてください
 		 */
+
+		// trinomial_blend
+
 		template <typename src_pixel_getter_t,
 				  typename dest_pixel_getter_t,
 				  typename result_pixel_setter_t,
@@ -89,7 +92,7 @@ namespace risa_gl
 				  typename src_alpha_factor_t,
 				  typename dest_alpha_factor_t,
 				  typename alpha_calculate_policy_t>
-		class blend
+		class binomial_blend
 		{
 		private:
 			/*
@@ -106,7 +109,7 @@ namespace risa_gl
 			alpha_calculate_policy_t alpha_calculate_policy;
 
 		public:
-			blend(const blend& source):
+			binomial_blend(const binomial_blend& source):
 				src_pixel_getter(source.src_pixel_getter),
 				dest_pixel_getter(source.dest_pixel_getter),
 				result_pixel_setter(source.result_pixel_setter),
@@ -116,20 +119,20 @@ namespace risa_gl
 				alpha_calculate_policy(source.alpha_calculate_policy)
 			{}
 				
-			blend(src_pixel_getter_t src_pixel_getter_ =
-					src_pixel_getter_t(),
-					dest_pixel_getter_t dest_pixel_getter_ =
-					dest_pixel_getter_t(),
-					result_pixel_setter_t result_pixel_setter_ =
-					result_pixel_setter_t(),
-					compute_factor_t compute_factor_ =
-					compute_factor_t(),
-					src_alpha_factor_t src_alpha_factor_ =
-					src_alpha_factor_t(),
-					dest_alpha_factor_t dest_alpha_factor_ =
-					dest_alpha_factor_t(),
-					alpha_calculate_policy_t alpha_calculate_policy_ =
-					alpha_calculate_policy_t()):
+			binomial_blend(src_pixel_getter_t src_pixel_getter_ =
+						   src_pixel_getter_t(),
+						   dest_pixel_getter_t dest_pixel_getter_ =
+						   dest_pixel_getter_t(),
+						   result_pixel_setter_t result_pixel_setter_ =
+						   result_pixel_setter_t(),
+						   compute_factor_t compute_factor_ =
+						   compute_factor_t(),
+						   src_alpha_factor_t src_alpha_factor_ =
+						   src_alpha_factor_t(),
+						   dest_alpha_factor_t dest_alpha_factor_ =
+						   dest_alpha_factor_t(),
+						   alpha_calculate_policy_t alpha_calculate_policy_ =
+						   alpha_calculate_policy_t()):
 				src_pixel_getter(src_pixel_getter_),
 				dest_pixel_getter(dest_pixel_getter_),
 				result_pixel_setter(result_pixel_setter_),
@@ -165,14 +168,14 @@ namespace risa_gl
 				 */
 				risa_gl::uint32 res_pixel =
 					compute_factor(((lower_mask()(src_pixel) *
-									   src_alpha_factor(src, dest))>>8) +
-									 ((lower_mask()(dest_pixel) *
-									   dest_alpha_factor(src, dest))>>8)) |
+									 src_alpha_factor(src, dest))>>8) +
+								   ((lower_mask()(dest_pixel) *
+									 dest_alpha_factor(src, dest))>>8)) |
 					(compute_factor((((higher_mask()(dest_pixel)>>8) *
-											 dest_alpha_factor(src, dest))>>8) +
-							(((higher_mask()(src_pixel)>>8) *
-									src_alpha_factor(src, dest))>>8))
-							<<8);
+									  dest_alpha_factor(src, dest))>>8) +
+									(((higher_mask()(src_pixel)>>8) *
+									  src_alpha_factor(src, dest))>>8))
+					 <<8);
 
 				// 結果セット
 				result_pixel_setter(result, res_pixel);
@@ -181,6 +184,9 @@ namespace risa_gl
 				alpha_calculate_policy(result, src, dest);
 			}
 		};
+
+		// monomial_predicate
+		// stripped_predicate
 	};
 };
 

@@ -1,7 +1,7 @@
 #ifndef RISA_ALPHA_COPY_HPP_
 #define RISA_ALPHA_COPY_HPP_
 
-#include "operators/primitive/primitive.hpp"
+#include "operators/primitive/blend.hpp"
 #include "operators/building_blocks.hpp"
 
 namespace risa_gl
@@ -11,13 +11,14 @@ namespace risa_gl
 		class alpha_copy_operator
 		{
 		private:
-			typedef primitive::blend<zero_getter,
-									 destination_getter,
-									 bit_setter,
-									 nop_factor,
-									 zero_alpha_factor,
-									 identity_alpha_factor,
-									 alpha_calculate_policy<
+			typedef primitive::binomial_blend<
+				zero_getter,
+				destination_getter,
+				bit_setter,
+				nop_factor,
+				zero_alpha_factor,
+				identity_alpha_factor,
+				alpha_calculate_policy<
 				source_alpha_getter> >
 			alpha_copy_opeartor_type;
 
@@ -41,13 +42,14 @@ namespace risa_gl
 		class opacity_copy_operator
 		{
 		private:
-			typedef primitive::blend<zero_getter,
-									 destination_getter,
-									 bit_setter,
-									 nop_factor,
-									 zero_alpha_factor,
-									 identity_alpha_factor,
-									 alpha_calculate_policy<
+			typedef primitive::binomial_blend<
+				zero_getter,
+				destination_getter,
+				bit_setter,
+				nop_factor,
+				zero_alpha_factor,
+				identity_alpha_factor,
+				alpha_calculate_policy<
 				source_opacity_getter> >
 			alpha_copy_opeartor_type;
 

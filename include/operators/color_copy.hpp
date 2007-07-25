@@ -1,7 +1,7 @@
 #ifndef RISA_COLOR_COPY_HPP_
 #define RISA_COLOR_COPY_HPP_
 
-#include "operators/primitive/primitive.hpp"
+#include "operators/primitive/blend.hpp"
 #include "operators/building_blocks.hpp"
 
 namespace risa_gl
@@ -11,7 +11,7 @@ namespace risa_gl
 		class color_copy_operator
 		{
 		private:
-			typedef primitive::blend<
+			typedef primitive::binomial_blend<
 				source_getter,
 				zero_getter,
 				bit_setter,
