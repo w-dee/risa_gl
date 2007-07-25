@@ -9,8 +9,8 @@ OBJS= \
 	rectangle_test.o \
 	memory_chunk_test.o \
 	colormap_test.o \
+	alpha_copy_test.o \
 #	color_copy_test.o \
-#	alpha_copy_test.o
 #	primitive_test.o \
 
 TARGET = unit_test

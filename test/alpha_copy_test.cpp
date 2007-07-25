@@ -5,10 +5,11 @@
 
 #include <algorithm>
 
-class alpha_copy_test : public CppUnit::TestFixture
+class alpha_copy_operator_test : public CppUnit::TestFixture
 {
-	CPPUNIT_TEST_SUITE(alpha_copy_test);
-	CPPUNIT_TEST(alpha_copy_blend_test);
+	CPPUNIT_TEST_SUITE(alpha_copy_operator_test);
+	CPPUNIT_TEST(alpha_copy_test);
+	CPPUNIT_TEST(opacity_copy_test);
 	CPPUNIT_TEST_SUITE_END();
 
 	template <typename container_type>
@@ -27,32 +28,32 @@ class alpha_copy_test : public CppUnit::TestFixture
 	};
 
 public:
-	void brightness_copy_blend_test()
+	void opacity_copy_test()
 	{
 		using namespace risa_gl;
 		typedef pixel_store<pixel> pixels_store;
 		typedef pixel_store<opaque> opaque_store;
 
-		pixels_store src(640, 480);
-		opaque_store dest(640, 480);
+		opaque_store src(640, 480);
+		pixels_store dest(640, 480);
 		pixels_store result(640, 480);
 
 		std::generate(src.begin(), src.end(),
-					  generator<pixel>(pixel(128, 128, 128, 256)));
-		std::generate(dest.begin(), dest.end(),
 					  generator<opaque>(opaque(128)));
+		std::generate(dest.begin(), dest.end(),
+					  generator<pixel>(pixel(128, 128, 128, 256)));
 
-		operators::opaque_copy_operator oper;
+		operators::opacity_copy_operator oper;
 		oper(src.begin(), dest.begin(), result.begin());
 		CPPUNIT_ASSERT(*result.begin() == pixel(128, 128, 128, 128));
-		std::generate(dest.begin(), dest.end(),
+		std::generate(src.begin(), src.end(),
 					  generator<opaque>(opaque(1)));
 
 		oper(src.begin(), dest.begin(), result.begin());
 		CPPUNIT_ASSERT(*result.begin() == pixel(128, 128, 128, 1));
 	}
 
-	void alpha_copy_blend_test()
+	void alpha_copy_test()
 	{
 		using namespace risa_gl;
 
@@ -80,4 +81,4 @@ public:
 };
 
 
-CPPUNIT_TEST_SUITE_REGISTRATION( alpha_copy_test );
+CPPUNIT_TEST_SUITE_REGISTRATION( alpha_copy_operator_test );

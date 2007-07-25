@@ -2,6 +2,7 @@
 #define RISA_ALPHA_COPY_HPP_
 
 #include "operators/primitive/primitive.hpp"
+#include "operators/building_blocks.hpp"
 
 namespace risa_gl
 {
@@ -9,18 +10,23 @@ namespace risa_gl
 	{
 		class alpha_copy_operator
 		{
-		public:
-			typedef primitive::channel_copy<
-				primitive::destination_target_selecter,
-				primitive::get_red_method_selecter,
-				primitive::destination_target_selecter,
-				primitive::get_green_method_selecter,
-				primitive::destination_target_selecter,
-				primitive::get_blue_method_selecter,
-				primitive::source_target_selecter,
-				primitive::get_alpha_method_selecter>
-			alpha_copy;
+		private:
+			typedef primitive::blend<zero_getter,
+									 destination_getter,
+									 bit_setter,
+									 nop_factor,
+									 zero_alpha_factor,
+									 identity_alpha_factor,
+									 alpha_calculate_policy<
+				source_alpha_getter> >
+			alpha_copy_opeartor_type;
 
+			alpha_copy_opeartor_type blender;
+		public:
+
+			/**
+			 * srcのもつalpha値をdestのcolor要素とマージしてresultにセットする
+			 */
 			template <typename src_itor_t,
 					  typename dest_itor_t,
 					  typename result_itor_t>
@@ -28,24 +34,29 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				alpha_copy()(src, dest, result);
+				blender(src, dest, result);
 			}
 		};
 
-		class opaque_copy_operator
+		class opacity_copy_operator
 		{
-		public:
-			typedef primitive::channel_copy<
-				primitive::source_target_selecter,
-				primitive::get_red_method_selecter,
-				primitive::source_target_selecter,
-				primitive::get_green_method_selecter,
-				primitive::source_target_selecter,
-				primitive::get_blue_method_selecter,
-				primitive::destination_target_selecter,
-				primitive::get_opacity_method_selecter>
-			brightness_copy;
+		private:
+			typedef primitive::blend<zero_getter,
+									 destination_getter,
+									 bit_setter,
+									 nop_factor,
+									 zero_alpha_factor,
+									 identity_alpha_factor,
+									 alpha_calculate_policy<
+				source_opacity_getter> >
+			alpha_copy_opeartor_type;
 
+			alpha_copy_opeartor_type blender;
+		public:
+
+			/**
+			 * srcのもつopacity値をdestのcolor要素とマージしてresultにセットする
+			 */
 			template <typename src_itor_t,
 					  typename dest_itor_t,
 					  typename result_itor_t>
@@ -53,7 +64,7 @@ namespace risa_gl
 							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				brightness_copy()(src, dest, result);
+				blender(src, dest, result);
 			}
 		};
 	};
