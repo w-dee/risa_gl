@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "memory_chunk.hpp"
+#include <memory_chunk.hpp>
 #include <vector>
 
 class memory_chunk_test : public CppUnit::TestFixture

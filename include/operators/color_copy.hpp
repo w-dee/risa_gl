@@ -1,8 +1,8 @@
 #ifndef RISA_COLOR_COPY_HPP_
 #define RISA_COLOR_COPY_HPP_
 
-#include "operators/primitive/blend.hpp"
-#include "operators/building_blocks.hpp"
+#include <operators/primitive/blend.hpp>
+#include <operators/building_blocks.hpp>
 
 namespace risa_gl
 {

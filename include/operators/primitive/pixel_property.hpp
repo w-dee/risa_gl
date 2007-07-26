@@ -1,7 +1,7 @@
 #ifndef RISA_PIXEL_GETTER_HPP_
 #define RISA_PIXEL_GETTER_HPP_
-#include "risa_types.hpp"
-#include "selector.hpp"
+#include <risa_types.hpp>
+#include <operators/primitive/selector.hpp>
 
 namespace risa_gl
 {

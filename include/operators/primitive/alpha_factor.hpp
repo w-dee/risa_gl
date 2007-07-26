@@ -1,7 +1,7 @@
 #ifndef RISA_ALPHA_FACTOR_HPP_
 #define RISA_ALPHA_FACTOR_HPP_
 
-#include "risa_types.hpp"
+#include <risa_types.hpp>
 
 namespace risa_gl
 {

@@ -12,13 +12,13 @@ OBJS= \
 	alpha_copy_test.o \
 	color_copy_test.o \
 	alpha_blend_test.o \
-#	primitive_test.o \
+	building_blocks_test.o \
 
 TARGET = unit_test
 EXT = .exe
 DEPENDS = $(OBJS:.o=.d)
 INCLUDES = ../include
-CXXFLAGS += -I$(INCLUDES) -g -Wall -msse2 -Wunused -fno-default-inline
+CXXFLAGS += -I$(INCLUDES) -g -Wall -Wunused -fno-default-inline
 LIBS +=-lcppunit
 
 .PHONY: clean depend version dependclean

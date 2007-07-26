@@ -1,8 +1,8 @@
 #ifndef RISA_PIXEL_HPP_
 #define RISA_PIXEL_HPP_
 
-#include "static_assert.hpp"
-#include "risa_types.hpp"
+#include <static_assert.hpp>
+#include <risa_types.hpp>
 
 #include <cassert>
 

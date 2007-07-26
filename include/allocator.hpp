@@ -1,7 +1,7 @@
 #ifndef RISA_ALLOCATOR_HPP_
 #define RISA_ALLOCATOR_HPP_
 
-#include "risa_types.hpp"
+#include <risa_types.hpp>
 
 namespace risa_gl {
 	/**

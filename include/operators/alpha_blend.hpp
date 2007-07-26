@@ -1,8 +1,8 @@
 #ifndef RISA_ALPHA_BLEND_HPP_
 #define RISA_ALPHA_BLEND_HPP_
 
-#include "operators/primitive/blend.hpp"
-#include "operators/building_blocks.hpp"
+#include <operators/primitive/blend.hpp>
+#include <operators/building_blocks.hpp>
 
 namespace risa_gl
 {
@@ -44,6 +44,8 @@ namespace risa_gl
 
 		/**
 		 * アルファブレンディング
+		 * r.color = src.color * src.a + dest.color * (1 - src.a)
+		 * r.a = src.a * src.a + dest.a * (1 - src.a)
 		 * alphaはsourceのalphaが保存される
 		 */
 		class alpha_blend_save_alpha_operator

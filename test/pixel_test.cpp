@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "pixel.hpp"
+#include <pixel.hpp>
 
 class pixel_test : public CppUnit::TestFixture
 {

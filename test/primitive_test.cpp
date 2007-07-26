@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "operators/primitive/blend.hpp"
-#include "pixel_store.hpp"
-#include "pixel.hpp"
+#include <operators/primitive/blend.hpp>
+#include <pixel_store.hpp>
+#include <pixel.hpp>
 
 #include <iostream>
 
