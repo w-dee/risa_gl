@@ -11,12 +11,12 @@ class building_blocks_test : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	template <typename arg_type>
+	template <typename arg_type, typename selector>
 	struct dereferencer
 	{
-		arg_type operator()(arg_type* arg) const
+		arg_type operator()(arg_type* left, arg_type* right) const
 		{
-			return *arg;
+			return *selector()(left, right);
 		}
 
 	};
@@ -30,10 +30,8 @@ public:
 		pixel result;
 
 		operators::multiply_alpha_and_alpha_policy<
-			primitive::source_selector,
-			dereferencer<uint32>,
-			primitive::destination_selector,
-			dereferencer<uint32> > oper;
+			dereferencer<uint32, primitive::source_selector>,
+			dereferencer<uint32, primitive::destination_selector> > oper;
 
 		oper(&result, &src, &dest);
 		// src * src + dest * (1 - src)

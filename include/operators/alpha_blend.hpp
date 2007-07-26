@@ -47,7 +47,7 @@ namespace risa_gl
 		 * r.color = src.color * src.a + dest.color * (1 - src.a)
 		 * r.a = src.a * src.a + dest.a * (1 - src.a)
 		 */
-		class alpha_blend_save_alpha_operator
+		class alpha_blend_calculate_alpha_operator
 		{
 		private:
 			typedef primitive::binomial_blend<
@@ -58,13 +58,11 @@ namespace risa_gl
 				source_alpha_getter,
 				invert_source_alpha_getter,
 				multiply_alpha_and_alpha_policy<
-				source_getter,
 				source_alpha_getter,
-				destination_getter,
 				destination_alpha_getter> >
-			alpha_blend_save_alpha_opeartor_type;
+			alpha_blend_calculate_alpha_opeartor_type;
 
-			alpha_blend_save_alpha_opeartor_type blender;
+			alpha_blend_calculate_alpha_opeartor_type blender;
 		public:
 
 			/**

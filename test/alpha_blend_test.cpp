@@ -9,7 +9,7 @@ class alpha_blend_operator_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(alpha_blend_operator_test);
 	CPPUNIT_TEST(alpha_blend_test);
-	CPPUNIT_TEST(alpha_blend_save_alpha_test);
+	CPPUNIT_TEST(alpha_blend_calculate_alpha_test);
 	CPPUNIT_TEST_SUITE_END();
 
 	template <typename container_type>
@@ -28,7 +28,7 @@ class alpha_blend_operator_test : public CppUnit::TestFixture
 	};
 
 public:
-	void alpha_blend_save_alpha_test()
+	void alpha_blend_calculate_alpha_test()
 	{
 		using namespace risa_gl;
 
@@ -52,12 +52,12 @@ public:
 		 * 0.25 + 0.5 = 0.75
 		 * 65 + 127 = 192
 		 */
-		operators::alpha_blend_operator oper;
+		operators::alpha_blend_calculate_alpha_operator oper;
 		oper(src.begin(), dest.begin(), result.begin());
 		CPPUNIT_ASSERT(result.begin()->get_red() == 64);
 		CPPUNIT_ASSERT(result.begin()->get_green() == 64); 
 		CPPUNIT_ASSERT(result.begin()->get_blue() == 64);
-		CPPUNIT_ASSERT(result.begin()->get_alpha() == 191);
+		CPPUNIT_ASSERT(result.begin()->get_alpha() == 192);
 
 		std::generate(dest.begin(), dest.end(),
 					  generator<pixel>(pixel(255, 255, 255, 1)));

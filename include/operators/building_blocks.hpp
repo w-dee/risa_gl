@@ -135,17 +135,13 @@ namespace risa_gl
 		invert_destination_opacity_getter;
 
 
-		template <typename source_selector,
-				  typename source_method_selector,
-				  typename destination_selector,
-				  typename destination_method_selector>
+		template <typename source_getter,
+				  typename destination_getter>
 		class multiply_alpha_and_alpha_policy
 		{
 		private:
-			template <typename source_selector_type,
-					  typename source_method_selector_type,
-					  typename destination_selector_type,
-					  typename destination_method_selector_type>
+			template <typename source_getter_type,
+					  typename destination_getter_type>
 			struct alpha_and_alpha_calculator
 			{
 				template <typename src_itor_t,
@@ -155,11 +151,9 @@ namespace risa_gl
 					dest_itor_t dest) const
 				{
 					const int src_alpha = 
-						source_method_selector_type()(
-							source_selector_type()(src, dest));
+						source_getter_type()(src, dest);
 					const int dest_alpha =
-						destination_method_selector_type()(
-							destination_selector_type()(src, dest));
+						destination_getter_type()(src, dest);
 
 					/**
 					 * mean to
@@ -181,10 +175,8 @@ namespace risa_gl
 			{
 				alpha_calculate_policy<
 					alpha_and_alpha_calculator<
-					source_selector,
-					source_method_selector,
-					destination_selector,
-					destination_method_selector> >()(result, src, dest);
+					source_getter,
+					destination_getter> >()(result, src, dest);
 			}
 		};
 	};
