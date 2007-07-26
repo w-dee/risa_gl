@@ -34,6 +34,44 @@ namespace risa_gl
 		typedef invert_alpha_factor<destination_selector,
 									get_alpha_method_selector>
 		invert_destination_alpha_getter;
+		
+		template <typename source_type, typename multiply_type>
+		class multiply_factor
+		{
+		public:
+			
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t src,
+									   dest_itor_t dest) const
+			{
+				return multiply_type(src, dest)(source_type()(src, dest));
+			}
+		};
+
+		template <typename src_type>
+		class multiply_type_factor
+		{
+		private:
+			risa_gl::uint32 factor;
+
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			multiply_type_factor(src_itor_t src, dest_itor_t dest):
+				factor(src_type()(src, dest))
+			{}
+
+			risa_gl::uint32 operator()(risa_gl::uint32 value) const
+			{
+				return (factor * value) >> 8;
+			}
+		};
+
+		typedef multiply_factor<
+			invert_source_alpha_getter,
+			multiply_type_factor<destination_alpha_getter> >
+		multiply_invert_source_alpha_and_destination_alpha_getter;
 
 		// invert scaled opacity getter
 
