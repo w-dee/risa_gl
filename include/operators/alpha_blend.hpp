@@ -46,7 +46,6 @@ namespace risa_gl
 		 * アルファブレンディング
 		 * r.color = src.color * src.a + dest.color * (1 - src.a)
 		 * r.a = src.a * src.a + dest.a * (1 - src.a)
-		 * alphaはsourceのalphaが保存される
 		 */
 		class alpha_blend_save_alpha_operator
 		{
@@ -58,7 +57,11 @@ namespace risa_gl
 				nop_factor,
 				source_alpha_getter,
 				invert_source_alpha_getter,
-				alpha_calculate_policy<source_alpha_getter> >
+				multiply_alpha_and_alpha_policy<
+				source_getter,
+				source_alpha_getter,
+				destination_getter,
+				destination_alpha_getter> >
 			alpha_blend_save_alpha_opeartor_type;
 
 			alpha_blend_save_alpha_opeartor_type blender;
