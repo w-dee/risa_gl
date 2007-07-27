@@ -77,43 +77,6 @@ namespace risa_gl
 		};
 		// }}}
 
-		/**
-		 * 加色ブレンディング(sourceが加色用)
-		 * r.color = saturation(src.color * src.a + dest.color)
-		 * r.a = src.a + dest.a * (1 - src.a)
-		 */
-		// {{{ add_blend_additive_destination_operator
-		class add_blend_additive_destination_operator
-		{
-		private:
-			typedef primitive::binomial_blend<
-				source_getter,
-				destination_getter,
-				bit_setter,
-				saturation_factor,
-				source_alpha_getter,
-				identity_alpha_factor,
-				multiply_alpha_and_alpha_policy<
-				source_alpha_getter,
-				destination_alpha_getter> >
-			add_blend_additive_destination_opeartor_type;
-
-			add_blend_additive_destination_opeartor_type blender;
-		public:
-
-			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							dest_itor_t dest,
-							result_itor_t result) const
-			{
-				blender(src, dest, result);
-			}
-		};
-		// }}}
-
-
 	};
 };
 

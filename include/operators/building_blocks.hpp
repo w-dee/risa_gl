@@ -8,33 +8,40 @@
 #include <operators/primitive/selector.hpp>
 #include <operators/primitive/method_selector.hpp>
 
-
 namespace risa_gl
 {
 	namespace operators
 	{
 		using namespace risa_gl::primitive;
 
-		// getters(pixel value)
+		// {{{ pixel_getter
+		// {{{ source
 		typedef bits_getter<source_selector> source_getter;
+		// }}}
+		// {{{ destination
 		typedef bits_getter<destination_selector> destination_getter;
+		// }}}
+		// }}}
 		
-		// alpha getters
+		// {{{ alpha getters
 		typedef alpha_factor<source_selector,
 							 get_alpha_method_selector>
 		source_alpha_getter;
 		typedef alpha_factor<destination_selector,
 							 get_alpha_method_selector>
 		destination_alpha_getter;
+		// }}}
 
-		// invert alpha getter
+		// {{{ invert alpha getter
 		typedef invert_alpha_factor<source_selector,
 									get_alpha_method_selector>
 		invert_source_alpha_getter;
 		typedef invert_alpha_factor<destination_selector,
 									get_alpha_method_selector>
 		invert_destination_alpha_getter;
-		
+		// }}}
+
+		// {{{ multiply factor and factor.
 		template <typename source_type, typename multiply_type>
 		class multiply_factor
 		{
@@ -48,7 +55,12 @@ namespace risa_gl
 				return multiply_type(src, dest)(source_type()(src, dest));
 			}
 		};
+		// }}}
 
+		// {{{ constant multiply factor
+		/**
+		 * src_typeを適用した結果をoperator()の引数にかけて返す
+		 */
 		template <typename src_type>
 		class multiply_type_factor
 		{
@@ -67,6 +79,7 @@ namespace risa_gl
 				return (factor * value) >> 8;
 			}
 		};
+		// }}}
 
 		typedef multiply_factor<
 			invert_source_alpha_getter,
