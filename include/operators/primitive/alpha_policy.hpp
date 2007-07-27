@@ -36,6 +36,5 @@ namespace risa_gl
 				result->set_alpha(calculator()(src, dest));
 			}
 		};
-
 	};
 };
