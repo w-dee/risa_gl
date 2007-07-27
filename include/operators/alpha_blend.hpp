@@ -15,7 +15,34 @@ namespace risa_gl
 		 * r.color = src.color * src.a + dest.color * (1-src.a)
 		 * r.a = ?
 		 */
-		// {{{ alpha_blend_operator		class alpha_blend_operator		{		private:			typedef primitive::binomial_blend<				source_getter,				destination_getter,				bit_setter,				nop_factor,				source_alpha_getter,				invert_source_alpha_getter,				not_calculate_policy>			alpha_blend_opeartor_type;			alpha_blend_opeartor_type blender;		public:			template <typename src_itor_t,					  typename dest_itor_t,					  typename result_itor_t>			void operator()(src_itor_t src,							dest_itor_t dest,							result_itor_t result) const			{				blender(src, dest, result);			}		};		// }}}
+		// {{{ alpha_blend_operator
+		class alpha_blend_operator
+		{
+		private:
+			typedef primitive::binomial_blend<
+				source_getter,
+				destination_getter,
+				bit_setter,
+				nop_factor,
+				source_alpha_getter,
+				invert_source_alpha_getter,
+				not_calculate_policy>
+			alpha_blend_opeartor_type;
+
+			alpha_blend_opeartor_type blender;
+		public:
+
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+		// }}}
 
 		/**
 		 * アルファブレンディング
@@ -24,14 +51,72 @@ namespace risa_gl
 		 * r.color = src.color * src.a + dest.color * (1-src.a)
 		 * r.a = dest.a
 		 */
-		// {{{ alpha_blend_save_destination_alpha_operator		class alpha_blend_save_destination_alpha_operator		{		private:			typedef primitive::binomial_blend<				source_getter,				destination_getter,				bit_setter,				nop_factor,				source_alpha_getter,				invert_source_alpha_getter,				alpha_calculate_policy<destination_alpha_getter> >			alpha_blend_save_destination_alpha_opeartor_type;			alpha_blend_save_destination_alpha_opeartor_type blender;		public:			template <typename src_itor_t,					  typename dest_itor_t,					  typename result_itor_t>			void operator()(src_itor_t src,							dest_itor_t dest,							result_itor_t result) const			{				blender(src, dest, result);			}		};		// }}}
+		// {{{ alpha_blend_save_destination_alpha_operator
+		class alpha_blend_save_destination_alpha_operator
+		{
+		private:
+			typedef primitive::binomial_blend<
+				source_getter,
+				destination_getter,
+				bit_setter,
+				nop_factor,
+				source_alpha_getter,
+				invert_source_alpha_getter,
+				alpha_calculate_policy<destination_alpha_getter> >
+			alpha_blend_save_destination_alpha_opeartor_type;
+
+			alpha_blend_save_destination_alpha_opeartor_type blender;
+		public:
+
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+		// }}}
 
 		/**
 		 * アルファブレンディング
 		 * r.color = src.color * src.a + dest.color * (1 - src.a)
 		 * r.a = src.a * src.a + dest.a * (1 - src.a)
 		 */
-		// {{{ alpha_blend_calculate_alpha_operator		class alpha_blend_calculate_alpha_operator		{		private:			typedef primitive::binomial_blend<				source_getter,				destination_getter,				bit_setter,				nop_factor,				source_alpha_getter,				invert_source_alpha_getter,				multiply_alpha_and_alpha_policy<				source_alpha_getter,				destination_alpha_getter> >			alpha_blend_calculate_alpha_opeartor_type;			alpha_blend_calculate_alpha_opeartor_type blender;		public:			template <typename src_itor_t,					  typename dest_itor_t,					  typename result_itor_t>			void operator()(src_itor_t src,							dest_itor_t dest,							result_itor_t result) const			{				blender(src, dest, result);			}		};		// }}}
+		// {{{ alpha_blend_calculate_alpha_operator
+
+		class alpha_blend_calculate_alpha_operator
+		{
+		private:
+			typedef primitive::binomial_blend<
+				source_getter,
+				destination_getter,
+				bit_setter,
+				nop_factor,
+				source_alpha_getter,
+				invert_source_alpha_getter,
+				multiply_alpha_and_alpha_policy<
+				source_alpha_getter,
+				destination_alpha_getter> >
+			alpha_blend_calculate_alpha_opeartor_type;
+
+			alpha_blend_calculate_alpha_opeartor_type blender;
+		public:
+
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+
+		// }}}
 
 		/**
 		 * アルファブレンディング
