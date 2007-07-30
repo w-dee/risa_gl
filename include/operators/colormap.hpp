@@ -8,6 +8,7 @@ namespace risa_gl
 {
 	namespace operators
 	{
+		// {{{ abstruct
 		/**
 		 * カラーマップオペレータ
 		 * result = src.a * constant color を実行する
@@ -16,7 +17,7 @@ namespace risa_gl
 		 * 度で描画) (以下の2*2*4=16種類)
 		 * * 65階調(文字描画用) と 256階調(通常用) 
 		 * * opacity=255とopacity=255以外の2種類 
-		 *   ? これ、opacity=255だとcolor copyと変わらんのでは?
+		 *  * alphaとは別にopacityを読み込んでそれを掛けるってこと？
 		 *   
 		 * * sourceを完全不透明であると見なし、sourceのアルファ値を保
          *         存して合成
@@ -34,6 +35,7 @@ namespace risa_gl
 		 *   r = sat(r +
 		 *     (s.r * s.a * o, s.g * s.a * o, s.b * s.a * o, s.a * o(?)))
 		 */
+		// }}}
 
 		/**
 		 * destinationが65levelの透過性を持つカラーマップ処理。
@@ -41,6 +43,7 @@ namespace risa_gl
 		 * destinationはopaqueであること
 		 * r = color.rgba * scale(dest.opaque)
 		 */
+		// {{{ colormap_6bpp_transparency
 		class colormap_6bpp_transparency
 		{
 		private:
@@ -76,6 +79,7 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
+		// }}}
 
 		/**
 		 * destinationが65levelの透過性を持つカラーマップ処理。
@@ -83,6 +87,7 @@ namespace risa_gl
 		 * destinationはopaqueであること
 		 * r = color.rgb * scale(dest.opaque)
 		 */
+		// {{{ colormap_6bpp_transparency_save_alpha
 		class colormap_6bpp_transparency_save_alpha
 		{
 		private:
@@ -119,6 +124,7 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
+		// }}}
 
 		/**
 		 * destinationが65levelの透過性を持つカラーマップ-アルファブレンド処理。
@@ -126,6 +132,7 @@ namespace risa_gl
 		 * r = color.rgb * scale(dest.opaque) +
 		 *     source.rgb * (1-scale(dest.opaque))
 		 */
+		// {{{ colormap_6bpp_alpha_blend
 		class colormap_6bpp_alpha_blend
 		{
 		private:
@@ -161,12 +168,14 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
+		// }}}
 
 		/**
 		 * destinationが65levelの透過性を持つカラーマップ-加色混合処理。
 		 * r = saturation(color.rgb * scale(dest.opaque) +
 		 *                source.rgb * scale(dest.opaque))
 		 */
+		// {{{ colormap_6bpp_add_blend
 		class colormap_6bpp_add_blend
 		{
 		private:
@@ -203,12 +212,14 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
+		// }}}
 
 		/**
 		 * destinationを透過性としてカラーマップ処理。
 		 * alphaは不定
 		 * r = color.rgba * scale(dest.a)
 		 */
+		// {{{ colormap_transparency
 		class colormap_transparency
 		{
 		private:
@@ -244,12 +255,14 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
+		// }}}
 
 		/**
 		 * destinationがアルファとしてカラーマップ処理。
 		 * alphaは保存
 		 * r = color.rgb * scale(dest.a)
 		 */
+		// {{{ colormap_transparency_save_alpha
 		class colormap_transparency_save_alpha
 		{
 		private:
@@ -286,6 +299,7 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
+		// }}}
 
 		/**
 		 * destinationをアルファ値としてカラーマップ-アルファブレンド処理。
@@ -293,6 +307,7 @@ namespace risa_gl
 		 * r = color.rgb * scale(dest.a) +
 		 *     source.rgb * (1-scale(dest.a))
 		 */
+		// {{{ colormap_alpha_blend
 		class colormap_alpha_blend
 		{
 		private:
@@ -328,12 +343,14 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
+		// }}}
 
 		/**
 		 * destinationをアルファ値としてカラーマップ-加色混合処理。
 		 * r = saturation(color.rgb * scale(dest.a) +
 		 *                source.rgb * scale(dest.a))
 		 */
+		// {{{ colormap_add_blend
 		class colormap_add_blend
 		{
 		private:
@@ -370,6 +387,7 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
+		// }}}
 	};
 };
 

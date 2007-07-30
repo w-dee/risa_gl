@@ -81,21 +81,294 @@ namespace risa_gl
 		};
 		// }}}
 
+		// {{{ multiply factor
 		typedef multiply_factor<
 			invert_source_alpha_getter,
 			multiply_type_factor<destination_alpha_getter> >
 		multiply_invert_source_alpha_and_destination_alpha_getter;
+		// }}}
 
 		// invert scaled opacity getter
 
-		// opacity getter
+		// {{{ with opacity channel alpha operators.
+		template <typename selector_type, typename method_selector>
+		class alpha_getter_with_opacity
+		{
+			typedef alpha_factor<selector_type,
+								 method_selector> operator_type;
+
+			const int opacity;
+			operator_type operator_method;
+
+		public:
+			const int get_opacity() const
+			{
+				return opacity;
+			}
+
+			alpha_getter_with_opacity():
+				opacity(256)
+			{}
+
+			alpha_getter_with_opacity(const alpha_getter_with_opacity& src):
+				opacity(src.opacity),
+				operator_method(src.operator_method)
+			{}
+
+			alpha_getter_with_opacity(const int opacity_):
+				opacity(opacity_)
+			{}
+
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t src,
+									   dest_itor_t dest) const
+			{
+				return (operator_method(src, dest) * opacity) >> 8;
+			}
+		};
+
+		template <typename selector_type, typename method_selector>
+		class invert_alpha_getter_with_opacity
+		{
+			typedef alpha_factor<selector_type,
+								 method_selector> operator_type;
+
+			const int opacity;
+			operator_type operator_method;
+
+		public:
+			const int get_opacity() const
+			{
+				return opacity;
+			}
+
+			invert_alpha_getter_with_opacity():
+				opacity(256)
+			{}
+
+			invert_alpha_getter_with_opacity(
+				const invert_alpha_getter_with_opacity& src):
+				opacity(src.opacity),
+				operator_method(src.operator_method)
+			{}
+
+			invert_alpha_getter_with_opacity(const int opacity_):
+				opacity(opacity_)
+			{}
+
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t src,
+									   dest_itor_t dest) const
+			{
+				return 256 - ((operator_method(src, dest) * opacity) >> 8);
+			}
+		};
+		// }}}
+
+		// {{{ target alpha getter with opacities.
+		class source_alpha_getter_with_opacity :
+			public alpha_getter_with_opacity<source_selector,
+			get_alpha_method_selector>
+		{
+			typedef alpha_getter_with_opacity<source_selector,
+											  get_alpha_method_selector>
+			parent_type;
+
+		public:
+			source_alpha_getter_with_opacity():
+				parent_type()
+			{}
+
+			source_alpha_getter_with_opacity(
+				const source_alpha_getter_with_opacity& src):
+				parent_type(src)
+			{}
+
+			source_alpha_getter_with_opacity(const int opacity_):
+				parent_type(opacity_)
+			{}
+		};
+
+		class destination_alpha_getter_with_opacity :
+			public alpha_getter_with_opacity<destination_selector,
+			get_alpha_method_selector>
+		{
+			typedef alpha_getter_with_opacity<destination_selector,
+											  get_alpha_method_selector>
+			parent_type;
+
+		public:
+			destination_alpha_getter_with_opacity():
+				parent_type()
+			{}
+
+			destination_alpha_getter_with_opacity(
+				const destination_alpha_getter_with_opacity& src):
+				parent_type(src)
+			{}
+
+			destination_alpha_getter_with_opacity(const int opacity_):
+				parent_type(opacity_)
+			{}
+		};
+
+		class source_opacity_getter_with_opacity :
+			public alpha_getter_with_opacity<source_selector,
+			primitive::get_opacity_method_selector>
+		{
+			typedef alpha_getter_with_opacity<
+				source_selector,
+				primitive::get_opacity_method_selector>
+			parent_type;
+
+		public:
+			source_opacity_getter_with_opacity():
+				parent_type()
+			{}
+
+			source_opacity_getter_with_opacity(
+				const source_opacity_getter_with_opacity& src):
+				parent_type(src.get_opacity())
+			{}
+
+			source_opacity_getter_with_opacity(const int opacity_):
+				parent_type(opacity_)
+			{}
+		};
+
+		class destination_opacity_getter_with_opacity :
+			public alpha_getter_with_opacity<destination_selector,
+			get_opacity_method_selector>
+		{
+			typedef alpha_getter_with_opacity<
+				destination_selector,
+				get_opacity_method_selector>
+			parent_type;
+
+		public:
+			destination_opacity_getter_with_opacity():
+				parent_type()
+			{}
+
+			destination_opacity_getter_with_opacity(
+				const destination_alpha_getter_with_opacity& src):
+				parent_type(src.get_opacity())
+			{}
+
+			destination_opacity_getter_with_opacity(const int opacity_):
+				parent_type(opacity_)
+			{}
+		};
+		// }}}
+
+		// {{{ invert target alpha getter with opacities
+		class invert_source_alpha_getter_with_opacity :
+			public invert_alpha_getter_with_opacity<source_selector,
+			get_alpha_method_selector>
+		{
+			typedef invert_alpha_getter_with_opacity<source_selector,
+													 get_alpha_method_selector>
+			parent_type;
+
+		public:
+			invert_source_alpha_getter_with_opacity():
+				parent_type()
+			{}
+
+			invert_source_alpha_getter_with_opacity(
+				const source_alpha_getter_with_opacity& src):
+				parent_type(src.get_opacity())
+			{}
+
+			invert_source_alpha_getter_with_opacity(const int opacity_):
+				parent_type(opacity_)
+			{}
+		};
+
+		class invert_destination_alpha_getter_with_opacity :
+			public invert_alpha_getter_with_opacity<destination_selector,
+			get_alpha_method_selector>
+		{
+			typedef invert_alpha_getter_with_opacity<destination_selector,
+													 get_alpha_method_selector>
+			parent_type;
+
+		public:
+			invert_destination_alpha_getter_with_opacity():
+				parent_type()
+			{}
+
+			invert_destination_alpha_getter_with_opacity(
+				const invert_destination_alpha_getter_with_opacity& src):
+				parent_type(src.get_opacity())
+			{}
+
+			invert_destination_alpha_getter_with_opacity(const int opacity_):
+				parent_type(opacity_)
+			{}
+		};
+
+		class invert_source_opacity_getter_with_opacity :
+			public invert_alpha_getter_with_opacity<source_selector,
+			get_opacity_method_selector>
+		{
+			typedef invert_alpha_getter_with_opacity<
+				source_selector,
+				get_opacity_method_selector>
+			parent_type;
+
+		public:
+			invert_source_opacity_getter_with_opacity():
+				parent_type()
+			{}
+
+			invert_source_opacity_getter_with_opacity(
+				const source_alpha_getter_with_opacity& src):
+				parent_type(src.get_opacity())
+			{}
+
+			invert_source_opacity_getter_with_opacity(const int opacity_):
+				parent_type(opacity_)
+			{}
+		};
+
+		class invert_destination_opacity_getter_with_opacity :
+			public invert_alpha_getter_with_opacity<destination_selector,
+			get_opacity_method_selector>
+		{
+			typedef invert_alpha_getter_with_opacity<
+				destination_selector,
+				get_opacity_method_selector>
+			parent_type;
+
+		public:
+			invert_destination_opacity_getter_with_opacity():
+				parent_type()
+			{}
+
+			invert_destination_opacity_getter_with_opacity(
+				const destination_alpha_getter_with_opacity& src):
+				parent_type(src.get_opacity())
+			{}
+
+			invert_destination_opacity_getter_with_opacity(const int opacity_):
+				parent_type(opacity_)
+			{}
+		};
+		// }}}
+
+		// {{{ opacity getter
 		typedef alpha_factor<source_selector,
 							 get_opacity_method_selector>
 		source_opacity_getter;
 		typedef alpha_factor<destination_selector,
 							 get_opacity_method_selector>
 		destination_opacity_getter;
+		// }}}
 
+		// {{{ scaled opacity getters.
 		template <int min, int max,
 				  int projection_min, int projection_max>
 		class scaled_source_opacity_getter
@@ -135,8 +408,9 @@ namespace risa_gl
 				return scaler_type()(src, dest);
 			}
 		};
+		// }}}
 
-		// invert scaled opacity getter
+		// {{{ invert scaled opacity getter
 		template <int min, int max,
 				  int projection_min, int projection_max>
 		class scaled_invert_source_opacity_getter
@@ -176,16 +450,18 @@ namespace risa_gl
 				return scaler_type()(src, dest);
 			}
 		};
+		// }}}
 
-		// invert opacity getter
+		// {{{ invert opacity getter
 		typedef invert_alpha_factor<source_selector,
 									get_opacity_method_selector>
 		invert_source_opacity_getter;
 		typedef invert_alpha_factor<destination_selector,
 									get_opacity_method_selector>
 		invert_destination_opacity_getter;
+		// }}}
 
-
+		// {{{ multiply alpha and alpha policy
 		template <typename source_getter,
 				  typename destination_getter>
 		class multiply_alpha_and_alpha_policy
@@ -230,6 +506,7 @@ namespace risa_gl
 					destination_getter> >()(result, src, dest);
 			}
 		};
+		// }}}
 	};
 };
 
