@@ -8,6 +8,10 @@ class building_blocks_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(building_blocks_test);
 	CPPUNIT_TEST(multiply_alpha_and_alpha_policy_test);
+	CPPUNIT_TEST(scaled_source_opacity_getter_test);
+	CPPUNIT_TEST(scaled_invert_source_opacity_getter_test);
+	CPPUNIT_TEST(scaled_destination_opacity_getter_test);
+	CPPUNIT_TEST(scaled_invert_destination_opacity_getter_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -20,6 +24,62 @@ public:
 		}
 
 	};
+
+	void scaled_source_opacity_getter_test()
+	{
+		using namespace risa_gl::operators;
+		using namespace risa_gl;
+		typedef scaled_source_opacity_getter<1, 65, 1, 256> getter_type;
+		getter_type oper;
+		
+		opaque src(33);
+		opaque dest(1);
+
+		CPPUNIT_ASSERT(oper(&src, &dest) == 128);
+	}
+
+	void scaled_invert_source_opacity_getter_test()
+	{
+		using namespace risa_gl::operators;
+		using namespace risa_gl;
+		typedef scaled_invert_source_opacity_getter<1, 65, 1, 256> getter_type;
+		getter_type oper;
+		
+		opaque src(1);
+		opaque dest(33);
+
+		CPPUNIT_ASSERT(oper(&src, &dest) == 255);
+	}
+
+	void scaled_destination_opacity_getter_test()
+	{
+		using namespace risa_gl::operators;
+		using namespace risa_gl;
+		typedef scaled_destination_opacity_getter<1, 65, 1, 256> getter_type;
+		getter_type oper;
+		
+		opaque src(33);
+		opaque dest(65);
+
+		CPPUNIT_ASSERT(oper(&src, &dest) == 256);
+
+		dest = opaque(33);
+		CPPUNIT_ASSERT(oper(&src, &dest) == 128);
+	}
+
+	void scaled_invert_destination_opacity_getter_test()
+	{
+		using namespace risa_gl::operators;
+		using namespace risa_gl;
+		typedef
+			scaled_invert_destination_opacity_getter<1, 65, 1, 256> getter_type;
+		getter_type oper;
+		
+		opaque src(1);
+		opaque dest(33);
+
+		CPPUNIT_ASSERT(oper(&src, &dest) == 128);
+	}
 
 	void multiply_alpha_and_alpha_policy_test()
 	{

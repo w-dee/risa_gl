@@ -56,6 +56,20 @@ namespace risa_gl
 			}
 		};
 
+		template <int min, int max, int projection_min, int projection_max>
+		class scale_factor
+		{
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 value) const
+			{
+				const int range = max - min;
+				const int projection_range = projection_max - projection_min;
+
+				return (value - min) *
+					projection_range / range + projection_min;
+			}
+		};
+		
 		/**
 		 * 写像スケーリングつきalpha_selector
 		 * @param min 元のalpha値の最小値
@@ -68,6 +82,8 @@ namespace risa_gl
 		class scaled_alpha_selector
 		{
 			typedef alpha_factor<selector, method_selector> stub_type;
+			typedef scale_factor<min, max, projection_min, projection_max>
+			scaler;
 
 		public:
 			
@@ -76,11 +92,7 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				const int range = max - min;
-				const int projection_range = projection_max - projection_min;
-
-				return (stub_type()(src, dest) - min) *
-					projection_range / range + projection_min;
+				return scaler()(stub_type()(src, dest));
 			}
 		};
 
@@ -115,7 +127,8 @@ namespace risa_gl
 		class scaled_invert_alpha_selector
 		{
 			typedef alpha_factor<selector, method_selector> stub_type;
-
+			typedef scale_factor<min, max, projection_min, projection_max>
+			scaler;
 		public:
 			
 			template <typename src_itor_t,
@@ -123,12 +136,7 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				const int range = max - min;
-				const int projection_range = projection_max - projection_min;
-
-				return projection_max -
-					((stub_type()(src, dest) - min) *
-					 projection_range / range + projection_min);
+				return scaler()(stub_type()(src, dest));
 			}
 		};
 	};
