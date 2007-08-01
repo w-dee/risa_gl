@@ -397,7 +397,7 @@ namespace risa_gl
 		 * destinationはopaqueであること
 		 * r = color.rgba * scale(dest.opaque)
 		 */
-		// {{{ colormap_6bpp_transparency
+		// {{{ colormap_6bpp_transparency_with_opacity
 		class colormap_6bpp_transparency_with_opacity
 		{
 		private:
@@ -427,6 +427,109 @@ namespace risa_gl
 			
 			/**
 			 * @param src 無視される
+			 * @param dest opaque値
+			 * @param result 結果を受け取るイテレータ
+			 */
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+		// }}}
+
+		/**
+		 * destinationが65levelの透過性を持つカラーマップ処理。
+		 * alphaは保存
+		 * destinationはopaqueであること
+		 * r = color.rgb * scale(dest.opaque)
+		 */
+		// {{{ colormap_6bpp_transparency_save_alpha_with_opacity
+		class colormap_6bpp_transparency_save_alpha_with_opacity
+		{
+		private:
+			typedef binomial_blend<
+				dynamic_constant_getter,
+				zero_getter,
+				bit_setter,
+				nop_factor,
+				scaled_destination_opacity_getter_with_opacity<1, 65, 1, 256>,
+				zero_alpha_factor,
+				alpha_calculate_policy<
+				scaled_destination_opacity_getter<1, 65, 1, 256> > >
+			colormap_operator_type;
+			colormap_operator_type blender;
+
+			colormap_6bpp_transparency_save_alpha_with_opacity();
+		public:
+			colormap_6bpp_transparency_save_alpha_with_opacity(
+				const pixel& color,
+				const int opacity):
+				blender(
+					dynamic_constant_getter(color.get_bit_representation()),
+					zero_getter(),
+					bit_setter(),
+					nop_factor(),
+					scaled_destination_opacity_getter_with_opacity<1, 65, 1, 256>(opacity))
+			{}
+			
+			/**
+			 * @param src 設定する透過度を持つイテレータ
+			 * @param dest opaque値
+			 * @param result 結果を受け取るイテレータ
+			 */
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+		// }}}
+
+		/**
+		 * destinationが65levelの透過性を持つカラーマップ-アルファブレンド処理。
+		 * alphaは今のところ破壊される
+		 * r = color.rgb * scale(dest.opaque) +
+		 *     source.rgb * (1-scale(dest.opaque))
+		 */
+		// {{{ colormap_6bpp_alpha_blend_with_opacity
+		class colormap_6bpp_alpha_blend_with_opacity
+		{
+		private:
+			typedef binomial_blend<
+				dynamic_constant_getter,
+				source_getter,
+				bit_setter,
+				nop_factor,
+				scaled_destination_opacity_getter_with_opacity<1, 65, 1, 256>,
+				scaled_invert_destination_opacity_getter_with_opacity<1, 65, 1, 256>,
+				not_calculate_policy>
+			colormap_operator_type;
+			colormap_operator_type blender;
+
+			colormap_6bpp_alpha_blend_with_opacity();
+		public:
+			colormap_6bpp_alpha_blend_with_opacity(
+				const pixel& color, const int opacity):
+				blender(
+					dynamic_constant_getter(color.get_bit_representation()),
+					source_getter(),
+					bit_setter(),
+					nop_factor(),
+					scaled_destination_opacity_getter_with_opacity<1, 65, 1, 256>(opacity),
+					scaled_invert_destination_opacity_getter_with_opacity<1, 65, 1, 256>(opacity))
+			{}
+			
+			/**
+			 * @param src 設定する透過度を持つイテレータ
 			 * @param dest opaque値
 			 * @param result 結果を受け取るイテレータ
 			 */

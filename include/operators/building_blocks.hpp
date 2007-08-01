@@ -497,12 +497,12 @@ namespace risa_gl
 				  int projection_min, int projection_max>
 		class scaled_invert_source_opacity_getter
 		{
-			typedef scaled_invert_alpha_selector<min,
-												 max,
-												 projection_min,
-												 projection_max,
-												 source_selector,
-												 get_opacity_method_selector>
+			typedef scaled_alpha_selector<min,
+										  max,
+										  projection_min,
+										  projection_max,
+										  source_selector,
+										  get_opacity_method_selector>
 			scaler_type;
 
 		public:
@@ -560,7 +560,8 @@ namespace risa_gl
 				opacity(256)
 			{}
 
-			scaled_invert_source_opacity_getter_with_opacity(const int opacity_):
+			scaled_invert_source_opacity_getter_with_opacity(
+				const int opacity_):
 				opacity(opacity_)
 			{}
 
@@ -573,7 +574,8 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				return (scaler_type()(src, dest) * opacity) >> 8;
+				return ((projection_max - scaler_type()(src, dest)) *
+						opacity) >> 8;
 			}
 		};
 
@@ -581,18 +583,18 @@ namespace risa_gl
 				  int projection_min, int projection_max>
 		class scaled_invert_destination_opacity_getter_with_opacity
 		{
-			typedef scaled_invert_alpha_selector<min,
-												 max,
-												 projection_min,
-												 projection_max,
-												 destination_selector,
-												 get_opacity_method_selector>
+			typedef scaled_alpha_selector<min,
+										  max,
+										  projection_min,
+										  projection_max,
+										  destination_selector,
+										  get_opacity_method_selector>
 			scaler_type;
 
 			const int opacity;
 
 		public:
-			const int get_opacity() 
+			const int get_opacity() const
 			{
 				return opacity;
 			}
@@ -614,7 +616,8 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				return (scaler_type()(src, dest) * opacity) >> 8;
+				return ((projection_max - scaler_type()(src, dest))
+						* opacity) >> 8;
 			}
 		};
 		// }}}
