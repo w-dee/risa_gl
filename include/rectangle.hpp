@@ -206,6 +206,6 @@ namespace risa_gl {
 			return fragments;
 		}
 	};
-};
+}
 
 #endif /* RISA_RECTANGLE_HPP_ */

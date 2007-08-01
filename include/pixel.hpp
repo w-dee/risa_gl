@@ -15,7 +15,7 @@ namespace risa_gl
 	{
 	public:
 		enum {
-			opaque_position = 0,
+			opaque_position = 0
 		};
 
 		typedef opaque self_type;
@@ -70,7 +70,7 @@ namespace risa_gl
 			red_position = 0,
 			green_position = 1,
 			blue_position = 2,
-			alpha_position = 3,
+			alpha_position = 3
 		};
 
 		typedef rgba self_type;
@@ -115,7 +115,7 @@ namespace risa_gl
 			red_position = 0,
 			green_position = 1,
 			blue_position = 2,
-			alpha_position = 3,
+			alpha_position = 3
 		};
 
 		typedef agbr self_type;
@@ -162,7 +162,7 @@ namespace risa_gl
 			red_position = pixel_format::red_position,
 			green_position = pixel_format::green_position,
 			blue_position = pixel_format::blue_position,
-			alpha_position = pixel_format::alpha_position,
+			alpha_position = pixel_format::alpha_position
 		};
 
 		typedef pixel_type self_type;
@@ -273,9 +273,7 @@ namespace risa_gl
 						src.get_green(),
 						src.get_blue(),
 						src.get_alpha());
-	};
-
-
-};
+	}
+}
 
 #endif /* RISA_PIXEL_HPP_ */

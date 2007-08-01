@@ -36,7 +36,7 @@ namespace risa_gl
 				return value;
 			}
 		};
-	};
-};
+	}
+}
 
 #endif /* RISA_COMPUTE_FACTOR_HPP_ */

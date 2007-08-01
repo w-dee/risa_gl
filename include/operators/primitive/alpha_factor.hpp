@@ -139,8 +139,8 @@ namespace risa_gl
 				return scaler()(stub_type()(src, dest));
 			}
 		};
-	};
-};
+	}
+}
 
 #endif /* RISA_ALPHA_FACTOR_HPP_ */
 

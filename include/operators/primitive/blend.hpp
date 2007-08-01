@@ -214,7 +214,7 @@ namespace risa_gl
 
 		// {{{ stripped_predicate(無項演算)
 		// }}}
-	};
-};
+	}
+}
 
 #endif /* RISA_PRIMITIVE_HPP_ */

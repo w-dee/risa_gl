@@ -113,5 +113,5 @@ namespace risa_gl {
 		}
 	};
 
-};
+}
 #endif /* RISA_ALLOCATOR_HPP_ */

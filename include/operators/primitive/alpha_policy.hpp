@@ -1,3 +1,5 @@
+#ifndef RISA_ALPHA_POLICY_HPP_
+#define RISA_ALPHA_POLICY_HPP_
 
 namespace risa_gl
 {
@@ -36,5 +38,7 @@ namespace risa_gl
 				result->set_alpha(calculator()(src, dest));
 			}
 		};
-	};
-};
+	}
+}
+
+#endif /* RISA_ALPHA_POLICY_HPP_ */

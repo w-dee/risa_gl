@@ -155,7 +155,7 @@ namespace risa_gl
 				return method_selecter()(selector()(src, dest));
 			}
 		};
-	};
-};
+	}
+}
 
 #endif /* RISA_PIXEL_GETTER_HPP_ */

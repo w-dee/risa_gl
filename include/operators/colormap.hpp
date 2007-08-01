@@ -443,7 +443,6 @@ namespace risa_gl
 		// }}}
 
 		// }}}
-	};
-};
-
+	}
+}
 #endif /* RISA_OPERATORS_COLORMAP_HPP_ */

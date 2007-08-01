@@ -674,7 +674,7 @@ namespace risa_gl
 			}
 		};
 		// }}}
-	};
-};
+	}
+}
 
 #endif /* RISA_BUILDING_BLOCKS_HPP_ */

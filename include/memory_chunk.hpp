@@ -33,5 +33,5 @@ namespace risa_gl {
 			return chunk_data[offset];
 		}
 	};
-};
+}
 #endif /* RISA_MEMORY_CHUNK_HPP_ */

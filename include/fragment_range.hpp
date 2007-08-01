@@ -118,5 +118,5 @@ namespace risa_gl {
 			return iterator_range(back_begin, tail);
 		}
 	};
-};
+}
 #endif /* RISA_FRAGMENT_RANGE_HPP_ */

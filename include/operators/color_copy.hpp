@@ -38,7 +38,7 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
-	};
-};
+	}
+}
 
 #endif /* RISA_COLOR_COPY_HPP_ */

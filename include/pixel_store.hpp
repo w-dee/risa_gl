@@ -144,6 +144,6 @@ namespace risa_gl
 		}
 
 	};
-};
+}
 
 #endif /* RISA_PIXEL_STORE_HPP_ */

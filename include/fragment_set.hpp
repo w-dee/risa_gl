@@ -38,5 +38,5 @@ namespace risa_gl
 			return fragments.size();
 		}
 	};
-};
+}
 #endif /* RISA_FRAGMENT_SET_HPP_ */

@@ -77,7 +77,7 @@ namespace risa_gl
 		};
 		// }}}
 
-	};
-};
+	}
+}
 
 #endif /* RISA_ADD_BLEND_HPP_ */

@@ -48,6 +48,6 @@ namespace risa_gl
 			return tail;
 		}
 	};
-};
+}
 
 #endif /* RISA_FRAGMENT_HPP_ */

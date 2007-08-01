@@ -69,7 +69,7 @@ namespace risa_gl
 				blender(src, dest, result);
 			}
 		};
-	};
-};
+	}
+}
 
 #endif /* RISA_ALPHA_COPY_HPP_ */

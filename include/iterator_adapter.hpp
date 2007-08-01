@@ -55,5 +55,5 @@ namespace risa_gl
 					const_alignment_iterator_type(&*itor)));
 		}
 	};
-};
+}
 #endif /* RISA_ITERATOR_ADAPTER_HPP_ */

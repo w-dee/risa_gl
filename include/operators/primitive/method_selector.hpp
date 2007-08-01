@@ -26,6 +26,6 @@ namespace risa_gl
 				return itor->get_opacity();
 			}
 		};
-	};
-};
+	}
+}
 #endif /* RISA_METHOD_SELECTOR_HPP_ */

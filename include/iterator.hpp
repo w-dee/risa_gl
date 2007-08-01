@@ -20,7 +20,7 @@ namespace risa_gl
 		typedef ValueType& reference_type;
 
 		enum {
-			element_size = sizeof(value_type),
+			element_size = sizeof(value_type)
 		};
 
 	private:
@@ -121,10 +121,10 @@ namespace risa_gl
 	{
 	public:
 		enum {
-			fragments_size = FragmentsSize,
+			fragments_size = FragmentsSize
 		};
 		enum {
-			element_size = FragmentsSize,
+			element_size = FragmentsSize
 		};
 
 
@@ -212,6 +212,6 @@ namespace risa_gl
 			return !this->operator==(rhs);
 		}
 	};
-};
+}
 
 #endif /* RISA_ITERATOR_HPP_ */

@@ -155,7 +155,7 @@ namespace risa_gl
 		};
 		// }}}
 
-	};
-};
+	}
+}
 
 #endif /* RISA_ALPHA_BLEND_HPP_ */

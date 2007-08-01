@@ -30,7 +30,7 @@ namespace risa_gl
 				return dest;
 			}
 		};
-	};
-};
+	}
+}
 
 #endif /* RISA_SELECTOR_HPP_ */

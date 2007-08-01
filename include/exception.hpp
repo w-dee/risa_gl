@@ -27,6 +27,5 @@ namespace risa_gl
 			return std::runtime_error::what();
 		}
 	};
-
-};
+}
 #endif /* RISA_EXCEPTION_HPP_ */
