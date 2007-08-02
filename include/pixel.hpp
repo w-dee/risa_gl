@@ -256,6 +256,17 @@ namespace risa_gl
 				this->b == rhs.b &&
 				this->a == rhs.a;
 		}
+
+		friend std::ostream& operator<<(
+			std::ostream& out, const pixel_type<pixel_format>& self)
+		{
+			out << "pixel(" <<
+				static_cast<unsigned short>(self.get_red()) <<	", " <<
+				static_cast<unsigned short>(self.get_green()) << ", " <<
+				static_cast<unsigned short>(self.get_blue()) << ", " <<
+				static_cast<unsigned short>(self.get_alpha()) << ") ";
+			return out;
+		}
 	};
 
 	/**

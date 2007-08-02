@@ -111,7 +111,7 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				return 256 - method_selector()(selector()(src, dest));
+				return 257 - method_selector()(selector()(src, dest));
 			}
 		};
 

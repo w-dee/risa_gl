@@ -162,7 +162,7 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				return 256 - ((operator_method(src, dest) * opacity) >> 8);
+				return 257 - ((operator_method(src, dest) * opacity) >> 8);
 			}
 		};
 		// }}}

@@ -127,9 +127,9 @@ public:
 		 *  65 + 0
 		 */
 		oper(src.begin(), dest.begin(), result.begin());
-		CPPUNIT_ASSERT(result.begin()->get_red() == 190);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 190); 
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 190);
+		CPPUNIT_ASSERT(result.begin()->get_red() == 191);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 191); 
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 191);
 		CPPUNIT_ASSERT(result.begin()->get_alpha() == 65);
 	}
 
@@ -170,9 +170,9 @@ public:
 		 * = (0.75, 0.75, 0.75)
 		 */
 		oper(src.begin(), dest.begin(), result.begin());
-		CPPUNIT_ASSERT(result.begin()->get_red() == 190);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 190); 
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 190);
+		CPPUNIT_ASSERT(result.begin()->get_red() == 191);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 191); 
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 191);
 	}
 };
 
