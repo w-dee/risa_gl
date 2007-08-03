@@ -15,6 +15,7 @@ OBJS= \
 	building_blocks_test.o \
 	add_blend_test.o \
 	add_alpha_blend_test.o \
+	with_opacity_test.o \
 
 TARGET = unit_test
 EXT = .exe

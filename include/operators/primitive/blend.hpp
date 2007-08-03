@@ -129,7 +129,14 @@ namespace risa_gl
 			divisor_factor_t divisor_factor;
 
 		public:
+			typedef src_pixel_getter_t src_getter_type;
+			typedef dest_pixel_getter_t dest_getter_type;
+			typedef result_pixel_setter_t result_setter_type;
+			typedef compute_factor_t compute_type;
+			typedef src_alpha_factor_t source_alpha_type;
+			typedef dest_alpha_factor_t destination_alpha_type;
 			typedef alpha_calculate_policy_t alpha_policy_type;
+			typedef divisor_factor_t divisor_type;
 
 			binomial_blend(const binomial_blend& source):
 				src_pixel_getter(source.src_pixel_getter),
