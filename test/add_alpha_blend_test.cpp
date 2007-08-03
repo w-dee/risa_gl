@@ -2,8 +2,6 @@
 #include <operators/add_alpha_blend.hpp>
 #include <pixel.hpp>
 
-#include <iostream>
-
 class add_alpha_blend_operator_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(add_alpha_blend_operator_test);
@@ -48,7 +46,6 @@ public:
 		 */
 		dest = pixel(192, 192, 192, 193);
 		oper(&src, &dest, &result);
-		std::cout << result << std::endl;
 		CPPUNIT_ASSERT(result.get_red() == 136);
 		CPPUNIT_ASSERT(result.get_green() == 136);
 		CPPUNIT_ASSERT(result.get_blue() == 136);

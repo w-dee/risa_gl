@@ -129,6 +129,8 @@ namespace risa_gl
 			divisor_factor_t divisor_factor;
 
 		public:
+			typedef alpha_calculate_policy_t alpha_policy_type;
+
 			binomial_blend(const binomial_blend& source):
 				src_pixel_getter(source.src_pixel_getter),
 				dest_pixel_getter(source.dest_pixel_getter),

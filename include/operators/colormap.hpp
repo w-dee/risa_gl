@@ -40,8 +40,8 @@ namespace risa_gl
 		/**
 		 * destinationが65levelの透過性を持つカラーマップ処理。
 		 * alphaは不定
-		 * destinationはopaqueであること
-		 * r = color.rgba * scale(dest.opaque)
+		 * sourceはopaqueであること
+		 * r = color.rgb * scale(source.opaque)
 		 */
 		// {{{ colormap_6bpp_transparency
 		class colormap_6bpp_transparency
@@ -52,7 +52,7 @@ namespace risa_gl
 				zero_getter,
 				bit_setter,
 				nop_factor,
-				scaled_destination_opacity_getter<1, 65, 1, 256>,
+				scaled_source_opacity_getter<1, 65, 1, 256>,
 				zero_alpha_factor,
 				not_calculate_policy>
 			colormap_operator_type;
@@ -60,6 +60,8 @@ namespace risa_gl
 
 			colormap_6bpp_transparency();
 		public:
+			typedef colormap_operator_type::alpha_policy_type alpha_policy_type;
+
 			colormap_6bpp_transparency(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -84,8 +86,8 @@ namespace risa_gl
 		/**
 		 * destinationが65levelの透過性を持つカラーマップ処理。
 		 * alphaは保存
-		 * destinationはopaqueであること
-		 * r = color.rgb * scale(dest.opaque)
+		 * sourceはopaqueであること
+		 * r = color.rgb * scale(source.opaque)
 		 */
 		// {{{ colormap_6bpp_transparency_save_alpha
 		class colormap_6bpp_transparency_save_alpha
@@ -96,15 +98,17 @@ namespace risa_gl
 				zero_getter,
 				bit_setter,
 				nop_factor,
-				scaled_destination_opacity_getter<1, 65, 1, 256>,
+				scaled_source_opacity_getter<1, 65, 1, 256>,
 				zero_alpha_factor,
 				alpha_calculate_policy<
-				scaled_destination_opacity_getter<1, 65, 1, 256> > >
+				scaled_source_opacity_getter<1, 65, 1, 256> > >
 			colormap_operator_type;
 			colormap_operator_type blender;
 
 			colormap_6bpp_transparency_save_alpha();
 		public:
+			typedef colormap_operator_type::alpha_policy_type alpha_policy_type;
+
 			colormap_6bpp_transparency_save_alpha(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -129,8 +133,8 @@ namespace risa_gl
 		/**
 		 * destinationが65levelの透過性を持つカラーマップ-アルファブレンド処理。
 		 * alphaは今のところ破壊される
-		 * r = color.rgb * scale(dest.opaque) +
-		 *     source.rgb * (1-scale(dest.opaque))
+		 * r = color.rgb * scale(source.opaque) +
+		 *     destination.rgb * (1-scale(source.opaque))
 		 */
 		// {{{ colormap_6bpp_alpha_blend
 		class colormap_6bpp_alpha_blend
@@ -138,17 +142,19 @@ namespace risa_gl
 		private:
 			typedef binomial_blend<
 				dynamic_constant_getter,
-				source_getter,
+				destination_getter,
 				bit_setter,
 				nop_factor,
-				scaled_destination_opacity_getter<1, 65, 1, 256>,
-				scaled_invert_destination_opacity_getter<1, 65, 1, 256>,
+				scaled_source_opacity_getter<1, 65, 1, 256>,
+				scaled_invert_source_opacity_getter<1, 65, 1, 256>,
 				not_calculate_policy>
 			colormap_operator_type;
 			colormap_operator_type blender;
 
 			colormap_6bpp_alpha_blend();
 		public:
+			typedef colormap_operator_type::alpha_policy_type alpha_policy_type;
+
 			colormap_6bpp_alpha_blend(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -171,9 +177,9 @@ namespace risa_gl
 		// }}}
 
 		/**
-		 * destinationが65levelの透過性を持つカラーマップ-加色混合処理。
-		 * r = saturation(color.rgb * scale(dest.opaque) +
-		 *                source.rgb * scale(dest.opaque))
+		 * sourceが65levelの透過性を持つカラーマップ-加色混合処理。
+		 * r = saturation(color.rgb * scale(source.opaque) +
+		 *                destination.rgb * scale(source.opaque))
 		 */
 		// {{{ colormap_6bpp_add_blend
 		class colormap_6bpp_add_blend
@@ -181,18 +187,20 @@ namespace risa_gl
 		private:
 			typedef binomial_blend<
 				dynamic_constant_getter,
-				source_getter,
+				destination_getter,
 				bit_setter,
 				saturation_factor,
-				scaled_destination_opacity_getter<1, 65, 1, 256>,
-				scaled_destination_opacity_getter<1, 65, 1, 256>,
+				identity_alpha_factor,
+				scaled_invert_source_opacity_getter<1, 65, 1, 256>,
 				alpha_calculate_policy<
-				scaled_destination_opacity_getter<1, 65, 1, 256> > >
+				scaled_source_opacity_getter<1, 65, 1, 256> > >
 			colormap_operator_type;
 			colormap_operator_type blender;
 
 			colormap_6bpp_add_blend();
 		public:
+			typedef colormap_operator_type::alpha_policy_type alpha_policy_type;
+
 			colormap_6bpp_add_blend(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -228,7 +236,7 @@ namespace risa_gl
 				zero_getter,
 				bit_setter,
 				nop_factor,
-				destination_alpha_getter,
+				source_opacity_getter,
 				zero_alpha_factor,
 				not_calculate_policy>
 			colormap_operator_type;
@@ -236,6 +244,8 @@ namespace risa_gl
 
 			colormap_transparency();
 		public:
+			typedef colormap_operator_type::alpha_policy_type alpha_policy_type;
+
 			colormap_transparency(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -271,15 +281,17 @@ namespace risa_gl
 				zero_getter,
 				bit_setter,
 				nop_factor,
-				destination_alpha_getter,
+				source_opacity_getter,
 				zero_alpha_factor,
 				alpha_calculate_policy<
-				destination_alpha_getter> >
+				source_opacity_getter> >
 			colormap_operator_type;
 			colormap_operator_type blender;
 
 			colormap_transparency_save_alpha();
 		public:
+			typedef colormap_operator_type::alpha_policy_type alpha_policy_type;
+
 			colormap_transparency_save_alpha(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -313,17 +325,19 @@ namespace risa_gl
 		private:
 			typedef binomial_blend<
 				dynamic_constant_getter,
-				source_getter,
+				destination_getter,
 				bit_setter,
 				nop_factor,
-				destination_alpha_getter,
-				invert_destination_alpha_getter,
+				source_opacity_getter,
+				invert_source_opacity_getter,
 				not_calculate_policy>
 			colormap_operator_type;
 			colormap_operator_type blender;
 
 			colormap_alpha_blend();
 		public:
+			typedef colormap_operator_type::alpha_policy_type alpha_policy_type;
+
 			colormap_alpha_blend(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -356,11 +370,11 @@ namespace risa_gl
 		private:
 			typedef binomial_blend<
 				dynamic_constant_getter,
-				source_getter,
+				destination_getter,
 				bit_setter,
 				saturation_factor,
-				destination_alpha_getter,
-				destination_alpha_getter,
+				source_opacity_getter,
+				source_opacity_getter,
 				alpha_calculate_policy<
 				destination_alpha_getter > >
 			colormap_operator_type;
@@ -368,6 +382,8 @@ namespace risa_gl
 
 			colormap_add_blend();
 		public:
+			typedef colormap_operator_type::alpha_policy_type alpha_policy_type;
+
 			colormap_add_blend(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -389,163 +405,6 @@ namespace risa_gl
 		};
 		// }}}
 
-
-		// {{{ with opacity version.
-		/**
-		 * destinationが65levelの透過性を持つカラーマップ処理。
-		 * alphaは不定
-		 * destinationはopaqueであること
-		 * r = color.rgba * scale(dest.opaque)
-		 */
-		// {{{ colormap_6bpp_transparency_with_opacity
-		class colormap_6bpp_transparency_with_opacity
-		{
-		private:
-			typedef binomial_blend<
-				dynamic_constant_getter,
-				zero_getter,
-				bit_setter,
-				nop_factor,
-				scaled_destination_opacity_getter_with_opacity<1, 65, 1, 256>,
-				zero_alpha_factor,
-				not_calculate_policy>
-			colormap_operator_type;
-			colormap_operator_type blender;
-
-			colormap_6bpp_transparency_with_opacity();
-		public:
-			colormap_6bpp_transparency_with_opacity(const pixel& color,
-													const int opacity):
-				blender(
-					dynamic_constant_getter(color.get_bit_representation()),
-					zero_getter(),
-					bit_setter(),
-					nop_factor(),
-					scaled_destination_opacity_getter_with_opacity<
-					1, 65, 1, 256>(opacity))
-			{}
-			
-			/**
-			 * @param src 無視される
-			 * @param dest opaque値
-			 * @param result 結果を受け取るイテレータ
-			 */
-			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							dest_itor_t dest,
-							result_itor_t result) const
-			{
-				blender(src, dest, result);
-			}
-		};
-		// }}}
-
-		/**
-		 * destinationが65levelの透過性を持つカラーマップ処理。
-		 * alphaは保存
-		 * destinationはopaqueであること
-		 * r = color.rgb * scale(dest.opaque)
-		 */
-		// {{{ colormap_6bpp_transparency_save_alpha_with_opacity
-		class colormap_6bpp_transparency_save_alpha_with_opacity
-		{
-		private:
-			typedef binomial_blend<
-				dynamic_constant_getter,
-				zero_getter,
-				bit_setter,
-				nop_factor,
-				scaled_destination_opacity_getter_with_opacity<1, 65, 1, 256>,
-				zero_alpha_factor,
-				alpha_calculate_policy<
-				scaled_destination_opacity_getter<1, 65, 1, 256> > >
-			colormap_operator_type;
-			colormap_operator_type blender;
-
-			colormap_6bpp_transparency_save_alpha_with_opacity();
-		public:
-			colormap_6bpp_transparency_save_alpha_with_opacity(
-				const pixel& color,
-				const int opacity):
-				blender(
-					dynamic_constant_getter(color.get_bit_representation()),
-					zero_getter(),
-					bit_setter(),
-					nop_factor(),
-					scaled_destination_opacity_getter_with_opacity<1, 65, 1, 256>(opacity))
-			{}
-			
-			/**
-			 * @param src 設定する透過度を持つイテレータ
-			 * @param dest opaque値
-			 * @param result 結果を受け取るイテレータ
-			 */
-			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							dest_itor_t dest,
-							result_itor_t result) const
-			{
-				blender(src, dest, result);
-			}
-		};
-		// }}}
-
-		/**
-		 * destinationが65levelの透過性を持つカラーマップ-アルファブレンド処理。
-		 * alphaは今のところ破壊される
-		 * r = color.rgb * scale(dest.opaque) +
-		 *     source.rgb * (1-scale(dest.opaque))
-		 */
-		// {{{ colormap_6bpp_alpha_blend_with_opacity
-		class colormap_6bpp_alpha_blend_with_opacity
-		{
-		private:
-			typedef binomial_blend<
-				dynamic_constant_getter,
-				source_getter,
-				bit_setter,
-				nop_factor,
-				scaled_destination_opacity_getter_with_opacity<1, 65, 1, 256>,
-				scaled_invert_destination_opacity_getter_with_opacity<1, 65, 1, 256>,
-				not_calculate_policy>
-			colormap_operator_type;
-			colormap_operator_type blender;
-
-			colormap_6bpp_alpha_blend_with_opacity();
-		public:
-			colormap_6bpp_alpha_blend_with_opacity(
-				const pixel& color, const int opacity):
-				blender(
-					dynamic_constant_getter(color.get_bit_representation()),
-					source_getter(),
-					bit_setter(),
-					nop_factor(),
-					scaled_destination_opacity_getter_with_opacity<1, 65, 1, 256>(opacity),
-					scaled_invert_destination_opacity_getter_with_opacity<1, 65, 1, 256>(opacity))
-			{}
-			
-			/**
-			 * @param src 設定する透過度を持つイテレータ
-			 * @param dest opaque値
-			 * @param result 結果を受け取るイテレータ
-			 */
-			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							dest_itor_t dest,
-							result_itor_t result) const
-			{
-				blender(src, dest, result);
-			}
-		};
-		// }}}
-
-		// }}}
 	}
 }
 #endif /* RISA_OPERATORS_COLORMAP_HPP_ */

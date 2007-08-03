@@ -139,6 +139,62 @@ namespace risa_gl
 				return scaler()(stub_type()(src, dest));
 			}
 		};
+
+		/**
+		 * 実行時にセットされた定数を返すalpha factor
+		 */
+		// {{{ constant_alpha_factor
+		class constant_alpha_factor
+		{
+		private:
+			const int value;
+
+		public:
+			constant_alpha_factor():
+				value(256)
+			{}
+
+			constant_alpha_factor(const int value_):
+				value(value_)
+			{}
+
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t,
+									   dest_itor_t) const
+			{
+				return value;
+			}
+		};
+		// }}}
+	
+		/**
+		 * 実行時にセットされた定数の逆数を返すalpha factor
+		 */
+		// {{{ invert_constant_alpha_factor
+		class invert_constant_alpha_factor
+		{
+		private:
+			const int value;
+
+		public:
+			invert_constant_alpha_factor():
+				value(1)
+			{}
+
+			invert_constant_alpha_factor(const int value_):
+				value(257 - value_)
+			{}
+
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t,
+									   dest_itor_t) const
+			{
+				return value;
+			}
+		};
+		// }}}
 	}
 }
 
