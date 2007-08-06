@@ -177,13 +177,15 @@ public:
 		operators::colormap_alpha_blend
 			oper(pixel(255, 255, 255, 129));
 
-		// src(0.5, 0.5, 0.5, 1.0), color(1.0, 1.0, 1.0, 0.5), opacity(1.0)
-		// r = (1.0, 1.0, 1.0, ?)
+		// color(1.0, 1.0, 1.0, 0.5), dest(0.5, 0.5, 0.5, 1.0), opacity(1.0)
+		// (0.5, 0.5, 0.5) + (0.5, 0.5, 0.5) * (1 - 0.5)
+		// (0.5, 0.5, 0.5) + (0.25, 0.25, 0.25)
+		// r = (0.75, 0.75, 0.75)
 
 		oper(color_map.begin(), pixels.begin(), pixels.begin());
-		CPPUNIT_ASSERT(pixels.begin()->get_red() == 255);
-		CPPUNIT_ASSERT(pixels.begin()->get_green() == 255);
-		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 255);
+		CPPUNIT_ASSERT(pixels.begin()->get_red() == 192);
+		CPPUNIT_ASSERT(pixels.begin()->get_green() == 192);
+		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 192);
 	}
 
 	void colormap_transparency_save_alpha_test()

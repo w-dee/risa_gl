@@ -324,7 +324,7 @@ namespace risa_gl
 				source_opacity_getter,
 				zero_alpha_factor,
 				alpha_calculate_policy<
-				source_opacity_getter> >
+				destination_alpha_getter> >
 			colormap_operator_type;
 			colormap_operator_type blender;
 
@@ -376,8 +376,8 @@ namespace risa_gl
 				destination_getter,
 				bit_setter,
 				nop_factor,
-				multiply_constant_and_scaled_source_opacity_getter<1, 65, 1, 256>,
-				multiply_invert_constant_and_scaled_source_opacity_getter<1, 65, 1, 256>,
+				multiply_constant_and_source_opacity_getter,
+				multiply_invert_constant_and_source_opacity_getter,
 				not_calculate_policy>
 			colormap_operator_type;
 			colormap_operator_type blender;

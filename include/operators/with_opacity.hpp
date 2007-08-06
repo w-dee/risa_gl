@@ -85,7 +85,7 @@ namespace risa_gl
 						 const base_operator_type base_operator_ =
 						 base_operator_type()):
 				base_operator(base_operator_),
-				apply_opacity_operator(opacity),
+				apply_opacity_operator(opacity_),
 				opacity(opacity_)
 			{}
 

@@ -4,6 +4,7 @@
 #include <pixel_store.hpp>
 
 #include <algorithm>
+#include <iostream>
 
 class alpha_blend_operator_test : public CppUnit::TestFixture
 {
@@ -49,16 +50,14 @@ public:
 		 * dest(0, 0, 0, 1.0)
 		 * (0.5, 0.5, 0.5) * 0.5 + (0, 0, 0) * 1.0 * 0.5
 		 * = (0.25, 0.25, 0.25)
-		 * 0.5 * 0.5 + 1.0 * (1.0 - 0.5) =
-		 * 0.25 + 0.5 = 0.75
-		 * 65 + 127 = 192
+		 * 129 + 256 - (129 * 256)/256 = 256
 		 */
 		operators::alpha_blend_additive_calculate_alpha_operator oper;
 		oper(src.begin(), dest.begin(), result.begin());
 		CPPUNIT_ASSERT(result.begin()->get_red() == 64);
 		CPPUNIT_ASSERT(result.begin()->get_green() == 64); 
 		CPPUNIT_ASSERT(result.begin()->get_blue() == 64);
-		CPPUNIT_ASSERT(result.begin()->get_alpha() == 192);
+		CPPUNIT_ASSERT(result.begin()->get_alpha() == 256);
 
 		std::generate(dest.begin(), dest.end(),
 					  generator<pixel>(pixel(255, 255, 255, 1)));
@@ -69,16 +68,13 @@ public:
 		 * (0.5, 0.5, 0.5) * 0.5 + (1, 1, 1) * 0 * 0.5
 		 * = (0.25, 0.25, 0.25)
 		 *
-		 * src.a * src.a + dest.a * (1 - src.a) =
-		 *  0.5 * 0.5 + 0 * (1 - 0.5) =
-		 *  0.25 + 0 = 0.25
-		 *  65 + 0
+		 * 129 + 1 - (129 * 1)/256 = 130
 		 */
 		oper(src.begin(), dest.begin(), result.begin());
 		CPPUNIT_ASSERT(result.begin()->get_red() == 64);
 		CPPUNIT_ASSERT(result.begin()->get_green() == 64); 
 		CPPUNIT_ASSERT(result.begin()->get_blue() == 64);
-		CPPUNIT_ASSERT(result.begin()->get_alpha() == 65);
+		CPPUNIT_ASSERT(result.begin()->get_alpha() == 130);
 	}
 
 	void alpha_blend_calculate_alpha_test()
@@ -101,16 +97,16 @@ public:
 		 * dest(0, 0, 0, 1.0)
 		 * (0.5, 0.5, 0.5) * 0.5 + (0, 0, 0) * 0.5
 		 * = (0.25, 0.25, 0.25)
-		 * 0.5 * 0.5 + 1.0 * (1.0 - 0.5) =
-		 * 0.25 + 0.5 = 0.75
-		 * 65 + 127 = 192
+		 * 
+		 * 0.5 + 1.0 - 0.5 * 1.0 = 1.5 - 0.5
+		 * 1.0
 		 */
 		operators::alpha_blend_calculate_alpha_operator oper;
 		oper(src.begin(), dest.begin(), result.begin());
 		CPPUNIT_ASSERT(result.begin()->get_red() == 64);
 		CPPUNIT_ASSERT(result.begin()->get_green() == 64); 
 		CPPUNIT_ASSERT(result.begin()->get_blue() == 64);
-		CPPUNIT_ASSERT(result.begin()->get_alpha() == 192);
+		CPPUNIT_ASSERT(result.begin()->get_alpha() == 256);
 
 		std::generate(dest.begin(), dest.end(),
 					  generator<pixel>(pixel(255, 255, 255, 1)));
@@ -121,16 +117,14 @@ public:
 		 * (0.5, 0.5, 0.5) * 0.5 + (1, 1, 1) * 0.5
 		 * = (0.75, 0.75, 0.75)
 		 *
-		 * src.a * src.a + dest.a * (1 - src.a) =
-		 *  0.5 * 0.5 + 0 * (1 - 0.5) =
-		 *  0.25 + 0 = 0.25
-		 *  65 + 0
+		 * 129 + 1 - (129 * 1)/256 = 130 - 0
+		 * 
 		 */
 		oper(src.begin(), dest.begin(), result.begin());
 		CPPUNIT_ASSERT(result.begin()->get_red() == 191);
 		CPPUNIT_ASSERT(result.begin()->get_green() == 191); 
 		CPPUNIT_ASSERT(result.begin()->get_blue() == 191);
-		CPPUNIT_ASSERT(result.begin()->get_alpha() == 65);
+		CPPUNIT_ASSERT(result.begin()->get_alpha() == 130);
 	}
 
 	void alpha_blend_test()

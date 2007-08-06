@@ -1,4 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestAssert.h>
 #include <operators/with_opacity.hpp>
 #include <operators/alpha_blend.hpp>
 #include <operators/colormap.hpp>
@@ -9,6 +10,7 @@
 
 class with_opacity_test : public CppUnit::TestFixture
 {
+
 	CPPUNIT_TEST_SUITE(with_opacity_test);
 	CPPUNIT_TEST(alpha_blend_with_opacity_test);
 	CPPUNIT_TEST(colormap_6bpp_alpha_blend_with_opacity_test);
@@ -51,15 +53,19 @@ public:
 
 		// color(1.0, 1.0, 1.0, 0.5), dest(0.5, 0.5, 0.5, 1.0), opacity(1.0)
 		// color * color.a + dest * (1 - color.a)
-		// (0.5, 0.5, 0.5) + (0.25, 0.25, 0.25)
-		// (0.75, 0.75, 0.75)
-		// (191, 191, 191)
+		// (1, 1, 1) * 0.5 * 0.25 + (0.5, 0.5, 0.5) * (1 - 0.5 * 0.25)
+		// (1/8, 1/8, 1/8) + (0.5, 0.5, 0.5) * 7/8
+		// (0.125, 0.125, 0.125) + (0.4375, 0.4375, 0.4375)
+		// (0.5625, 0.5625, 0.5625)
+		// f(a, b) * opa + dest * (1 - opa)
+		// (0.5625, 0.5625, 0.5625) * 1 + dest * 0
+		// (143, 143, 143)
+		// 
 
 		oper(color_map.begin(), pixels.begin(), pixels.begin());
-		std::cout << *pixels.begin() << std::endl;
-		CPPUNIT_ASSERT(pixels.begin()->get_red() == 191);
-		CPPUNIT_ASSERT(pixels.begin()->get_green() == 191);
-		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 191);
+		CPPUNIT_ASSERT(pixels.begin()->get_red() == 143);
+		CPPUNIT_ASSERT(pixels.begin()->get_green() == 143);
+		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 143);
 	}
 
 	void colormap_6bpp_transparency_save_alpha_with_opacity_test()
@@ -77,14 +83,24 @@ public:
 		std::generate(color_map.begin(), color_map.end(),
 					  generator<opaque>(opaque(65)));
 
-		operators::with_opacity<
-			operators::colormap_transparency_save_alpha>
+		operators::with_opacity<operators::colormap_transparency_save_alpha>
 			oper(256, operators::colormap_transparency_save_alpha(
 					 pixel(128, 128, 128, 129)));
+
+		// src (0.5, 0.5, 0.5, 0.5)
+		// dest (0.5, 0.5, 0.5, 1.0)
+		// colormap_opa(0.25)
+		// opa(1)
+		// src * colormap_opa + dest
+		// = (0.125, 0.125, 0.125, 0.125)
+		// 
+		// 
+
 		oper(color_map.begin(), pixels.begin(), pixels.begin());
-		CPPUNIT_ASSERT(pixels.begin()->get_red() == 64);
-		CPPUNIT_ASSERT(pixels.begin()->get_green() == 64);
-		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 64);
+		std::cout << *pixels.begin() << std::endl;
+		CPPUNIT_ASSERT(pixels.begin()->get_red() == 32);
+		CPPUNIT_ASSERT(pixels.begin()->get_green() == 32);
+		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 32);
 		CPPUNIT_ASSERT(pixels.begin()->get_alpha() == 256);
 	}
 

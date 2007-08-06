@@ -57,7 +57,7 @@ namespace risa_gl
 			{}
 
 			multiply_factor(const multiply_factor& src):
-				source_factor(src.source),
+				source_factor(src.source_factor),
 				multiply(src.multiply)
 			{}
 			
@@ -66,7 +66,7 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				return multiply_type(src, dest, source_factor(src, dest));
+				return multiply(src, dest, source_factor(src, dest));
 			}
 		};
 		// }}}
@@ -80,14 +80,33 @@ namespace risa_gl
 		{
 		public:
 			template <typename src_itor_t,
-					  typename dest_itor_t>
+					  typename dest_itor_t,
+					  typename value_type_t>
 			risa_gl::uint32 operator()(src_itor_t src,
 									   dest_itor_t dest,
-									   risa_gl::uint32 value) const
+									   value_type_t value) const
 			{
 				return (src_type()(src, dest) * value) >> 8;
 			}
 		};
+		// }}}
+
+		// {{{ opacity getter
+		typedef alpha_factor<source_selector,
+							 get_opacity_method_selector>
+		source_opacity_getter;
+		typedef alpha_factor<destination_selector,
+							 get_opacity_method_selector>
+		destination_opacity_getter;
+		// }}}
+
+		// {{{ invert opacity getter
+		typedef invert_alpha_factor<source_selector,
+									get_opacity_method_selector>
+		invert_source_opacity_getter;
+		typedef invert_alpha_factor<destination_selector,
+									get_opacity_method_selector>
+		invert_destination_opacity_getter;
 		// }}}
 
 		// {{{ scaled opacity getters.
@@ -180,20 +199,54 @@ namespace risa_gl
 			multiply_type_factor<destination_alpha_getter> >
 		multiply_invert_source_alpha_and_destination_alpha_getter;
 
+		class multiply_constant_and_source_opacity_getter
+		{
+		private:
+			typedef multiply_factor<
+				constant_alpha_factor,
+				multiply_type_factor<source_opacity_getter> >
+			mult_const_and_opacity_type;
+
+			mult_const_and_opacity_type oper;
+
+		public:
+			multiply_constant_and_source_opacity_getter(
+				const int constant):
+				oper(constant_alpha_factor(constant))
+			{}
+
+			multiply_constant_and_source_opacity_getter(
+				const multiply_constant_and_source_opacity_getter& src):
+				oper(src.oper)
+			{}
+
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32  operator()(src_itor_t src,
+										dest_itor_t dest) const
+
+			{
+				return oper(src, dest);
+			}
+		};
+
 		template <int min, int max, int projection_min, int projection_max>
 		class multiply_constant_and_scaled_source_opacity_getter
 		{
 		private:
 			typedef multiply_factor<
 				constant_alpha_factor,
+				multiply_type_factor<
 				scaled_source_opacity_getter<
 				min, max, 
-				projection_min, projection_max> > mult_const_and_scaled_opacity_type;
+				projection_min, projection_max> > >
+			mult_const_and_scaled_opacity_type;
 
 			mult_const_and_scaled_opacity_type oper;
 
 		public:
-			multiply_constant_and_scaled_source_opacity_getter(const int constant):
+			multiply_constant_and_scaled_source_opacity_getter(
+				const int constant):
 				oper(constant_alpha_factor(constant))
 			{}
 
@@ -203,16 +256,45 @@ namespace risa_gl
 			{}
 
 			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							dest_itor_t dest,
-							result_itor_t result) const
+					  typename dest_itor_t>
+			risa_gl::uint32  operator()(src_itor_t src,
+										dest_itor_t dest) const
+
 			{
-				oper(src, dest, result);
+				return oper(src, dest);
 			}
 		};
 				
+		class multiply_invert_constant_and_source_opacity_getter
+		{
+		private:
+			typedef multiply_factor<
+				constant_alpha_factor,
+				multiply_type_factor<source_opacity_getter> >
+			mult_const_and_opacity_type;
+
+			mult_const_and_opacity_type oper;
+
+		public:
+			multiply_invert_constant_and_source_opacity_getter(
+				const int constant):
+				oper(constant_alpha_factor(constant))
+			{}
+
+			multiply_invert_constant_and_source_opacity_getter(
+				const multiply_invert_constant_and_source_opacity_getter& src):
+				oper(src.oper)
+			{}
+
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32  operator()(src_itor_t src,
+										dest_itor_t dest) const
+
+			{
+				return 257 - oper(src, dest);
+			}
+		};
 		
 		template <int min, int max, int projection_min, int projection_max>
 		class multiply_invert_constant_and_scaled_source_opacity_getter
@@ -220,14 +302,17 @@ namespace risa_gl
 		private:
 			typedef multiply_factor<
 				constant_alpha_factor,
+				multiply_type_factor<
 				scaled_source_opacity_getter<
 				min, max, 
-				projection_min, projection_max> > mult_const_and_scaled_opacity_type;
+				projection_min, projection_max> > >
+			mult_const_and_scaled_opacity_type;
 
 			mult_const_and_scaled_opacity_type oper;
 
 		public:
-			multiply_invert_constant_and_scaled_source_opacity_getter(const int constant):
+			multiply_invert_constant_and_scaled_source_opacity_getter(
+				const int constant):
 				oper(constant_alpha_factor(257 - constant))
 			{}
 
@@ -237,35 +322,13 @@ namespace risa_gl
 			{}
 
 			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							dest_itor_t dest,
-							result_itor_t result) const
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t src,
+									   dest_itor_t dest) const
 			{
-				oper(src, dest, result);
+				return oper(src, dest);
 			}
 		};
-		// }}}
-
-		// invert scaled opacity getter
-
-		// {{{ opacity getter
-		typedef alpha_factor<source_selector,
-							 get_opacity_method_selector>
-		source_opacity_getter;
-		typedef alpha_factor<destination_selector,
-							 get_opacity_method_selector>
-		destination_opacity_getter;
-		// }}}
-
-		// {{{ invert opacity getter
-		typedef invert_alpha_factor<source_selector,
-									get_opacity_method_selector>
-		invert_source_opacity_getter;
-		typedef invert_alpha_factor<destination_selector,
-									get_opacity_method_selector>
-		invert_destination_opacity_getter;
 		// }}}
 
 		// {{{ multiply alpha and alpha policy
