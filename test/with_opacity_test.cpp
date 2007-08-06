@@ -49,14 +49,17 @@ public:
 		operators::with_opacity<operators::colormap_alpha_blend>
 			oper(256, operators::colormap_alpha_blend(pixel(255, 255, 255, 129)));
 
-		// src(0.5, 0.5, 0.5, 1.0), color(1.0, 1.0, 1.0, 0.5), opacity(1.0)
-		// 
+		// color(1.0, 1.0, 1.0, 0.5), dest(0.5, 0.5, 0.5, 1.0), opacity(1.0)
+		// color * color.a + dest * (1 - color.a)
+		// (0.5, 0.5, 0.5) + (0.25, 0.25, 0.25)
+		// (0.75, 0.75, 0.75)
+		// (191, 191, 191)
 
 		oper(color_map.begin(), pixels.begin(), pixels.begin());
 		std::cout << *pixels.begin() << std::endl;
-		CPPUNIT_ASSERT(pixels.begin()->get_red() == 64);
-		CPPUNIT_ASSERT(pixels.begin()->get_green() == 64);
-		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 64);
+		CPPUNIT_ASSERT(pixels.begin()->get_red() == 191);
+		CPPUNIT_ASSERT(pixels.begin()->get_green() == 191);
+		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 191);
 	}
 
 	void colormap_6bpp_transparency_save_alpha_with_opacity_test()

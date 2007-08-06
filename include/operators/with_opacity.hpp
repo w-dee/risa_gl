@@ -97,8 +97,10 @@ namespace risa_gl
 							result_itor_t result) const
 			{
 				// result = f(src, dest) * opacity + src * (1 - opacity)
-				base_operator(src, dest, result);
-				apply_opacity_operator(result, dest, result);
+				typename result_itor_t::value_type temp_result;
+
+				base_operator(src, dest, &temp_result);
+				apply_opacity_operator(&temp_result, dest, result);
 				typedef typename base_operator_type::alpha_policy_type
 					policy_type;
 				policy_type()(result, src, dest);

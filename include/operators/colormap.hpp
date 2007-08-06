@@ -376,8 +376,8 @@ namespace risa_gl
 				destination_getter,
 				bit_setter,
 				nop_factor,
-				source_opacity_getter,
-				invert_source_opacity_getter,
+				multiply_constant_and_scaled_source_opacity_getter<1, 65, 1, 256>,
+				multiply_invert_constant_and_scaled_source_opacity_getter<1, 65, 1, 256>,
 				not_calculate_policy>
 			colormap_operator_type;
 			colormap_operator_type blender;
@@ -395,7 +395,12 @@ namespace risa_gl
 			typedef base_type::divisor_type divisor_type;
 
 			colormap_alpha_blend(const pixel& color):
-				blender(dynamic_constant_getter(color.get_bit_representation()))
+				blender(src_getter_type(color.get_bit_representation()),
+						dest_getter_type(),
+						result_setter_type(),
+						compute_type(),
+						source_alpha_type(color.get_alpha()),
+						destination_alpha_type(color.get_alpha()))
 			{}
 			
 			/**
