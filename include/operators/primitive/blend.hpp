@@ -224,11 +224,14 @@ namespace risa_gl
 
 				res_pixel |= res_pixel2;
 
-				// 結果セット
-				result_pixel_setter(result, res_pixel);
-
 				// アルファ値の計算
-				alpha_calculate_policy(result, src, dest);
+				// 結果セット
+				result_pixel_setter(result, 
+									alpha_calculate_policy(
+										res_pixel,
+										result,
+										src,
+										dest));
 			}
 		};
 		// }}}

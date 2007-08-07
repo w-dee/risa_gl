@@ -34,7 +34,7 @@ namespace risa_gl
 					nop_factor,
 					dynamic_constant_getter,
 					dynamic_constant_getter,
-					not_calculate_policy>
+					typename base_operator_type::alpha_policy_type>
 				blender_type;
 
 				blender_type blender;
@@ -101,9 +101,6 @@ namespace risa_gl
 
 				base_operator(src, dest, &temp_result);
 				apply_opacity_operator(&temp_result, dest, result);
-				typedef typename base_operator_type::alpha_policy_type
-					policy_type;
-				policy_type()(result, src, dest);
 			}
 		};
 		// }}}

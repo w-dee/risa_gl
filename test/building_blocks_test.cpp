@@ -93,7 +93,7 @@ public:
 			dereferencer<uint32, primitive::source_selector>,
 			dereferencer<uint32, primitive::destination_selector> > oper;
 
-		oper(&result, &src, &dest);
+		result.set_bit_representation(oper(0, &result, &src, &dest));
 		// src * src + dest * (1 - src)
 		// (256 * 256) >> 8 + 256 * (256 - 256)
 		// 256

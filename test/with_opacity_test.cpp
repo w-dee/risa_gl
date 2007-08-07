@@ -12,10 +12,8 @@ class with_opacity_test : public CppUnit::TestFixture
 {
 
 	CPPUNIT_TEST_SUITE(with_opacity_test);
-	CPPUNIT_TEST(alpha_blend_with_opacity_test);
-	CPPUNIT_TEST(colormap_6bpp_alpha_blend_with_opacity_test);
-	CPPUNIT_TEST(colormap_6bpp_transparency_save_alpha_with_opacity_test);
-	CPPUNIT_TEST(colormap_6bpp_transparency_with_opacity_test);
+	CPPUNIT_TEST(colormap_alpha_blend_with_opacity_test);
+	CPPUNIT_TEST(colormap_transparency_save_alpha_with_opacity_test);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	template <typename container_type>
@@ -33,7 +31,7 @@ public:
 		}
 	};
 
-	void colormap_6bpp_alpha_blend_with_opacity_test()
+	void colormap_alpha_blend_with_opacity_test()
 	{
 		using namespace risa_gl;
 
@@ -62,13 +60,14 @@ public:
 		// (143, 143, 143)
 		// 
 
+		
 		oper(color_map.begin(), pixels.begin(), pixels.begin());
 		CPPUNIT_ASSERT(pixels.begin()->get_red() == 143);
 		CPPUNIT_ASSERT(pixels.begin()->get_green() == 143);
 		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 143);
 	}
 
-	void colormap_6bpp_transparency_save_alpha_with_opacity_test()
+	void colormap_transparency_save_alpha_with_opacity_test()
 	{
 		using namespace risa_gl;
 
@@ -93,45 +92,13 @@ public:
 		// opa(1)
 		// src * colormap_opa + dest
 		// = (0.125, 0.125, 0.125, 0.125)
-		// 
-		// 
-
+		// a = 0.125 + 1.0 - (0.125 * 1.0)
+		//   = 1.125 - 0.125
 		oper(color_map.begin(), pixels.begin(), pixels.begin());
-		std::cout << *pixels.begin() << std::endl;
 		CPPUNIT_ASSERT(pixels.begin()->get_red() == 32);
 		CPPUNIT_ASSERT(pixels.begin()->get_green() == 32);
 		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 32);
 		CPPUNIT_ASSERT(pixels.begin()->get_alpha() == 256);
-	}
-
-	void colormap_6bpp_transparency_with_opacity_test()
-	{
-		using namespace risa_gl;
-
-		typedef pixel_store<pixel> pixels_store;
-		typedef pixel_store<opaque> alpha_store;
-
-		pixels_store pixels(640, 480);
-		alpha_store color_map(640, 480);
-
-		std::generate(pixels.begin(), pixels.end(),
-					  generator<pixel>(pixel(128, 128, 128, 256)));
-		std::generate(color_map.begin(), color_map.end(),
-					  generator<opaque>(opaque(65)));
-
-		operators::with_opacity<operators::colormap_transparency>
-			oper(256, operators::colormap_transparency(
-					 pixel(128, 128, 128, 129)));
-		oper(color_map.begin(), pixels.begin(), pixels.begin());
-
-		CPPUNIT_ASSERT(pixels.begin()->get_red() == 64);
-		CPPUNIT_ASSERT(pixels.begin()->get_green() == 64);
-		CPPUNIT_ASSERT(pixels.begin()->get_blue() == 64);
-	}
-
-	void alpha_blend_with_opacity_test()
-	{
-		CPPUNIT_FAIL("not implemented");
 	}
 };
 

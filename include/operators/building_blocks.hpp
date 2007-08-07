@@ -343,9 +343,8 @@ namespace risa_gl
 			{
 				template <typename src_itor_t,
 						  typename dest_itor_t>
-				unsigned int operator()(
-					src_itor_t src,
-					dest_itor_t dest) const
+				risa_gl::uint32 operator()(src_itor_t src,
+										   dest_itor_t dest) const
 				{
 					const int src_alpha = 
 						source_getter_type()(src, dest);
@@ -356,21 +355,24 @@ namespace risa_gl
 					 * mean to
 					 *  src.a + dest.a - src.a * dest.a 
 					 */
-					return src_alpha + dest_alpha - ((src_alpha * dest_alpha) >> 8);
+					return src_alpha + dest_alpha -
+						((src_alpha * dest_alpha) >> 8);
 				}
 			};
 		public:
-			template <typename result_itor_t,
+			template <typename bit_t,
+					  typename result_itor_t,
 					  typename src_itor_t,
 					  typename dest_itor_t>
-			void operator()(result_itor_t result,
-							src_itor_t src,
-							dest_itor_t dest) const
+			risa_gl::uint32  operator()(bit_t bits,
+										result_itor_t result,
+										src_itor_t src,
+										dest_itor_t dest) const
 			{
-				alpha_calculate_policy<
+				return alpha_calculate_policy<
 					alpha_and_alpha_calculator<
 					source_getter,
-					destination_getter> >()(result, src, dest);
+					destination_getter> >()(bits, result, src, dest);
 			}
 		};
 		// }}}
