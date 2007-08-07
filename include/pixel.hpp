@@ -4,6 +4,7 @@
 #include <static_assert.hpp>
 #include <risa_types.hpp>
 
+#include <ostream>
 #include <cassert>
 
 namespace risa_gl 
