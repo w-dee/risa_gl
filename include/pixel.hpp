@@ -110,30 +110,30 @@ namespace risa_gl
 	/**
 	 * AGBRピクセルフォーマット構造体
 	 */
-	struct agbr
+	struct abgr
 	{
 		enum {
-			red_position = 0,
-			green_position = 1,
-			blue_position = 2,
-			alpha_position = 3
+			alpha_position = 0,
+			blue_position = 1,
+			green_position = 2,
+			red_position = 3
 		};
 
-		typedef agbr self_type;
+		typedef abgr self_type;
 
-		agbr():
+		abgr():
 			a(255), b(), g(), r()
 		{}
 
-		agbr(byte r_, byte g_, byte b_, byte a_):
+		abgr(byte r_, byte g_, byte b_, byte a_):
 			a(a_), b(b_), g(g_), r(r_)
 		{}
 
-		agbr(const agbr& source):
+		abgr(const abgr& source):
 			a(source.a), b(source.b), g(source.g), r(source.r)
 		{}
 
-		agbr& operator=(const agbr& rhs)
+		abgr& operator=(const abgr& rhs)
 		{
 			if (this != &rhs)
 			{
