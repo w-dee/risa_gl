@@ -8,7 +8,8 @@ namespace risa_gl
 	template <typename base_type>
 	class endian_traits
 	{
-		friend class endian_traits_test;
+	private:
+		const size_t base_type_size;
 
 	public:
 		typedef enum
@@ -16,9 +17,6 @@ namespace risa_gl
 			big_endian,
 			little_endian
 		}  endian_type;
-
-	private:
-		const size_t base_type_size;
 
 		static const int* get_endian_test_value()
 		{
