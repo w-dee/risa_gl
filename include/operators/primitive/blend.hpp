@@ -201,7 +201,7 @@ namespace risa_gl
 						divisor_factor((lower_mask()(dest_pixel) *
 										dest_alpha_factor(src, dest)) &
 									   0xff00ff00));
-				assert (res_pixel & 0xff00ff00);
+				assert((res_pixel | 0x00ff00ff) == 0x00ff00ff);
 
 				const risa_gl::uint32 res_pixel2 =
 					(compute_factor(
@@ -211,7 +211,7 @@ namespace risa_gl
 						divisor_factor(((higher_mask()(src_pixel)>>8) *
 										src_alpha_factor(src, dest)) &
 									   0xff00ff00)) << 8);
-				assert (res_pixel2 & 0x00ff00ff);
+				assert((res_pixel2 | 0xff00ff00) == 0xff00ff00);
 
 				res_pixel |= res_pixel2;
 

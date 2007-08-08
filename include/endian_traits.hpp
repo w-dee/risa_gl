@@ -31,7 +31,6 @@ namespace risa_gl
 			return little_endian;
 		}
 
-	public:
 		endian_traits():
 			base_type_size(sizeof(base_type))
 		{}
