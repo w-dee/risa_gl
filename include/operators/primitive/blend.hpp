@@ -6,9 +6,6 @@
 #include <operators/primitive/selector.hpp>
 #include <operators/primitive/alpha_factor.hpp>
 
-#include <iostream>
-#include <iomanip>
-
 namespace risa_gl
 {
 	namespace primitive
@@ -204,10 +201,7 @@ namespace risa_gl
 						divisor_factor((lower_mask()(dest_pixel) *
 										dest_alpha_factor(src, dest)) &
 									   0xff00ff00));
-				if (res_pixel & 0xff00ff00)
-				{
-					std::cout << std::hex << res_pixel << std::endl;
-				}
+				assert (res_pixel & 0xff00ff00);
 
 				const risa_gl::uint32 res_pixel2 =
 					(compute_factor(
@@ -217,10 +211,7 @@ namespace risa_gl
 						divisor_factor(((higher_mask()(src_pixel)>>8) *
 										src_alpha_factor(src, dest)) &
 									   0xff00ff00)) << 8);
-				if (res_pixel2 & 0x00ff00ff)
-				{
-					std::cout << std::hex << res_pixel2 << std::endl;
-				}
+				assert (res_pixel2 & 0x00ff00ff);
 
 				res_pixel |= res_pixel2;
 
