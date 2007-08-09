@@ -33,3 +33,15 @@
 * result = src.color + dest.a;
 * reuslt = src.color + dest.o;
 *
+
+
+* tvpgl
+ * TVPOpacityOnOpacityTable
+  opacity * opacity 時？の事前計算テーブル
+
+ * TVPNegativeMulTable
+  alpha * alpha時のアルファ値の事前計算テーブル
+  中身はporter-duffのsource-over-destination ruleのもの。
+　f(a,b) = a * a.a + b * (1 - a.a)
+         = a*a.a + b - b*a.a ;(a=a.a, b=b.a)
+		 = a.a * a.a + b.a - b.a * a.a
