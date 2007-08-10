@@ -6,25 +6,25 @@
 .b = blue
 .o = 8bpp pixel
 
-* ƒ†ƒjƒo[ƒTƒ‹ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“
+* ãƒ¦ãƒ‹ãƒãƒ¼ã‚µãƒ«ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³
  * result = src.all * .o + dest.all * (256 - .o)
- * ƒAƒ‹ƒtƒ@’ll—¶‡¬
- * ‰ÁZƒAƒ‹ƒtƒ@‡¬
+ * ã‚¢ãƒ«ãƒ•ã‚¡å€¤è€ƒæ…®åˆæˆ
+ * åŠ ç®—ã‚¢ãƒ«ãƒ•ã‚¡åˆæˆ
 
-* ƒJƒ‰[ƒ}ƒbƒv
+* ã‚«ãƒ©ãƒ¼ãƒãƒƒãƒ—
  * result = src.o * dest.all
-  * src.o‚ğÊ‘œ‚·‚éƒpƒ^[ƒ“‚ª‚U‚SŠK’²‚Æ‚Q‚T‚UŠK’²
-  * •s“§–¾“x‚É‚æ‚Á‚ÄÅ“K‰»
+  * src.oã‚’å†™åƒã™ã‚‹ãƒ‘ã‚¿ãƒ¼ãƒ³ãŒï¼–ï¼”éšèª¿ã¨ï¼’ï¼•ï¼–éšèª¿
+  * ä¸é€æ˜åº¦ã«ã‚ˆã£ã¦æœ€é©åŒ–
   * result.a = src.a
   * result.a = non determine
 
-* •s“§–¾“xƒRƒs[
+* ä¸é€æ˜åº¦ã‚³ãƒ”ãƒ¼
  * result = dest.color + src.a
 
-* FƒRƒs[
+* è‰²ã‚³ãƒ”ãƒ¼
  * result = src.color + dest.a
 
-* ƒAƒ‹ƒtƒ@‡¬
+* ã‚¢ãƒ«ãƒ•ã‚¡åˆæˆ
  * result = dest.color * (256 - src.a) + src.color * src.a
 
 * 
@@ -37,11 +37,11 @@
 
 * tvpgl
  * TVPOpacityOnOpacityTable
-  opacity * opacity H‚Ì–‘OŒvZƒe[ƒuƒ‹
+  opacity * opacity æ™‚ï¼Ÿã®äº‹å‰è¨ˆç®—ãƒ†ãƒ¼ãƒ–ãƒ«
   src.a, dest.a
   c = (src.a / dest.a) / (1 - src.a + (src.a / dest.a))
-  “WŠJ‚·‚é‚Æ
-@c = src.a / ( -dest.a * src.a + src.a + dest.a)
+  å±•é–‹ã™ã‚‹ã¨
+ã€€c = src.a / ( -dest.a * src.a + src.a + dest.a)
   c = src.a / (src.a * ( 1 - dest.a ) + dest.a)
 
 								    src . a
@@ -51,9 +51,9 @@
 
 
  * TVPNegativeMulTable
-  alpha * alpha‚ÌƒAƒ‹ƒtƒ@’l‚Ì–‘OŒvZƒe[ƒuƒ‹
-  ’†g‚Íporter-duff‚Ìsource-over-destination rule‚Ì‚à‚ÌB
-@f(a,b) = a * a.a + b * (1 - a.a)
+  alpha * alphaæ™‚ã®ã‚¢ãƒ«ãƒ•ã‚¡å€¤ã®äº‹å‰è¨ˆç®—ãƒ†ãƒ¼ãƒ–ãƒ«
+  ä¸­èº«ã¯porter-duffã®source-over-destination ruleã®ã‚‚ã®ã€‚
+ã€€f(a,b) = a * a.a + b * (1 - a.a)
          = a*a.a + b - b*a.a ;(a=a.a, b=b.a)
 		 = a.a * a.a + b.a - b.a * a.a
 
