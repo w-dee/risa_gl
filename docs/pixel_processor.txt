@@ -38,6 +38,17 @@
 * tvpgl
  * TVPOpacityOnOpacityTable
   opacity * opacity 時？の事前計算テーブル
+  src.a, dest.a
+  c = (src.a / dest.a) / (1 - src.a + (src.a / dest.a))
+  展開すると
+　c = src.a / ( -dest.a * src.a + src.a + dest.a)
+  c = src.a / (src.a * ( 1 - dest.a ) + dest.a)
+
+								    src . a
+(%o4) 			       ---------------------------------
+				       (1 - dest . a) src . a + dest . a
+
+
 
  * TVPNegativeMulTable
   alpha * alpha時のアルファ値の事前計算テーブル
@@ -45,3 +56,6 @@
 　f(a,b) = a * a.a + b * (1 - a.a)
          = a*a.a + b - b*a.a ;(a=a.a, b=b.a)
 		 = a.a * a.a + b.a - b.a * a.a
+
+(%o29) 		    - dest . a src . a + src . a + dest . a
+
