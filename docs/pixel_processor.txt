@@ -59,3 +59,11 @@
 
 (%o29) 		    - dest . a src . a + src . a + dest . a
 
+
+ * TVPRecipTable256
+ alpha逆数table?
+ TVPRecipTable256[index] =  65536/(i);
+
+ * TVPRecipTable256_16
+ TVPRecipTable256を15bitに丸めたもの？
+ div 1 以外はそのまま、div1 については0x7fff(32767)に丸められる

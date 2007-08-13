@@ -1,37 +1,107 @@
 tjs_int TVPTLG5DecompressSlide_c(tjs_uint8 *out, const tjs_uint8 *in, tjs_int insize, tjs_uint8 *text, tjs_int initialr);
 void TVPAddBlend_HDA_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
+* c = sat(src + dest);
+* a = dest;
+
 void TVPAddBlend_HDA_o_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
+* c = sat(src*opa + dest);
+* a = dest;
+
 void TVPAddBlend_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
+* c = sat(src + dest);
+* a = undefined;
+
 void TVPAddBlend_o_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
+* c = sat(src*opa + dest);
+* a = undefined;
+
 void TVPAddSubVertSum16_c(tjs_uint16 *dest, const tjs_uint32 *addline, const tjs_uint32 *subline, tjs_int len);
 void TVPAddSubVertSum16_d_c(tjs_uint16 *dest, const tjs_uint32 *addline, const tjs_uint32 *subline, tjs_int len);
 void TVPAddSubVertSum32_c(tjs_uint32 *dest, const tjs_uint32 *addline, const tjs_uint32 *subline, tjs_int len);
 void TVPAddSubVertSum32_d_c(tjs_uint32 *dest, const tjs_uint32 *addline, const tjs_uint32 *subline, tjs_int len);
+
 void TVPAdditiveAlphaBlend_HDA_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
+* c,a = TVPAddAlphaBlend_HDA_n_a();
+
 void TVPAdditiveAlphaBlend_HDA_o_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
+* c,a = TVPAddAlphaBlend_n_a_o();
+
 void TVPAdditiveAlphaBlend_a_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
+* c,a = TVPAddAlphaBlend_a_a();
+
 void TVPAdditiveAlphaBlend_ao_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
+* c,a = TVPAddAlphaBlend_a_a_o();
+
 void TVPAdditiveAlphaBlend_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
+* c,a = TVPAddAlphaBlend_n_a();
+
 void TVPAdditiveAlphaBlend_d_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
+* not implemented yet.
+
 void TVPAdditiveAlphaBlend_do_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
+* not implemented yet.
+
 void TVPAdditiveAlphaBlend_o_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
+* c,a = TVPAddAlphaBlend_n_a_o();
+
 void TVPAdjustGamma_a_c(tjs_uint32 *dest, tjs_int len, tTVPGLGammaAdjustTempData *temp);
+* テーブルによるガンマ補正?
 void TVPAdjustGamma_c(tjs_uint32 *dest, tjs_int len, tTVPGLGammaAdjustTempData *temp);
+* 
+
 void TVPAlphaBlend_HDA_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
+* c = (s - d) * s.a + d;
+* a = d.a;
+
 void TVPAlphaBlend_HDA_o_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
+* c = (s - d) * s.a * opa + d;
+* a = undefined;
+
 void TVPAlphaBlend_a_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
+* c,a = TVPAddAlphaBlend_a_d();
+
 void TVPAlphaBlend_ao_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
+* c,a = TVPAddAlphaBlend_a_d_o();
+
 void TVPAlphaBlend_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
+* c,a = TVPAddAlphaBlend_n_a();
+
 void TVPAlphaBlend_d_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
+* c = (s - d) * (s.a /((1 - d.a)* s.a + d.a)) + d;
+* a = s.a + d.a - s.a * d.a
+
 void TVPAlphaBlend_do_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
+* c = (s - d) * (s.a * opa /((1 - d.a)* s.a * opa + d.a)) + d;
+* a = s.a * opa + d.a - s.a * d.a * opa
+ 
 void TVPAlphaBlend_o_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
+* c = (s - d) * s.a * opa + d;
+* a = undefined;
+
 void TVPAlphaColorMat_c(tjs_uint32 *dest, const tjs_uint32 color, tjs_int len);
+* c = (s - d) * s.a + d;
+* a = 1;
+
 void TVPApplyColorMap65_HDA_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color);
+* c = (c - d) * s.a + d; // c = constant color.
+* a = undefined;
+
 void TVPApplyColorMap65_HDA_o_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color, tjs_int opa);
+* c = (c - d) * s.a * opa + d;
+* a = undefined;
+
 void TVPApplyColorMap65_a_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color);
+* c,a = TVPAddAlphaBlend_a_ca(d, s.a, 1 - (c * s.a), c * s.a);
+
 void TVPApplyColorMap65_ao_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color, tjs_int opa);
+* c,a = TVPAddAlphaBlend_a_ca(d, s.a * opa, 1 - s.a * opa, c * s.a * opa);
+
 void TVPApplyColorMap65_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color);
+* c = (c - d) * s.a + d;
+* a = undefined;
+
 void TVPApplyColorMap65_d_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color);
+
 void TVPApplyColorMap65_do_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color, tjs_int opa);
 void TVPApplyColorMap65_o_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color, tjs_int opa);
 void TVPApplyColorMap_HDA_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color);
