@@ -101,9 +101,15 @@ void TVPApplyColorMap65_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, t
 * a = undefined;
 
 void TVPApplyColorMap65_d_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color);
+* c = (c - d) * opa_on_opa(opa, d.a) + d;
+* a = s.a + d.a - s.a * d.a
 
 void TVPApplyColorMap65_do_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color, tjs_int opa);
+* c = (c - d) * opa_on_opa(s.a * opa, d.a)+ d;
+* a = s.a * opa + d.a - s.a * opa * d.a
+
 void TVPApplyColorMap65_o_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color, tjs_int opa);
+* c = (c - d) * 
 void TVPApplyColorMap_HDA_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color);
 void TVPApplyColorMap_HDA_o_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color, tjs_int opa);
 void TVPApplyColorMap_a_c(tjs_uint32 *dest, const tjs_uint8 *src, tjs_int len, tjs_uint32 color);
