@@ -24,10 +24,8 @@ namespace risa_gl
 				destination_getter,
 				bit_setter,
 				saturation_factor,
-				source_alpha_getter,
-				multiply_factor<
+				identity_alpha_factor,
 				invert_source_alpha_getter,
-				multiply_type_factor<destination_alpha_getter> >,
 				not_calculate_policy>
 			add_alpha_blend_opeartor_type;
 
@@ -61,7 +59,7 @@ namespace risa_gl
 				destination_getter,
 				bit_setter,
 				saturation_factor,
-				source_alpha_getter,
+				identity_alpha_factor,
 				invert_source_alpha_getter,
 				alpha_calculate_policy<destination_alpha_getter> >
 			add_alpha_blend_save_destination_alpha_opeartor_type;

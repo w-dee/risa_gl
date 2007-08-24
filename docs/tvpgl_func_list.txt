@@ -1,6 +1,9 @@
 opa_on_opa(s,d)
-* a = s.a / (1 - s.a * d.a + d.a + s.a) {d.a > 0}
-* a = 1 {d.a == 0}
+* a = (y / x) / (1.0 - y + (y / x)); // original
+  * a = s.a / (1 - s.a * d.a + d.a + s.a) {d.a > 0}
+  * a = 1 {d.a == 0}
+
+				(y / x) / (1.0 - y + (y / x));
 
 
 tjs_int TVPTLG5DecompressSlide_c(tjs_uint8 *out, const tjs_uint8 *in, tjs_int insize, tjs_uint8 *text, tjs_int initialr);
@@ -25,8 +28,13 @@ void TVPAddSubVertSum16_d_c(tjs_uint16 *dest, const tjs_uint32 *addline, const t
 void TVPAddSubVertSum32_c(tjs_uint32 *dest, const tjs_uint32 *addline, const tjs_uint32 *subline, tjs_int len);
 void TVPAddSubVertSum32_d_c(tjs_uint32 *dest, const tjs_uint32 *addline, const tjs_uint32 *subline, tjs_int len);
 
+tjs_uilt32 TVPAddAlphaBlend_n_a();
+* c = sat(s + d*(1-s.a));
+* a = N/A
+
 void TVPAdditiveAlphaBlend_HDA_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len);
-* c,a = TVPAddAlphaBlend_HDA_n_a();
+* c = TVPAddAlphaBlend_HDA_n_a();
+* a = d.a;
 
 void TVPAdditiveAlphaBlend_HDA_o_c(tjs_uint32 *dest, const tjs_uint32 *src, tjs_int len, tjs_int opa);
 * c,a = TVPAddAlphaBlend_n_a_o();

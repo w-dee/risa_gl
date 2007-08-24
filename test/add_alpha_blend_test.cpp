@@ -2,12 +2,14 @@
 #include <operators/add_alpha_blend.hpp>
 #include <pixel.hpp>
 
+#include <iostream>
+
 class add_alpha_blend_operator_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(add_alpha_blend_operator_test);
 	CPPUNIT_TEST(add_alpha_blend_test);
-//	CPPUNIT_TEST(add_alpha_blend_save_destination_alpha_test);
-//	CPPUNIT_TEST(add_alpha_blend_addtive_destination_test);
+	CPPUNIT_TEST(add_alpha_blend_save_destination_alpha_test);
+	CPPUNIT_TEST(add_alpha_blend_addtive_destination_test);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void add_alpha_blend_test()
@@ -25,30 +27,29 @@ public:
 		 * r.a = ?
 		 * src(0.5, 0.5, 0.5, 0.5)
 		 * dest(0.25, 0.25, 0.25, 0.25)
-		 * r.color = (0.25, 0.25, 0.25) + (0.0625, 0.0625, 0.0625) * 0.5
-		 *         = (0.25, 0.25, 0.25) + (0.03125, 0.03125, 0.03125)
-		 *         = (0.28125, 0.28125, 0.28125)
-		 *         = (72, 72, 72)
+		 * r.color = (0.5, 0.5, 0.5) + (0.25, 0.25, 0.25) * 0.5
+		 *         = (0.625, 0.625, 0.625)
+		 *         = (160, 160, 160)
 		 */
 		operators::add_alpha_blend_operator oper;
 		oper(&src, &dest, &result);
-		CPPUNIT_ASSERT(result.get_red() == 72);
-		CPPUNIT_ASSERT(result.get_green() == 72);
-		CPPUNIT_ASSERT(result.get_blue() == 72);
+		CPPUNIT_ASSERT(result.get_red() == 160);
+		CPPUNIT_ASSERT(result.get_green() == 160);
+		CPPUNIT_ASSERT(result.get_blue() == 160);
 
 		/*
 		 * src(0.5, 0.5, 0.5, 0.5)
 		 * dest(0.75, 0.75, 0.75, 0.75)
-		 * r.color = (0.25, 0.25, 0.25) + (0.5625, 0.5625, 0.5625) * 0.5
-		 *         = (0.25, 0.25, 0.25) + (0.28125, 0.28125, 0.28125)
-		 *         = (0.53125, 0.53125, 0.53125)
-		 *         = (136, 136, 136)
+		 * r.color = (0.5, 0.5, 0.5) + (0.75, 0.75, 0.75) * 0.5
+		 *         = (0.5, 0.5, 0.5) + (0.375, 0.375, 0.375)
+		 *         = (0.875, 0.875, 0.875)
+		 *         = (224, 224, 224)
 		 */
 		dest = pixel(192, 192, 192, 193);
 		oper(&src, &dest, &result);
-		CPPUNIT_ASSERT(result.get_red() == 136);
-		CPPUNIT_ASSERT(result.get_green() == 136);
-		CPPUNIT_ASSERT(result.get_blue() == 136);
+		CPPUNIT_ASSERT(result.get_red() == 224);
+		CPPUNIT_ASSERT(result.get_green() == 224);
+		CPPUNIT_ASSERT(result.get_blue() == 224);
 	}
 
 	void add_alpha_blend_save_destination_alpha_test()
@@ -62,20 +63,28 @@ public:
 		/**
 		 * r.color = saturation(src.color + dest.color)
 		 * r.a = dest.a
-		 * (192, 192, 192, 65)
+		 * (160, 160, 160, 65)
 		 */
 		operators::add_alpha_blend_save_destination_alpha_operator oper;
 		oper(&src, &dest, &result);
-		CPPUNIT_ASSERT(result.get_red() == 192);
-		CPPUNIT_ASSERT(result.get_green() == 192);
-		CPPUNIT_ASSERT(result.get_blue() == 192);
+		CPPUNIT_ASSERT(result.get_red() == 160);
+		CPPUNIT_ASSERT(result.get_green() == 160);
+		CPPUNIT_ASSERT(result.get_blue() == 160);
 		CPPUNIT_ASSERT(result.get_alpha() == 65);
 
+		/*
+		 * src(0.5, 0.5, 0.5, 0.5)
+		 * dest(0.75, 0.75, 0.75, 0.75)
+		 * r.color = (0.5, 0.5, 0.5) + (0.75, 0.75, 0.75) * 0.5
+		 *         = (0.5, 0.5, 0.5) + (0.375, 0.375, 0.375)
+		 *         = (0.875, 0.875, 0.875)
+		 *         = (224, 224, 224)
+		 */
 		dest = pixel(192, 192, 192, 193);
 		oper(&src, &dest, &result);
-		CPPUNIT_ASSERT(result.get_red() == 255);
-		CPPUNIT_ASSERT(result.get_green() == 255);
-		CPPUNIT_ASSERT(result.get_blue() == 255);
+		CPPUNIT_ASSERT(result.get_red() == 224);
+		CPPUNIT_ASSERT(result.get_green() == 224);
+		CPPUNIT_ASSERT(result.get_blue() == 224);
 		CPPUNIT_ASSERT(result.get_alpha() == 193);
 	}
 
