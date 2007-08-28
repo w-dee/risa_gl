@@ -23,7 +23,12 @@ EXT = .exe
 DEPENDS = $(OBJS:.o=.d)
 INCLUDES = ../include
 CXXFLAGS += -I$(INCLUDES) -g -Wall -Wunused -fno-default-inline
-LIBS +=-lcppunit
+LIBS =
+ifeq ($(CXX),g++)
+LIBCPPUNIT = -lcppunit
+else
+LIBCPPUNIT= -lcppunit-dw2
+endif
 
 .PHONY: clean depend version dependclean
 
@@ -33,7 +38,7 @@ check: all
 	./$(TARGET)$(EXT)
 
 $(TARGET)$(EXT): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET)$(EXT) $(OBJS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET)$(EXT) $(OBJS) $(LIBS) $(LIBCPPUNIT)
 
 %.d: %.cpp
 	$(CXX) -I$(INCLUDES) -MM -MT $*.o $< > $@
