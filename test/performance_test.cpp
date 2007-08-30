@@ -1,9 +1,12 @@
+#define NOMINMAX
 #include <pixel.hpp>
 #include <pixel_store.hpp>
 #include <operators/alpha_blend.hpp>
 #include <iostream>
 #include <algorithm>
 #include <Thread/RerunnableThread.hpp>
+
+#include <windows.h>
 
 template <
 	typename func_t,
@@ -88,14 +91,56 @@ typedef Work<Job<
 	pixel_store<pixel>::iterator,
 	pixel_store<pixel>::iterator> > alpha_copy;
 
+class performance_counter
+{
+private:
+	LARGE_INTEGER start_time;
+	LARGE_INTEGER stop_time;
+	
+public:
+	performance_counter():
+		start_time(), stop_time()
+	{}
+
+	~performance_counter()
+	{}
+
+	void start()
+	{
+		QueryPerformanceCounter(&start_time);
+	}
+
+	void stop()
+	{
+		QueryPerformanceCounter(&stop_time);
+	}
+
+private:
+	double convert(LARGE_INTEGER value) const
+	{
+		return
+			static_cast<double>(value.HighPart) *
+			static_cast<double>(std::numeric_limits<int>::max()) +
+			static_cast<double>(value.LowPart);
+	}
+public:
+	long long get_time() const
+	{
+		LARGE_INTEGER freq;
+		QueryPerformanceFrequency(&freq);
+
+		return
+			((stop_time.QuadPart - start_time.QuadPart) * 1000) / freq.QuadPart;
+	}
+};
+
 int main()
 {
 	typedef pixel_store<pixel> frame_type;
 	frame_type frame_buffer(640, 480);
 	frame_type back_buffer(640, 480);
 
-//	operators::alpha_blend_calculate_alpha_operator oper;
-//	operators::alpha_blend_operator oper;
+	performance_counter counter;
 
 	std::fill(frame_buffer.begin(), frame_buffer.end(),
 				  pixel(255, 255, 255, 128));
@@ -105,6 +150,8 @@ int main()
 #ifdef MT
 	RerunnableThread proc_even, proc_odd;
 #endif /* MT */
+
+	counter.start();
 
 	for (int count = 0; count < 2000; ++count) {
 #ifdef MT
@@ -138,10 +185,15 @@ int main()
 		job.run();
 #endif /* MT */
 	}
-
+	
+	counter.stop();
 #ifdef MT
 	proc_even.quit();
 	proc_odd.quit();
 #endif /* MT */
+
+	std::cout << "using time for " <<
+		(static_cast<double>(counter.get_time()) / 1000.0) << std::endl;
+
 	return 0;
 }
