@@ -15,7 +15,7 @@ namespace risa_gl
 				zero_getter,
 				destination_getter,
 				bit_setter,
-				nop_factor,
+				plus_factor,
 				zero_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<
@@ -46,7 +46,7 @@ namespace risa_gl
 				zero_getter,
 				destination_getter,
 				bit_setter,
-				nop_factor,
+				plus_factor,
 				zero_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<

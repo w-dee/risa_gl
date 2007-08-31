@@ -51,7 +51,7 @@ namespace risa_gl
 				dynamic_constant_getter,
 				zero_getter,
 				bit_setter,
-				nop_factor,
+				plus_factor,
 				scaled_source_opacity_getter<1, 65, 1, 256>,
 				zero_alpha_factor,
 				not_calculate_policy>
@@ -105,7 +105,7 @@ namespace risa_gl
 				dynamic_constant_getter,
 				zero_getter,
 				bit_setter,
-				nop_factor,
+				plus_factor,
 				scaled_source_opacity_getter<1, 65, 1, 256>,
 				zero_alpha_factor,
 				alpha_calculate_policy<
@@ -160,7 +160,7 @@ namespace risa_gl
 				dynamic_constant_getter,
 				destination_getter,
 				bit_setter,
-				nop_factor,
+				plus_factor,
 				scaled_source_opacity_getter<1, 65, 1, 256>,
 				scaled_invert_source_opacity_getter<1, 65, 1, 256>,
 				not_calculate_policy>
@@ -267,7 +267,7 @@ namespace risa_gl
 				dynamic_constant_getter,
 				zero_getter,
 				bit_setter,
-				nop_factor,
+				plus_factor,
 				source_opacity_getter,
 				zero_alpha_factor,
 				not_calculate_policy>
@@ -320,7 +320,7 @@ namespace risa_gl
 				dynamic_constant_getter,
 				zero_getter,
 				bit_setter,
-				nop_factor,
+				plus_factor,
 				source_opacity_getter,
 				zero_alpha_factor,
 				alpha_calculate_policy<
@@ -375,7 +375,7 @@ namespace risa_gl
 				dynamic_constant_getter,
 				destination_getter,
 				bit_setter,
-				nop_factor,
+				plus_factor,
 				multiply_constant_and_source_opacity_getter,
 				multiply_invert_constant_and_source_opacity_getter,
 				not_calculate_policy>

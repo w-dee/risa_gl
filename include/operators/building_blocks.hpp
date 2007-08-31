@@ -20,6 +20,9 @@ namespace risa_gl
 		// }}}
 		// {{{ destination
 		typedef bits_getter<destination_selector> destination_getter;
+
+		typedef complement_getter<destination_selector> 
+		complement_destination_getter;
 		// }}}
 		// }}}
 		

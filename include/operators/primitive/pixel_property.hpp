@@ -143,6 +143,23 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * selectorを利用して対象をbit_representationメソッドを使って
+		 * 補値を取得するgetter
+		 */
+		template <typename selector>
+		class complement_getter
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t src,
+									   dest_itor_t dest) const
+			{
+				return ~selector()(src, dest)->get_bit_representation();
+			}
+		};
+
 		template <typename selector, typename method_selecter>
 		class alpha_getter
 		{

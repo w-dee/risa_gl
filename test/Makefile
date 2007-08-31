@@ -1,6 +1,8 @@
 
 OBJS= \
 	test_main.o \
+	compute_factor_test.o \
+	sub_blend_test.o \
 	pixel_test.o \
 	pixel_store_test.o \
 	iterator_test.o \
@@ -55,10 +57,10 @@ version:
 	$(CXX) --version
 
 performance_test_mt: performance_test.cpp
-	$(CXX) -DMT -O3 --param inline-unit-growth=2000 --param large-function-growth=2000 --param max-inline-insns-single=2000 -D_WIN32_WINNT=0x0501 -I../include -I../../cpp_lib -Winline -Wall -o $@ $<
+	$(CXX) -DMT -DNDEBUG -O3 --param inline-unit-growth=2000 --param large-function-growth=2000 --param max-inline-insns-single=2000 -D_WIN32_WINNT=0x0501 -I../include -I../../cpp_lib -Winline -Wall -o $@ $<
 
 performance_test: performance_test.cpp
-	$(CXX) -O3 --param inline-unit-growth=2000 --param large-function-growth=2000 --param max-inline-insns-single=2000 -D_WIN32_WINNT=0x0501 -I../include -I../../cpp_lib -Winline -Wall -o $@ $<
+	$(CXX) -O3 -DNDEBUG --param inline-unit-growth=2000 --param large-function-growth=2000 --param max-inline-insns-single=2000 -D_WIN32_WINNT=0x0501 -I../include -I../../cpp_lib -Winline -Wall -o $@ $<
 
 
 include $(DEPENDS)

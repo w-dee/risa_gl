@@ -87,7 +87,7 @@ public:
 };
 
 typedef Work<Job<
-	operators::alpha_blend_operator,
+	operators::alpha_blend_save_destination_alpha_operator,
 	pixel_store<pixel>::iterator,
 	pixel_store<pixel>::iterator> > alpha_copy;
 

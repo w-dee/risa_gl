@@ -8,32 +8,50 @@ namespace risa_gl
 	namespace primitive
 	{
 		/**
-		 * サチュレーションファクタ
+		 * 飽和加算ファンタ
 		 */
 		class saturation_factor
 		{
 		public:
-			risa_gl::uint32 operator()(risa_gl::uint32 value) const
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
+									   risa_gl::uint32 rhs) const
 			{
-				return
-					((value & 0xff000000U) ?
-					 0x00ff0000U :
-					 (value & 0x00ff0000U)) |
-					((value & 0x0000ff00U) ?
-					 0x000000ffU :
-					 (value & 0x000000ffU));
+				const risa_gl::uint32 carry_bits =
+					((lhs & rhs) +
+					 (((lhs ^ rhs) >> 1) & 0x7f7f7f7f)) &
+					0x80808080;
+				const risa_gl::uint32 mask =
+					(carry_bits << 1) - (carry_bits >> 7);
+				return  (lhs + rhs - mask) | mask;
+			}
+		};
+
+		class under_saturation_factor
+		{
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
+									   risa_gl::uint32 rhs) const
+			{
+				const risa_gl::uint32 borrow_bits =
+					((((lhs ^ ~rhs) << 1) & 0x7f7f7f7f) -
+					 (lhs & ~rhs)) &
+					0x80808080;
+				const risa_gl::uint32 mask =
+					(borrow_bits << 1) - (borrow_bits >> 7);
+				return (lhs + rhs - mask) & mask;
 			}
 		};
 
 		/**
-		 * 何もしないファクタ
+		 * 加算ファクタ
 		 */
-		class nop_factor
+		class plus_factor
 		{
 		public:
-			risa_gl::uint32 operator()(risa_gl::uint32 value) const
+			risa_gl::uint32 operator()(risa_gl::uint32 rhs,
+									   risa_gl::uint32 lhs) const
 			{
-				return value;
+				return rhs + lhs;
 			}
 		};
 	}

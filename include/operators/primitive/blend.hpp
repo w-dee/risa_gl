@@ -197,7 +197,7 @@ namespace risa_gl
 					compute_factor(
 						divisor_factor((lower_mask()(src_pixel) *
 										src_alpha_factor(src, dest)) &
-									   0xff00ff00) +
+									   0xff00ff00),
 						divisor_factor((lower_mask()(dest_pixel) *
 										dest_alpha_factor(src, dest)) &
 									   0xff00ff00));
@@ -207,7 +207,7 @@ namespace risa_gl
 					(compute_factor(
 						divisor_factor(((higher_mask()(dest_pixel)>>8) *
 										dest_alpha_factor(src, dest)) &
-									   0xff00ff00) +
+									   0xff00ff00),
 						divisor_factor(((higher_mask()(src_pixel)>>8) *
 										src_alpha_factor(src, dest)) &
 									   0xff00ff00)) << 8);
