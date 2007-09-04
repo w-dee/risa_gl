@@ -2,7 +2,7 @@
 #define RISA_BUILDING_BLOCKS_HPP_
 
 #include <operators/primitive/alpha_policy.hpp>
-#include <operators/primitive/compute_factor.hpp>
+#include <operators/primitive/compute_function.hpp>
 #include <operators/primitive/alpha_factor.hpp>
 #include <operators/primitive/pixel_property.hpp>
 #include <operators/primitive/selector.hpp>

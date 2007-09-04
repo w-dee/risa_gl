@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <operators/primitive/compute_factor.hpp>
+#include <operators/primitive/compute_function.hpp>
 
 #include <iostream>
 #include <iomanip>

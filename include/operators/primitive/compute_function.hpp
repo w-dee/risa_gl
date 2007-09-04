@@ -1,5 +1,5 @@
-#ifndef RISA_COMPUTE_FACTOR_HPP_
-#define RISA_COMPUTE_FACTOR_HPP_
+#ifndef RISA_COMPUTE_FUNCTION_HPP_
+#define RISA_COMPUTE_FUNCTION_HPP_
 
 #include <risa_types.hpp>
 
@@ -83,4 +83,4 @@ namespace risa_gl
 	}
 }
 
-#endif /* RISA_COMPUTE_FACTOR_HPP_ */
+#endif /* RISA_COMPUTE_FUNCTION_HPP_ */

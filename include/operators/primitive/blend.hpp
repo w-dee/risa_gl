@@ -2,7 +2,7 @@
 #define RISA_PRIMITIVE_HPP_
 #include <iterator.hpp>
 #include <risa_types.hpp>
-#include <operators/primitive/compute_factor.hpp>
+#include <operators/primitive/compute_function.hpp>
 #include <operators/primitive/selector.hpp>
 #include <operators/primitive/alpha_factor.hpp>
 
