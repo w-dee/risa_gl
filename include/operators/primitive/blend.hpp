@@ -205,12 +205,13 @@ namespace risa_gl
 
 				const risa_gl::uint32 res_pixel2 =
 					(compute_factor(
-						divisor_factor(((higher_mask()(dest_pixel)>>8) *
-										dest_alpha_factor(src, dest)) &
-									   0xff00ff00),
 						divisor_factor(((higher_mask()(src_pixel)>>8) *
 										src_alpha_factor(src, dest)) &
+									   0xff00ff00),
+						divisor_factor(((higher_mask()(dest_pixel)>>8) *
+										dest_alpha_factor(src, dest)) &
 									   0xff00ff00)) << 8);
+
 				assert((res_pixel2 | 0xff00ff00) == 0xff00ff00);
 
 				res_pixel |= res_pixel2;

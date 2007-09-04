@@ -26,6 +26,7 @@ public:
 		operators::sub_blend_operator oper;
 		oper(&src, &dest, &result);
 
+		std::cout << result << std::endl;
 		CPPUNIT_ASSERT(result.get_red() == 64);
 		CPPUNIT_ASSERT(result.get_green() == 64);
 		CPPUNIT_ASSERT(result.get_blue() == 64);

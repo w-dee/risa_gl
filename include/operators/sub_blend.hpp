@@ -20,7 +20,7 @@ namespace risa_gl
 		private:
 			typedef primitive::binomial_blend<
 				source_getter,
-				complement_destination_getter,
+				destination_getter,
 				bit_setter,
 				under_saturation_factor,
 				identity_alpha_factor,
@@ -54,7 +54,7 @@ namespace risa_gl
 		private:
 			typedef primitive::binomial_blend<
 				source_getter,
-				complement_destination_getter,
+				destination_getter,
 				bit_setter,
 				under_saturation_factor,
 				identity_alpha_factor,

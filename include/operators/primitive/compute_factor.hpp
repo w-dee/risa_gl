@@ -8,7 +8,7 @@ namespace risa_gl
 	namespace primitive
 	{
 		/**
-		 * 飽和加算ファンタ
+		 * 飽和加算ファクンタ
 		 */
 		class saturation_factor
 		{
@@ -26,19 +26,25 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * 飽和減算ファンクタ
+		 */
 		class under_saturation_factor
 		{
 		public:
 			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
 									   risa_gl::uint32 rhs) const
 			{
-				const risa_gl::uint32 borrow_bits =
-					((((lhs ^ ~rhs) << 1) & 0x7f7f7f7f) -
-					 (lhs & ~rhs)) &
-					0x80808080;
-				const risa_gl::uint32 mask =
-					(borrow_bits << 1) - (borrow_bits >> 7);
-				return (lhs + rhs - mask) & mask;
+				assert((lhs & 0xff00ff00) == 0);
+				assert((rhs & 0xff00ff00) == 0);
+
+				const risa_gl::uint32 not_use_borrow =
+					((lhs | 0x01000100) - rhs) & 0x01000100;
+
+				const risa_gl::uint32 mask = 
+					not_use_borrow - (not_use_borrow >> 8);
+
+				return ((lhs | 0x01000100) - rhs) & mask;
 			}
 		};
 
