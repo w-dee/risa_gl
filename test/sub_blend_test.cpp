@@ -2,8 +2,6 @@
 #include <operators/sub_blend.hpp>
 #include <pixel.hpp>
 
-#include <iostream>
-
 class sub_blend_operator_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(sub_blend_operator_test);
@@ -26,7 +24,6 @@ public:
 		operators::sub_blend_operator oper;
 		oper(&src, &dest, &result);
 
-		std::cout << result << std::endl;
 		CPPUNIT_ASSERT(result.get_red() == 64);
 		CPPUNIT_ASSERT(result.get_green() == 64);
 		CPPUNIT_ASSERT(result.get_blue() == 64);

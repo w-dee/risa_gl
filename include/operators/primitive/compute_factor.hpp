@@ -8,9 +8,9 @@ namespace risa_gl
 	namespace primitive
 	{
 		/**
-		 * 飽和加算ファクンタ
+		 * 飽和加算ファンクタ
 		 */
-		class saturation_factor
+		class saturation_function
 		{
 		public:
 			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
@@ -29,7 +29,7 @@ namespace risa_gl
 		/**
 		 * 飽和減算ファンクタ
 		 */
-		class under_saturation_factor
+		class under_saturation_function
 		{
 		public:
 			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
@@ -49,17 +49,37 @@ namespace risa_gl
 		};
 
 		/**
-		 * 加算ファクタ
+		 * 加算ファンクタ
 		 */
-		class plus_factor
+		class plus_function
 		{
 		public:
-			risa_gl::uint32 operator()(risa_gl::uint32 rhs,
-									   risa_gl::uint32 lhs) const
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
+									   risa_gl::uint32 rhs) const
 			{
-				return rhs + lhs;
+				return lhs + rhs;
 			}
 		};
+
+		/**
+		 * 乗算ファンクタ
+		 */
+		class multiply_function
+		{
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
+									   risa_gl::uint32 rhs) const
+			{
+				assert((lhs & 0xff00ff00) == 0);
+				assert((rhs & 0xff00ff00) == 0);
+
+				return 
+					((((lhs & 0x000000ff) * (rhs & 0x000000ff)) |
+					  ((lhs & 0x00ff0000) * ((rhs & 0x00ff0000) >> 16))) &
+					 0xff00ff00) >> 8;
+			}
+		};
+
 	}
 }
 

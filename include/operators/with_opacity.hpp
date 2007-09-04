@@ -31,7 +31,7 @@ namespace risa_gl
 					source_getter,
 					destination_getter,
 					bit_setter,
-					plus_factor,
+					plus_function,
 					dynamic_constant_getter,
 					dynamic_constant_getter,
 					typename base_operator_type::alpha_policy_type>
@@ -45,7 +45,7 @@ namespace risa_gl
 						source_getter(),
 						destination_getter(),
 						bit_setter(),
-						plus_factor(),
+						plus_function(),
 						dynamic_constant_getter(opacity),
 						dynamic_constant_getter(257 - opacity))
 				{}

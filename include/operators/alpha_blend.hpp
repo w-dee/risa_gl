@@ -23,7 +23,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				plus_factor,
+				plus_function,
 				source_alpha_getter,
 				invert_source_alpha_getter,
 				not_calculate_policy>
@@ -59,7 +59,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				plus_factor,
+				plus_function,
 				source_alpha_getter,
 				invert_source_alpha_getter,
 				alpha_calculate_policy<destination_alpha_getter> >
@@ -94,7 +94,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				plus_factor,
+				plus_function,
 				source_alpha_getter,
 				invert_source_alpha_getter,
 				multiply_alpha_and_alpha_policy<
@@ -132,7 +132,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				plus_factor,
+				plus_function,
 				source_alpha_getter,
 				multiply_invert_source_alpha_and_destination_alpha_getter,
 				multiply_alpha_and_alpha_policy<

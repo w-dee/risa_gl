@@ -15,7 +15,7 @@ namespace risa_gl
 				source_getter,
 				zero_getter,
 				bit_setter,
-				plus_factor,
+				plus_function,
 				identity_alpha_factor,
 				zero_alpha_factor,
 				alpha_calculate_policy<
