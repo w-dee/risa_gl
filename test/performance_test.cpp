@@ -6,7 +6,9 @@
 #include <algorithm>
 #include <Thread/RerunnableThread.hpp>
 
-#include <windows.h>
+#ifdef WIN32
+#	include <windows.h>
+#endif
 
 template <
 	typename func_t,
@@ -91,6 +93,7 @@ typedef Work<Job<
 	pixel_store<pixel>::iterator,
 	pixel_store<pixel>::iterator> > alpha_copy;
 
+#ifdef WIN32
 class performance_counter
 {
 private:
@@ -133,6 +136,7 @@ public:
 			((stop_time.QuadPart - start_time.QuadPart) * 1000) / freq.QuadPart;
 	}
 };
+#endif
 
 int main()
 {
@@ -140,7 +144,9 @@ int main()
 	frame_type frame_buffer(640, 480);
 	frame_type back_buffer(640, 480);
 
+#ifdef WIN32
 	performance_counter counter;
+#endif
 
 	std::fill(frame_buffer.begin(), frame_buffer.end(),
 				  pixel(255, 255, 255, 128));
@@ -151,7 +157,9 @@ int main()
 	RerunnableThread proc_even, proc_odd;
 #endif /* MT */
 
+#if WIN32
 	counter.start();
+#endif
 
 	for (int count = 0; count < 2000; ++count) {
 #ifdef MT
@@ -185,15 +193,20 @@ int main()
 		job.run();
 #endif /* MT */
 	}
-	
+
+#ifdef WIN32
 	counter.stop();
+#endif
+
 #ifdef MT
 	proc_even.quit();
 	proc_odd.quit();
 #endif /* MT */
 
+#ifdef WIN32
 	std::cout << "using time for " <<
 		(static_cast<double>(counter.get_time()) / 1000.0) << std::endl;
+#endif
 
 	return 0;
 }
