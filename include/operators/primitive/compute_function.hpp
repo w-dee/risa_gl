@@ -2,6 +2,7 @@
 #define RISA_COMPUTE_FUNCTION_HPP_
 
 #include <risa_types.hpp>
+#include <operators/primitive/selector.hpp>
 #include <cassert>
 
 namespace risa_gl
@@ -11,7 +12,7 @@ namespace risa_gl
 		/**
 		 * 飽和加算ファンクタ
 		 */
-		class saturation_function
+		class add_saturation_function
 		{
 		public:
 			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
@@ -27,17 +28,42 @@ namespace risa_gl
 			}
 		};
 
+		template <typename selector_type>
+		class invert
+		{
+		private:
+			selector_type selector;
+
+		public:
+			template <typename lhs_type,
+					  typename rhs_type>
+			risa_gl::uint32 operator()(lhs_type lhs,
+									   rhs_type rhs) const
+			{
+				return 0x00ff00ff - selector(lhs, rhs);
+			}
+		};
+		
 		/**
 		 * 飽和減算ファンクタ
 		 */
-		class under_saturation_function
+		template <typename source_selector_type,
+				  typename destination_selector_type>
+		class subtract_saturation_function
 		{
+		private:
+			source_selector_type src_select;
+			destination_selector_type dest_select;
+
 		public:
-			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
-									   risa_gl::uint32 rhs) const
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs_,
+									   risa_gl::uint32 rhs_) const
 			{
-				assert((lhs & 0xff00ff00) == 0);
-				assert((rhs & 0xff00ff00) == 0);
+				assert((lhs_ & 0xff00ff00) == 0);
+				assert((rhs_ & 0xff00ff00) == 0);
+
+				const risa_gl::uint32 lhs = dest_select(lhs_, rhs_);
+				const risa_gl::uint32 rhs = src_select(lhs_, rhs_);
 
 				const risa_gl::uint32 not_use_borrow =
 					((lhs | 0x01000100) - rhs) & 0x01000100;
@@ -81,6 +107,33 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * 除算ファンクタ
+		 * result = lhs / rhs;
+		 */
+		template <typename source_selector_type,
+				  typename destination_selector_type>
+		class divide_saturation_function
+		{
+		private:
+			source_selector_type src_select;
+			destination_selector_type dest_select;
+
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs_,
+									   risa_gl::uint32 rhs_) const
+			{
+				assert((lhs_ & 0xff00ff00) == 0);
+				assert((rhs_ & 0xff00ff00) == 0);
+
+				const risa_gl::uint32 lhs = dest_select(lhs_, rhs_);
+				const risa_gl::uint32 rhs = src_select(lhs_, rhs_);
+				
+				return ((((lhs & 0x000000ff) * (rhs & 0x000000ff)) |
+						 ((lhs & 0x00ff0000) * ((rhs & 0x00ff0000) >> 16))) &
+						0xff00ff00) >> 8;
+			}
+		};
 	}
 }
 

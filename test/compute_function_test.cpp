@@ -17,7 +17,7 @@ public:
 	{
 		using namespace risa_gl::primitive;
 
-		saturation_function sat;
+		add_saturation_function sat;
 
 		CPPUNIT_ASSERT(sat(0x80808080, 0x7f7f7f7f) == 0xffffffff);
 		CPPUNIT_ASSERT(sat(0x80808080, 0x80808080) == 0xffffffff);
@@ -28,7 +28,9 @@ public:
 	{
 		using namespace risa_gl::primitive;
 
-		under_saturation_function sat;
+		subtract_saturation_function<
+			destination_selector,
+			source_selector> sat;
 
 		CPPUNIT_ASSERT(sat(0x00800080, 0x00000000) == 0x00800080);
 		CPPUNIT_ASSERT(sat(0x00800080, 0x00700070) == 0x00100010);

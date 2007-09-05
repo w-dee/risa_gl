@@ -22,7 +22,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				saturation_function,
+				add_saturation_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				not_calculate_policy>
@@ -56,7 +56,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				saturation_function,
+				add_saturation_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<destination_alpha_getter> >

@@ -13,54 +13,54 @@ public:
 	{
 		using namespace risa_gl;
 
-		pixel src(128, 128, 128, 129);
-		pixel dest(64, 64, 64, 65);
+		pixel src(128, 128, 128, 65);
+		pixel dest(128, 128, 128, 129);
 		pixel result;
 
 		/**
-		 * r.color = saturation(src.color - dest.color)
-		 * (64, 64, 64)
+		 * r.color = saturation(dest.color - (1 - src.color))
+		 * (0, 0, 0)
 		 */
 		operators::sub_blend_operator oper;
 		oper(&src, &dest, &result);
 
-		CPPUNIT_ASSERT(result.get_red() == 64);
-		CPPUNIT_ASSERT(result.get_green() == 64);
-		CPPUNIT_ASSERT(result.get_blue() == 64);
+		CPPUNIT_ASSERT(result.get_red() == 1);
+		CPPUNIT_ASSERT(result.get_green() == 1);
+		CPPUNIT_ASSERT(result.get_blue() == 1);
 
-		dest = pixel(192, 192, 192, 193);
+		src = pixel(192, 192, 192, 193);
 		oper(&src, &dest, &result);
-		CPPUNIT_ASSERT(result.get_red() == 0);
-		CPPUNIT_ASSERT(result.get_green() == 0);
-		CPPUNIT_ASSERT(result.get_blue() == 0);
+		CPPUNIT_ASSERT(result.get_red() == 65);
+		CPPUNIT_ASSERT(result.get_green() == 65);
+		CPPUNIT_ASSERT(result.get_blue() == 65);
 	}
 
 	void sub_blend_save_destination_alpha_test()
 	{
 		using namespace risa_gl;
 
-		pixel src(128, 128, 128, 129);
-		pixel dest(64, 64, 64, 65);
+		pixel dest(128, 128, 128, 129);
+		pixel src(128, 128, 128, 65);
 		pixel result;
 
 		/**
-		 * r.color = saturation(src.color - dest.color)
+		 * r.color = saturation(dest.color - (1 - src.color))
 		 * r.a = dest.a
-		 * (64, 64, 64, 65)
+		 * (0, 0, 0, 129)
 		 */
 		operators::sub_blend_save_destination_alpha_operator oper;
 		oper(&src, &dest, &result);
-		CPPUNIT_ASSERT(result.get_red() == 64);
-		CPPUNIT_ASSERT(result.get_green() == 64);
-		CPPUNIT_ASSERT(result.get_blue() == 64);
-		CPPUNIT_ASSERT(result.get_alpha() == 65);
+		CPPUNIT_ASSERT(result.get_red() == 1);
+		CPPUNIT_ASSERT(result.get_green() == 1);
+		CPPUNIT_ASSERT(result.get_blue() == 1);
+		CPPUNIT_ASSERT(result.get_alpha() == 129);
 
-		dest = pixel(192, 192, 192, 193);
+		src = pixel(192, 192, 192, 193);
 		oper(&src, &dest, &result);
-		CPPUNIT_ASSERT(result.get_red() == 0);
-		CPPUNIT_ASSERT(result.get_green() == 0);
-		CPPUNIT_ASSERT(result.get_blue() == 0);
-		CPPUNIT_ASSERT(result.get_alpha() == 193);
+		CPPUNIT_ASSERT(result.get_red() == 65);
+		CPPUNIT_ASSERT(result.get_green() == 65);
+		CPPUNIT_ASSERT(result.get_blue() == 65);
+		CPPUNIT_ASSERT(result.get_alpha() == 129);
 	}
 };
 

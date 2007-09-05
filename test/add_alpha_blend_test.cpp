@@ -9,7 +9,7 @@ class add_alpha_blend_operator_test : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(add_alpha_blend_operator_test);
 	CPPUNIT_TEST(add_alpha_blend_test);
 	CPPUNIT_TEST(add_alpha_blend_save_destination_alpha_test);
-	CPPUNIT_TEST(add_alpha_blend_addtive_destination_test);
+	CPPUNIT_TEST(add_alpha_blend_additive_destination_test);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void add_alpha_blend_test()
@@ -88,7 +88,7 @@ public:
 		CPPUNIT_ASSERT(result.get_alpha() == 193);
 	}
 
-	void add_alpha_blend_addtive_destination_test()
+	void add_alpha_blend_additive_destination_test()
 	{
 		using namespace risa_gl;
 

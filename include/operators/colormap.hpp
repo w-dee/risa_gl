@@ -213,7 +213,7 @@ namespace risa_gl
 				dynamic_constant_getter,
 				destination_getter,
 				bit_setter,
-				saturation_function,
+				add_saturation_function,
 				identity_alpha_factor,
 				scaled_invert_source_opacity_getter<1, 65, 1, 256>,
 				alpha_calculate_policy<
@@ -433,7 +433,7 @@ namespace risa_gl
 				dynamic_constant_getter,
 				destination_getter,
 				bit_setter,
-				saturation_function,
+				add_saturation_function,
 				source_opacity_getter,
 				source_opacity_getter,
 				alpha_calculate_policy<

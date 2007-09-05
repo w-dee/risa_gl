@@ -11,8 +11,10 @@ namespace risa_gl
 		class source_selector
 		{
 		public:
-			template <typename source_type, typename destination_type>
-			source_type operator()(source_type src, destination_type)
+			template <typename source_type,
+					  typename destination_type>
+			source_type operator()(source_type src,
+								   destination_type) const
 			{
 				return src;
 			}
@@ -24,8 +26,10 @@ namespace risa_gl
 		class destination_selector
 		{
 		public:
-			template <typename source_type, typename destination_type>
-			destination_type operator()(source_type, destination_type dest)
+			template <typename source_type,
+					  typename destination_type>
+			destination_type operator()(source_type,
+										destination_type dest) const
 			{
 				return dest;
 			}
