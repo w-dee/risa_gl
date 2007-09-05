@@ -2,6 +2,7 @@
 #define RISA_COMPUTE_FUNCTION_HPP_
 
 #include <risa_types.hpp>
+#include <cassert>
 
 namespace risa_gl
 {
