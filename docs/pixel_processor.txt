@@ -66,4 +66,7 @@
 
  * TVPRecipTable256_16
  TVPRecipTable256を15bitに丸めたもの？
- div 1 以外はそのまま、div1 については0x7fff(32767)に丸められる
+ div 1以外はそのまま、div 1については0x7fff(32767)に丸められる
+
+除算用テーブルらしい
+ 
