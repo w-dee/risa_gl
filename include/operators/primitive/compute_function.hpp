@@ -134,6 +134,7 @@ namespace risa_gl
 				const risa_gl::uint32 high =
 					(((lhs & 0x00ff0000) << 8) / ((rhs & 0x00ff0000) >> 16));
 
+				return 0U;
 			}
 		};
 	}

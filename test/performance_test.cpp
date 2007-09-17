@@ -154,7 +154,7 @@ int main()
 				  pixel(0, 0, 0, 1));
 
 #ifdef MT
-	RerunnableThread proc_even, proc_odd;
+	RerunnableThread proc_even;
 #endif /* MT */
 
 #if WIN32
@@ -175,10 +175,10 @@ int main()
 		alpha_copy odd_copy(src_frag_set.second, dest_frag_set.second);
 
 		proc_even.start(&even_copy);
-		proc_odd.start(&odd_copy);
+
+		odd_copy.run();
 
 		proc_even.join();
-		proc_odd.join();
 #else
 		frame_type::iterator src_itor = frame_buffer.begin();
 		frame_type::iterator dest_itor = back_buffer.begin();
@@ -200,7 +200,6 @@ int main()
 
 #ifdef MT
 	proc_even.quit();
-	proc_odd.quit();
 #endif /* MT */
 
 #ifdef WIN32
