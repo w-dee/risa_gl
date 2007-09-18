@@ -8,6 +8,11 @@
 
 #include <util/TimeCounter.hpp>
 
+/**
+ * 測定するオペレータの指定
+ */
+typedef risa_gl::operators::alpha_blend_save_destination_alpha_operator target_operator;
+
 template <
 	typename func_t,
 	typename src_itor_t,
@@ -87,7 +92,7 @@ public:
 };
 
 typedef Work<Job<
-	operators::alpha_blend_save_destination_alpha_operator,
+	target_operator,
 	pixel_store<pixel>::iterator,
 	pixel_store<pixel>::iterator> > alpha_copy;
 
@@ -133,7 +138,7 @@ int main()
 		frame_type::iterator src_itor = frame_buffer.begin();
 		frame_type::iterator dest_itor = back_buffer.begin();
 
-		Job<operators::alpha_blend_operator,
+		Job<target_operator,
 			frame_type::iterator,
 			frame_type::iterator>
 		 job
