@@ -6,9 +6,7 @@
 #include <algorithm>
 #include <Thread/RerunnableThread.hpp>
 
-#ifdef WIN32
-#	include <windows.h>
-#endif
+#include <util/TimeCounter.hpp>
 
 template <
 	typename func_t,
@@ -93,50 +91,6 @@ typedef Work<Job<
 	pixel_store<pixel>::iterator,
 	pixel_store<pixel>::iterator> > alpha_copy;
 
-#ifdef WIN32
-class performance_counter
-{
-private:
-	LARGE_INTEGER start_time;
-	LARGE_INTEGER stop_time;
-	
-public:
-	performance_counter():
-		start_time(), stop_time()
-	{}
-
-	~performance_counter()
-	{}
-
-	void start()
-	{
-		QueryPerformanceCounter(&start_time);
-	}
-
-	void stop()
-	{
-		QueryPerformanceCounter(&stop_time);
-	}
-
-private:
-	double convert(LARGE_INTEGER value) const
-	{
-		return
-			static_cast<double>(value.HighPart) *
-			static_cast<double>(std::numeric_limits<int>::max()) +
-			static_cast<double>(value.LowPart);
-	}
-public:
-	long long get_time() const
-	{
-		LARGE_INTEGER freq;
-		QueryPerformanceFrequency(&freq);
-
-		return
-			((stop_time.QuadPart - start_time.QuadPart) * 1000) / freq.QuadPart;
-	}
-};
-#endif
 
 int main()
 {
@@ -144,9 +98,7 @@ int main()
 	frame_type frame_buffer(640, 480);
 	frame_type back_buffer(640, 480);
 
-#ifdef WIN32
-	performance_counter counter;
-#endif
+	TimeCounter counter;
 
 	std::fill(frame_buffer.begin(), frame_buffer.end(),
 				  pixel(255, 255, 255, 128));
@@ -157,9 +109,7 @@ int main()
 	RerunnableThread proc_even;
 #endif /* MT */
 
-#if WIN32
 	counter.start();
-#endif
 
 	for (int count = 0; count < 2000; ++count) {
 #ifdef MT
@@ -194,18 +144,14 @@ int main()
 #endif /* MT */
 	}
 
-#ifdef WIN32
 	counter.stop();
-#endif
 
 #ifdef MT
 	proc_even.quit();
 #endif /* MT */
 
-#ifdef WIN32
 	std::cout << "using time for " <<
-		(static_cast<double>(counter.get_time()) / 1000.0) << std::endl;
-#endif
+		(static_cast<double>(counter.getTime()) / 1000.0) << std::endl;
 
 	return 0;
 }
