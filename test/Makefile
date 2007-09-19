@@ -1,6 +1,7 @@
 
 OBJS= \
 	test_main.o \
+	div_blend_test.o \
 	mul_blend_test.o \
 	compute_function_test.o \
 	sub_blend_test.o \

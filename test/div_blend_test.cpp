@@ -2,6 +2,8 @@
 #include <operators/div_blend.hpp>
 #include <pixel.hpp>
 
+#include <iostream>
+
 class div_blend_operator_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(div_blend_operator_test);
@@ -19,29 +21,29 @@ public:
 		pixel result;
 
 		/**
-		 * r.color = dest.color * src.color
+		 * r.color = dest.color / src.color
 		 * (0.5, 0,5, 0,5) / (0.25, 0.25, 0.25)
-		 * = (0.125, 0.125, 0.125)
-		 * (32, 32, 32)
+		 * = (2, 2, 2)
+		 * (255, 255, 255)
 		 */
 		operators::div_blend_operator oper;
 		oper(&src, &dest, &result);
 
-		CPPUNIT_ASSERT(result.get_red() == 32);
-		CPPUNIT_ASSERT(result.get_green() == 32);
-		CPPUNIT_ASSERT(result.get_blue() == 32);
+		CPPUNIT_ASSERT(result.get_red() == 255);
+		CPPUNIT_ASSERT(result.get_green() == 255);
+		CPPUNIT_ASSERT(result.get_blue() == 255);
 
 		/**
-		 * r.color = src.color * dest.color
-		 * (0.5, 0,5, 0,5) * (0.75, 0.75, 0.75)
-		 * = (0.375, 0.375, 0.375)
-		 * (96, 96, 96)
+		 * r.color = dest.color / src.color
+		 * (0.75, 0,75, 0,75) / (0.25, 0.25, 0.25)
+		 * = (3/2, 3/2, 3/2)
+		 * (255, 255, 255)
 		 */
 		dest = pixel(192, 192, 192, 193);
 		oper(&src, &dest, &result);
-		CPPUNIT_ASSERT(result.get_red() == 96);
-		CPPUNIT_ASSERT(result.get_green() == 96);
-		CPPUNIT_ASSERT(result.get_blue() == 96);
+		CPPUNIT_ASSERT(result.get_red() == 255);
+		CPPUNIT_ASSERT(result.get_green() == 255);
+		CPPUNIT_ASSERT(result.get_blue() == 255);
 	}
 
 	void div_blend_save_destination_alpha_test()
@@ -56,27 +58,27 @@ public:
 		oper(&src, &dest, &result);
 
 		/**
-		 * r.color = src.color * dest.color
-		 * (0.5, 0,5, 0,5) * (0.25, 0.25, 0.25)
-		 * = (0.125, 0.125, 0.125)
-		 * (32, 32, 32, 65)
+		 * r.color = dest.color / src.color
+		 * (0.25, 0.25, 0.25) / (0.5, 0,5, 0,5)
+		 * = (0.5, 0.5, 0.5)
+		 * (127, 127, 127, 65)
 		 */
-		CPPUNIT_ASSERT(result.get_red() == 32);
-		CPPUNIT_ASSERT(result.get_green() == 32);
-		CPPUNIT_ASSERT(result.get_blue() == 32);
+		CPPUNIT_ASSERT(result.get_red() == 127);
+		CPPUNIT_ASSERT(result.get_green() == 127);
+		CPPUNIT_ASSERT(result.get_blue() == 127);
 		CPPUNIT_ASSERT(result.get_alpha() == 65);
 
 		dest = pixel(192, 192, 192, 193);
 		oper(&src, &dest, &result);
 		/**
-		 * r.color = src.color * dest.color
-		 * (0.5, 0,5, 0,5) * (0.75, 0.75, 0.75)
-		 * = (0.375, 0.375, 0.375)
-		 * (96, 96, 96, 193)
+		 * r.color = dest.color / src.color
+		 * (0.25, 0,25, 0,25) / (0.25, 0.25, 0.25)
+		 * = (1, 1, 1)
+		 * (255, 255, 255, 193)
 		 */
-		CPPUNIT_ASSERT(result.get_red() == 96);
-		CPPUNIT_ASSERT(result.get_green() == 96);
-		CPPUNIT_ASSERT(result.get_blue() == 96);
+		CPPUNIT_ASSERT(result.get_red() == 255);
+		CPPUNIT_ASSERT(result.get_green() == 255);
+		CPPUNIT_ASSERT(result.get_blue() == 255);
 		CPPUNIT_ASSERT(result.get_alpha() == 193);
 	}
 };

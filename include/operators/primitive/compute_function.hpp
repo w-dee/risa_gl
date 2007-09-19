@@ -130,11 +130,16 @@ namespace risa_gl
 				const risa_gl::uint32 rhs = src_select(lhs_, rhs_);
 				
 				const risa_gl::uint32 low = 
-					(((lhs & 0x000000ff) << 8) / (rhs & 0x000000ff));
-				const risa_gl::uint32 high =
-					(((lhs & 0x00ff0000) << 8) / ((rhs & 0x00ff0000) >> 16));
+					((lhs & 0x000000ffU) << 8) /
+					((rhs & 0x000000ffU)+1);
 
-				return 0U;
+				const risa_gl::uint32 high =
+					((lhs & 0x00ff0000U) >> 8) /
+					(((rhs & 0x00ff0000U) >> 16)+1);
+
+				return
+					(low > 0xff ? 0xff : low) |
+					(high > 0xff ? 0x00ff0000 : (high << 16));
 			}
 		};
 	}
