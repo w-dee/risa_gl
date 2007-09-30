@@ -142,6 +142,71 @@ namespace risa_gl
 					(high > 0xff ? 0x00ff0000 : (high << 16));
 			}
 		};
+
+		/**
+		 * 比較(大)ファンクタ
+		 * result = max(lhs, rhs);
+		 */
+		class compare_grater_function
+		{
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
+									   risa_gl::uint32 rhs) const
+			{
+				assert((lhs & 0xff00ff00) == 0);
+				assert((rhs & 0xff00ff00) == 0);
+
+				const risa_gl::uint32 lhs_high = lhs & 0x00ff0000;
+				const risa_gl::uint32 lhs_low = lhs & 0x000000ff;
+				const risa_gl::uint32 rhs_high = rhs & 0x00ff0000;
+				const risa_gl::uint32 rhs_low = rhs & 0x000000ff;
+
+				return
+					(lhs_high > rhs_high ? lhs_high : rhs_high) |
+					(lhs_low > rhs_low ? lhs_low : rhs_low);
+			}
+		};
+
+		/**
+		 * 比較(小)ファンクタ
+		 * result = min(lhs, rhs);
+		 */
+		class compare_lesser_function
+		{
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
+									   risa_gl::uint32 rhs) const
+			{
+				assert((lhs & 0xff00ff00) == 0);
+				assert((rhs & 0xff00ff00) == 0);
+
+				const risa_gl::uint32 lhs_high = lhs & 0x00ff0000;
+				const risa_gl::uint32 lhs_low = lhs & 0x000000ff;
+				const risa_gl::uint32 rhs_high = rhs & 0x00ff0000;
+				const risa_gl::uint32 rhs_low = rhs & 0x000000ff;
+
+				return
+					(lhs_high < rhs_high ? lhs_high : rhs_high) |
+					(lhs_low < rhs_low ? lhs_low : rhs_low);
+			}
+		};
+
+		/**
+		 * 
+		 * result = 1 - (lhs * rhs);
+		 */
+		class invert_multiply_function
+		{
+		private:
+			multiply_function multiplier;
+
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
+									   risa_gl::uint32 rhs) const
+			{
+				return 0x00ff00ff - multiplier(lhs, rhs);
+			}
+		};
 	}
 }
 

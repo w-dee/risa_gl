@@ -1,5 +1,5 @@
-#ifndef RISA_DIV_BLEND_HPP_
-#define RISA_DIV_BLEND_HPP_
+#ifndef RISA_SCREEN_BLEND_HPP_
+#define RISA_SCREEN_BLEND_HPP_
 
 #include <operators/primitive/blend.hpp>
 #include <operators/primitive/alpha_factor.hpp>
@@ -10,27 +10,25 @@ namespace risa_gl
 	namespace operators
 	{
 		/**
-		 * é™¤ç®—ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°(alphaã¯ç ´å£Š)
-		 * r.color = src.color / dest.color
+		 * ƒXƒNƒŠ[ƒ“æZƒuƒŒƒ“ƒfƒBƒ“ƒO(alpha‚Í”j‰ó)
+		 * r.color = 1 - (1 - src.color) * (1 - dest.color)
 		 * r.a = ?
 		 */
-		// {{{ div_blend_operator
-		class div_blend_operator
+		// {{{ screen_blend_operator
+		class screen_blend_operator
 		{
 		private:
 			typedef primitive::binomial_blend<
-				source_getter,
-				destination_getter,
+				invert_source_getter,
+				invert_destination_getter,
 				bit_setter,
-				divide_saturation_function<
-				source_selector,
-				destination_selector>,
+				invert_multiply_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				not_calculate_policy>
-			div_blend_opeartor_type;
+			screen_blend_opeartor_type;
 
-			div_blend_opeartor_type blender;
+			screen_blend_opeartor_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -46,27 +44,25 @@ namespace risa_gl
 		// }}}
 
 		/**
-		 * é™¤ç®—ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°(alphaã¯destinationã‚’ä¿å­˜)
-		 * r.color = src.color * dest.color
+		 * ƒXƒNƒŠ[ƒ“æZƒuƒŒƒ“ƒfƒBƒ“ƒO(alpha‚Ídestination‚ğ•Û‘¶)
+		 * r.color = 1 - (1 - src.color) * (1 - dest.color)
 		 * r.a = dest.a
 		 */
-		// {{{ div_blend_save_destination_alpha_operator
-		class div_blend_save_destination_alpha_operator
+		// {{{ screen_blend_save_destination_alpha_operator
+		class screen_blend_save_destination_alpha_operator
 		{
 		private:
 			typedef primitive::binomial_blend<
-				source_getter,
-				destination_getter,
+				invert_source_getter,
+				invert_destination_getter,
 				bit_setter,
-				divide_saturation_function<
-				source_selector,
-				destination_selector>,
+				invert_multiply_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<destination_alpha_getter> >
-			div_blend_save_destination_alpha_opeartor_type;
+			screen_blend_save_destination_alpha_opeartor_type;
 
-			div_blend_save_destination_alpha_opeartor_type blender;
+			screen_blend_save_destination_alpha_opeartor_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -80,8 +76,6 @@ namespace risa_gl
 			}
 		};
 		// }}}
-		
 	}
 }
-
-#endif /* RISA_DIV_BLEND_HPP_ */
+#endif /* RISA_SCREEN_BLEND_HPP_ */

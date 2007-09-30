@@ -1,5 +1,5 @@
-#ifndef RISA_DIV_BLEND_HPP_
-#define RISA_DIV_BLEND_HPP_
+#ifndef RISA_LIGHTEN_BLEND_HPP_
+#define RISA_LIGHTEN_BLEND_HPP_
 
 #include <operators/primitive/blend.hpp>
 #include <operators/primitive/alpha_factor.hpp>
@@ -10,27 +10,25 @@ namespace risa_gl
 	namespace operators
 	{
 		/**
-		 * 除算ブレンディング(alphaは破壊)
-		 * r.color = src.color / dest.color
+		 * 比較(明)ブレンディング(alphaは破壊)
+		 * r.color = max(src.color, dest.color)
 		 * r.a = ?
 		 */
-		// {{{ div_blend_operator
-		class div_blend_operator
+		// {{{ lighten_blend_operator
+		class lighten_blend_operator
 		{
 		private:
 			typedef primitive::binomial_blend<
 				source_getter,
 				destination_getter,
 				bit_setter,
-				divide_saturation_function<
-				source_selector,
-				destination_selector>,
+				compare_grater_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				not_calculate_policy>
-			div_blend_opeartor_type;
+			lighten_blend_opeartor_type;
 
-			div_blend_opeartor_type blender;
+			lighten_blend_opeartor_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -46,27 +44,25 @@ namespace risa_gl
 		// }}}
 
 		/**
-		 * 除算ブレンディング(alphaはdestinationを保存)
-		 * r.color = src.color * dest.color
+		 * 比較(明)ブレンディング(alphaはdestinationを保存)
+		 * r.color = max(src.color, dest.color)
 		 * r.a = dest.a
 		 */
-		// {{{ div_blend_save_destination_alpha_operator
-		class div_blend_save_destination_alpha_operator
+		// {{{ lighten_blend_save_destination_alpha_operator
+		class lighten_blend_save_destination_alpha_operator
 		{
 		private:
 			typedef primitive::binomial_blend<
 				source_getter,
 				destination_getter,
 				bit_setter,
-				divide_saturation_function<
-				source_selector,
-				destination_selector>,
+				compare_grater_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<destination_alpha_getter> >
-			div_blend_save_destination_alpha_opeartor_type;
+			lighten_blend_save_destination_alpha_opeartor_type;
 
-			div_blend_save_destination_alpha_opeartor_type blender;
+			lighten_blend_save_destination_alpha_opeartor_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -80,8 +76,6 @@ namespace risa_gl
 			}
 		};
 		// }}}
-		
 	}
 }
-
-#endif /* RISA_DIV_BLEND_HPP_ */
+#endif /* RISA_LIGHTEN_BLEND_HPP_ */

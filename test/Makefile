@@ -1,6 +1,9 @@
 
 OBJS= \
 	test_main.o \
+	lighten_blend_test.o \
+	darken_blend_test.o \
+	screen_blend_test.o \
 	div_blend_test.o \
 	mul_blend_test.o \
 	compute_function_test.o \

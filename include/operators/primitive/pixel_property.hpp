@@ -148,7 +148,7 @@ namespace risa_gl
 		 * 補値を取得するgetter
 		 */
 		template <typename selector>
-		class complement_getter
+		class invert_getter
 		{
 		public:
 			template <typename src_itor_t,
