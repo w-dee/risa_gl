@@ -14,6 +14,42 @@ namespace risa_gl
 	{
 		using namespace risa_gl::primitive;
 
+		// {{{ photoshop_blend
+		/**
+		 * photoshop互換用ブレンドヘルパ
+		 */
+		template <typename stub_operator,
+				  typename blend_operator>
+		class photoshop_blend
+		{
+		private:
+			stub_operator stub;
+			blend_operator blender;
+
+		public:
+			photoshop_blend(stub_operator stub_ = stub_operator(),
+							blend_operator blender_ = blend_operator()):
+				stub(stub_), blender(blender_)
+			{}
+
+			photoshop_blend(const photoshop_blend& src):
+				stub(src.stub), blender(src.blender)
+			{}
+
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				typename result_itor_t::value_type temp_result;
+				stub(src, dest, &temp_result);
+				blender(&temp_result, dest, result);
+			}			
+		};
+		// }}}
+
 		// {{{ pixel_getter
 		// {{{ source
 		typedef bits_getter<source_selector> source_getter;
