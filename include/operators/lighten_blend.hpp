@@ -44,6 +44,40 @@ namespace risa_gl
 		// }}}
 
 		/**
+		 * 比較(明)ブレンディング(alphaはsourceを保存)
+		 * r.color = max(src.color, dest.color)
+		 * r.a = src.a
+		 */
+		// {{{ lighten_blend_save_source_alpha_operator
+		class lighten_blend_save_source_alpha_operator
+		{
+		private:
+			typedef primitive::binomial_blend<
+				source_getter,
+				destination_getter,
+				bit_setter,
+				compare_grater_function,
+				identity_alpha_factor,
+				identity_alpha_factor,
+				alpha_calculate_policy<source_alpha_getter> >
+			lighten_blend_save_source_alpha_opeartor_type;
+
+			lighten_blend_save_source_alpha_opeartor_type blender;
+		public:
+
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+		// }}}
+
+		/**
 		 * 比較(明)ブレンディング(alphaはdestinationを保存)
 		 * r.color = max(src.color, dest.color)
 		 * r.a = dest.a

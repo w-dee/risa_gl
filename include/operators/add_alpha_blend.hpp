@@ -45,6 +45,41 @@ namespace risa_gl
 		// }}}
 
 		/**
+		 * 加色アルファブレンディング(alphaはsourceを保存)
+		 * r.color = saturation(src.color * src.a +
+		 *                      dest.color * dest.a * (1 - src.a))
+		 * r.a = src.a
+		 */
+		// {{{ add_alpha_blend_save_source_alpha_operator
+		class add_alpha_blend_save_source_alpha_operator
+		{
+		private:
+			typedef primitive::binomial_blend<
+				source_getter,
+				destination_getter,
+				bit_setter,
+				add_saturation_function,
+				identity_alpha_factor,
+				invert_source_alpha_getter,
+				alpha_calculate_policy<source_alpha_getter> >
+			add_alpha_blend_save_source_alpha_opeartor_type;
+
+			add_alpha_blend_save_source_alpha_opeartor_type blender;
+		public:
+
+			template <typename src_itor_t,
+					  typename dest_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+		// }}}
+
+		/**
 		 * 加色アルファブレンディング(alphaはdestinationを保存)
 		 * r.color = saturation(src.color * src.a +
 		 *                      dest.color * dest.a * (1 - src.a))

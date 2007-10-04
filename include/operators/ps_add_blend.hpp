@@ -14,7 +14,7 @@ namespace risa_gl
 		/**
 		 * PS互換加色ブレンディング(alphaは破壊)
 		 * r.color =
-		 *  alpha_blend(add_blend_save_destination_alpha(src, dest),
+		 *  alpha_blend(add_blend_save_source_alpha(src, dest),
 		 *              dest, result);
 		 * r.a = ?
 		 *
@@ -30,8 +30,9 @@ namespace risa_gl
 		class ps_add_blend_operator
 		{
 		private:
-			typedef photoshop_blend<add_blend_save_destination_alpha_operator,
-									alpha_blend_operator>
+			typedef photoshop_blend<
+				add_blend_save_source_alpha_operator,
+				alpha_blend_operator>
 			ps_add_blend_operator_type;
 			ps_add_blend_operator_type blender;
 		public:
@@ -59,7 +60,7 @@ namespace risa_gl
 		{
 		private:
 			typedef photoshop_blend<
-				add_blend_save_destination_alpha_operator,
+				add_blend_save_source_alpha_operator,
 				alpha_blend_save_destination_alpha_operator>
 			ps_add_blend_operator_type;
 			ps_add_blend_operator_type blender;
