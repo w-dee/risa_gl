@@ -1,6 +1,7 @@
 
 OBJS= \
 	test_main.o \
+	ps_sub_blend_test.o \
 	ps_add_blend_test.o \
 	lighten_blend_test.o \
 	darken_blend_test.o \
