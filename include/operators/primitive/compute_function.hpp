@@ -207,6 +207,49 @@ namespace risa_gl
 				return 0x00ff00ff - multiplier(lhs, rhs);
 			}
 		};
+
+		/**
+		 * 
+		 */
+		template <typename lhs_selector_type,
+				  typename rhs_selector_type>
+		class overlay_function
+		{
+		private:
+			lhs_selector_type lhs_selector;
+			rhs_selector_type rhs_selector;
+
+			risa_gl::uint8 compute_overlay(risa_gl::uint8 rhs,
+										   risa_gl::uint8 lhs) const
+			{
+				if (rhs > 127)
+					return 255 - ((((256 - rhs) * (256 - lhs)) * 2) / 8);
+				else
+					return (((rhs * lhs) * 2) / 8);
+			}
+
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
+									   risa_gl::uint32 rhs) const
+			{
+				risa_gl::uint8 lhs_high =
+					static_cast<risa_gl::uint8>((lhs_selector(lhs, rhs) &
+												 0x00ff0000) >> 16);
+				risa_gl::uint8 lhs_low  = 
+					static_cast<risa_gl::uint8>(lhs_selector(lhs, rhs) &
+												0x000000ff);
+				risa_gl::uint8 rhs_high =
+					static_cast<risa_gl::uint8>((rhs_selector(lhs, rhs) &
+												 0x00ff0000) >> 16);
+				risa_gl::uint8 rhs_low =
+					static_cast<risa_gl::uint8>(rhs_selector(lhs, rhs) &
+												0x000000ff);
+
+				return
+					(compute_overlay(rhs_high, lhs_high) << 16) | 
+					compute_overlay(rhs_low, lhs_low);
+			}
+		};
 	}
 }
 

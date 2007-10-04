@@ -1,6 +1,7 @@
 
 OBJS= \
 	test_main.o \
+	ps_overlay_blend_test.o \
 	ps_screen_blend_test.o \
 	ps_mul_blend_test.o \
 	ps_sub_blend_test.o \
