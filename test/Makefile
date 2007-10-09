@@ -35,10 +35,10 @@ EXT = .exe
 DEPENDS = $(OBJS:.o=.d)
 INCLUDES = ../include
 CXXFLAGS += -I$(INCLUDES) -g -Wall -Wunused -fno-default-inline
-ifeq ($(CXX),g++)
-LIBCPPUNIT = -lcppunit
+ifeq ($(CXX),g++-dw2)
+LIBCPPUNIT = -lcppunit-dw2
 else
-LIBCPPUNIT= -lcppunit-dw2
+LIBCPPUNIT= -lcppunit
 endif
 
 .PHONY: clean depend version dependclean
