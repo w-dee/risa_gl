@@ -69,7 +69,7 @@ namespace risa_gl
 		};
 
 		/**
-		 * PSŒİŠ·ƒI[ƒoƒŒƒCƒuƒŒƒ“ƒfƒBƒ“ƒO(alpha‚Í”j‰ó)
+		 * PSäº’æ›ã‚ªãƒ¼ãƒãƒ¬ã‚¤ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°(alphaã¯ç ´å£Š)
 		 */
 		// {{{ ps_overlay_blend_operator
 		class ps_overlay_blend_operator
@@ -97,7 +97,7 @@ namespace risa_gl
 		// }}}
 
 		/**
-		 * PSŒİŠ·ƒI[ƒoƒŒƒCƒuƒŒƒ“ƒfƒBƒ“ƒO(alpha‚Ídestination‚ğ•Û‘¶)
+		 * PSäº’æ›ã‚ªãƒ¼ãƒãƒ¬ã‚¤ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°(alphaã¯destinationã‚’ä¿å­˜)
 		 */
 		// {{{ ps_overlay_blend_save_destination_alpha_operator
 		class ps_overlay_blend_save_destination_alpha_operator

@@ -10,7 +10,7 @@ namespace risa_gl
 	namespace operators
 	{
 		/**
-		 * ƒXƒNƒŠ[ƒ“æZƒuƒŒƒ“ƒfƒBƒ“ƒO(alpha‚Í”j‰ó)
+		 * ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¹—ç®—ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°(alphaã¯ç ´å£Š)
 		 * r.color = 1 - (1 - src.color) * (1 - dest.color)
 		 * r.a = ?
 		 */
@@ -44,7 +44,7 @@ namespace risa_gl
 		// }}}
 
 		/**
-		 * ƒXƒNƒŠ[ƒ“æZƒuƒŒƒ“ƒfƒBƒ“ƒO(alpha‚Ísource‚ğ•Û‘¶)
+		 * ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¹—ç®—ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°(alphaã¯sourceã‚’ä¿å­˜)
 		 * r.color = 1 - (1 - src.color) * (1 - dest.color)
 		 * r.a = src.a
 		 */
@@ -78,7 +78,7 @@ namespace risa_gl
 		// }}}
 
 		/**
-		 * ƒXƒNƒŠ[ƒ“æZƒuƒŒƒ“ƒfƒBƒ“ƒO(alpha‚Ídestination‚ğ•Û‘¶)
+		 * ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¹—ç®—ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°(alphaã¯destinationã‚’ä¿å­˜)
 		 * r.color = 1 - (1 - src.color) * (1 - dest.color)
 		 * r.a = dest.a
 		 */

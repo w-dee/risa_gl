@@ -12,7 +12,7 @@ namespace risa_gl
 	namespace operators
 	{
 		/**
-		 * PSŒİŠ·ÏFƒuƒŒƒ“ƒfƒBƒ“ƒO(alpha‚Í”j‰ó)
+		 * PSäº’æ›ç©è‰²ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°(alphaã¯ç ´å£Š)
 		 */
 		// {{{ ps_screen_blend_operator
 		class ps_screen_blend_operator
@@ -40,7 +40,7 @@ namespace risa_gl
 		// }}}
 
 		/**
-		 * PSŒİŠ·ÏFƒuƒŒƒ“ƒfƒBƒ“ƒO(alpha‚Ídestination‚ğ•Û‘¶)
+		 * PSäº’æ›ç©è‰²ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°(alphaã¯destinationã‚’ä¿å­˜)
 		 */
 		// {{{ ps_screen_blend_save_destination_alpha_operator
 		class ps_screen_blend_save_destination_alpha_operator
