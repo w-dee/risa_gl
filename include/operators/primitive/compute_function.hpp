@@ -223,9 +223,9 @@ namespace risa_gl
 										   risa_gl::uint8 lhs) const
 			{
 				if (rhs > 127)
-					return 255 - ((((256 - rhs) * (256 - lhs)) * 2) / 8);
+					return 255 - ((((256 - rhs) * (256 - lhs)) * 2) / 256);
 				else
-					return (((rhs * lhs) * 2) / 8);
+					return (((rhs * lhs) * 2) / 256);
 			}
 
 		public:

@@ -55,9 +55,8 @@ public:
 		 */
 		operators::ps_overlay_blend_operator oper;
 		oper(src.begin(), dest.begin(), result.begin());
-		std::cout << *result.begin() << std::endl;
 
-		CPPUNIT_ASSERT(result.begin()->get_red() == 205);
+		CPPUNIT_ASSERT(result.begin()->get_red() == 207);
 		CPPUNIT_ASSERT(result.begin()->get_green() == 54);
 		CPPUNIT_ASSERT(result.begin()->get_blue() == 54);
 
@@ -77,7 +76,6 @@ public:
 		 * (255, 0, 0)
 		 */
 		oper(src.begin(), dest.begin(), result.begin());
-		std::cout << *result.begin() << std::endl;
 
 		CPPUNIT_ASSERT(result.begin()->get_red() == 255);
 		CPPUNIT_ASSERT(result.begin()->get_green() == 0);
@@ -98,20 +96,22 @@ public:
 					  generator<pixel>(pixel(182, 41, 41, 256)));
 
 		/**
-		 * (43, 43, 43) * (74, 215, 215)
-		 * (12, 36, 36)
-		 * (244, 220, 220)
+		 * (213, 213, 213), (182, 41, 41)
+		 * (182, 41, 41), (213, 213, 213)
+		 * (255 - 73 * 42 * 2 / 256, 41 * 213 * 2 / 256, 41 * 213 * 2 / 256)
+		 * (232, 68, 68)
 		 *
-		 * (244, 220, 220, 129), (182, 41, 41)
-		 * (122, 110, 110), (91, 20, 20)
-		 * (213, 130, 130)
+		 * (232, 68, 68, 129), (182, 41, 41)
+		 * (116, 34, 34), (91, 20, 20)
+		 * (207, 54, 54)
+		 *
 		 */
 		operators::ps_overlay_blend_save_destination_alpha_operator oper;
 		oper(src.begin(), dest.begin(), result.begin());
 
-		CPPUNIT_ASSERT(result.begin()->get_red() == 213);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 130);
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 130);
+		CPPUNIT_ASSERT(result.begin()->get_red() == 207);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 54);
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 54);
 		CPPUNIT_ASSERT(result.begin()->get_alpha() == 256);
 
 		std::generate(src.begin(), src.end(),
@@ -120,19 +120,20 @@ public:
 					  generator<pixel>(pixel(255, 0, 0, 129)));
 
 		/**
-		 * (0, 0, 0) * (0, 255, 255)
-		 * (0, 0, 0)
-		 * (255, 255, 255)
+		 * (255, 255, 255), (255, 0, 0)
+		 * (255, 0, 0), (255, 255, 255)
+		 * (255 - 0 * 0 * 2, 0 * 255 * 2 / 256, 0 * 255 * 2 / 256)
+		 * (255, 0, 0)
 		 *
-		 * (255, 255, 255, 129), (255, 0, 0, 129)
-		 * (128, 128, 128), (128, 0, 0)
-		 * (255, 128, 128)
-		 *
+		 * (255, 0, 0, 129), (255, 0, 0)
+		 * (128, 0, 0), (128, 0, 0)
+		 * (255, 0, 0)
 		 */
 		oper(src.begin(), dest.begin(), result.begin());
+
 		CPPUNIT_ASSERT(result.begin()->get_red() == 255);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 128);
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 128);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 0);
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 0);
 		CPPUNIT_ASSERT(result.begin()->get_alpha() == 129);
 	}
 };

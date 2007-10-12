@@ -18,9 +18,8 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				overlay_function<
-				source_selector,
-				destination_selector>,
+				overlay_function<destination_selector,
+								 source_selector>,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				not_calculate_policy>
