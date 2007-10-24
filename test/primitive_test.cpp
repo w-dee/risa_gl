@@ -2,6 +2,7 @@
 #include <operators/primitive/blend.hpp>
 #include <pixel_store.hpp>
 #include <pixel.hpp>
+#include <operators/building_blocks.hpp>
 
 #include <iostream>
 
@@ -10,8 +11,6 @@ using namespace risa_gl;
 class primitive_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(primitive_test);
-	CPPUNIT_TEST(scaler_test);
-	CPPUNIT_TEST(clear_test);
 	CPPUNIT_TEST(blend_test);
 	CPPUNIT_TEST_SUITE_END();
 
@@ -39,11 +38,15 @@ public:
 	void blend_test()
 	{
 		using namespace risa_gl::primitive;
+		using namespace risa_gl::operators;
 		typedef binomial_blend<
-			one_minus_destination_alpha_factor,
-			zero_factor,
-			destination_alpha_factor,
-			identity_factor> alpha_blend;
+			source_getter,
+			destination_getter,
+			bit_setter,
+			plus_function,
+			source_alpha_getter,
+			invert_source_alpha_getter,
+			not_calculate_policy>  alpha_blend;
 
 		alpha_blend blender;
 		pixel_store_t::iterator itor_src = source.begin();
@@ -60,49 +63,6 @@ public:
 			 * result = (191, 191, 191, 128)
 			 */
 			CPPUNIT_ASSERT(*itor_result == pixel(191, 191, 191, 129));
-		}
-	}
-
-	void saturation_blend_test()
-	{
-		using namespace risa_gl::primitive;
-		typedef binomial_blend<
-			one_minus_destination_alpha_factor,
-			zero_factor,
-			destination_alpha_factor,
-			identity_factor> alpha_blend;
-
-		alpha_blend blender;
-		pixel_store_t::iterator itor_src = source.begin();
-		pixel_store_t::iterator itor_dest = destination.begin();
-		pixel_store_t::iterator itor_result = result.begin();
-		
-		for (; itor_src != source.end();
-			 ++itor_src, ++itor_dest, ++itor_result)
-		{
-			blender(itor_src, itor_dest, itor_result);
-			/**
-			 * c = 255 * 128 + 128 * 128 = (255 + 128)
-			 * a = 0 + 128
-			 * result = (191, 191, 191, 128)
-			 */
-			CPPUNIT_ASSERT(*itor_result == pixel(191, 191, 191, 129));
-		}
-	}
-
-	void clear_test()
-	{
-		using namespace risa_gl::primitive;
-		clear blender;
-		pixel_store_t::iterator itor_src = source.begin();
-		pixel_store_t::iterator itor_dest = destination.begin();
-		pixel_store_t::iterator itor_result = result.begin();
-		
-		for (; itor_src != source.end();
-			 ++itor_src, ++itor_dest, ++itor_result)
-		{
-			blender(itor_src, itor_dest, itor_result);
-			CPPUNIT_ASSERT(*itor_result == pixel(0, 0, 0, 1));
 		}
 	}
 };
