@@ -44,38 +44,23 @@ public:
 
 		/**
 		 * (213, 213, 213), (182, 41, 41)
-		 * (182, 41, 41), (213, 213, 213)
-		 * (255 -(73  * 42 * 2 / 256),
-		 * 255 - (214 * 42 * 2 / 256),
-		 * 255 - (214 * 42 * 2 / 256))
-		 * (232, 185, 185)
-		 *
-		 * (232, 185, 185, 129), (182, 41, 41)
-		 * (116, 92, 92), (91, 20, 20)
-		 * (207, 54, 54)
+		 * (222, 199, 199)
 		 *
 		 */
 		operators::ps_hardlight_blend_operator oper;
 		oper(src.begin(), dest.begin(), result.begin());
-		std::cout << *result.begin() << std::endl;
 
-		CPPUNIT_ASSERT(result.begin()->get_red() == 207);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 54);
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 54);
+		CPPUNIT_ASSERT(result.begin()->get_red() == 222);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 198);
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 198);
 
 		std::generate(src.begin(), src.end(),
-					  generator<pixel>(pixel(255, 0, 0, 129)));
-		std::generate(dest.begin(), dest.end(),
 					  generator<pixel>(pixel(255, 255, 255, 129)));
+		std::generate(dest.begin(), dest.end(),
+					  generator<pixel>(pixel(255, 0, 0, 129)));
 
 		/**
 		 * (255, 255, 255), (255, 0, 0)
-		 * (255, 0, 0), (255, 255, 255)
-		 * (255 - 0 * 0 * 2, 0 * 255 * 2 / 256, 0 * 255 * 2 / 256)
-		 * (255, 0, 0)
-		 *
-		 * (255, 0, 0, 129), (255, 0, 0)
-		 * (128, 0, 0), (128, 0, 0)
 		 * (255, 0, 0)
 		 */
 		oper(src.begin(), dest.begin(), result.begin());
@@ -98,40 +83,19 @@ public:
 		std::generate(dest.begin(), dest.end(),
 					  generator<pixel>(pixel(213, 213, 213, 256)));
 
-		/**
-		 * (213, 213, 213), (182, 41, 41)
-		 * (182, 41, 41), (213, 213, 213)
-		 * (255 - 73 * 42 * 2 / 256, 41 * 213 * 2 / 256, 41 * 213 * 2 / 256)
-		 * (232, 68, 68)
-		 *
-		 * (232, 68, 68, 129), (182, 41, 41)
-		 * (116, 34, 34), (91, 20, 20)
-		 * (207, 54, 54)
-		 *
-		 */
 		operators::ps_hardlight_blend_save_destination_alpha_operator oper;
 		oper(src.begin(), dest.begin(), result.begin());
 
-		CPPUNIT_ASSERT(result.begin()->get_red() == 207);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 54);
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 54);
+		CPPUNIT_ASSERT(result.begin()->get_red() == 222);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 198);
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 198);
 		CPPUNIT_ASSERT(result.begin()->get_alpha() == 256);
 
 		std::generate(src.begin(), src.end(),
-					  generator<pixel>(pixel(255, 0, 0, 129)));
-		std::generate(dest.begin(), dest.end(),
 					  generator<pixel>(pixel(255, 255, 255, 129)));
+		std::generate(dest.begin(), dest.end(),
+					  generator<pixel>(pixel(255, 0, 0, 129)));
 
-		/**
-		 * (255, 255, 255), (255, 0, 0)
-		 * (255, 0, 0), (255, 255, 255)
-		 * (255 - 0 * 0 * 2, 0 * 255 * 2 / 256, 0 * 255 * 2 / 256)
-		 * (255, 0, 0)
-		 *
-		 * (255, 0, 0, 129), (255, 0, 0)
-		 * (128, 0, 0), (128, 0, 0)
-		 * (255, 0, 0)
-		 */
 		oper(src.begin(), dest.begin(), result.begin());
 
 		CPPUNIT_ASSERT(result.begin()->get_red() == 255);

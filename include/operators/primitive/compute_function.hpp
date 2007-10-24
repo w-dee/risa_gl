@@ -3,6 +3,7 @@
 
 #include <risa_types.hpp>
 #include <operators/primitive/selector.hpp>
+#include <cmath>
 #include <cassert>
 
 namespace risa_gl
@@ -209,7 +210,7 @@ namespace risa_gl
 		};
 
 		/**
-		 * 
+		 * オーバーレイ、ハードライト用ブレンド関数
 		 */
 		template <typename lhs_selector_type,
 				  typename rhs_selector_type>
@@ -248,6 +249,44 @@ namespace risa_gl
 				return
 					(compute_overlay(rhs_high, lhs_high) << 16) | 
 					compute_overlay(rhs_low, lhs_low);
+			}
+		};
+
+		/**
+		 *
+		 */
+		class softlight_function
+		{
+		private:
+			float exponent(risa_gl::uint8 base,
+						   risa_gl::uint8 exponential) const
+			{
+				return powf(static_cast<float>(base) / 255.0f,
+							static_cast<float>(exponential) / 255.0f);
+			}
+
+			risa_gl::uint8 compute_softlight(risa_gl::uint8 src,
+											 risa_gl::uint8 dest) const
+			{
+				if (dest >= 128)
+					return static_cast<risa_gl::uint8>
+						(255 * exponent(src, 128 / dest));
+				return static_cast<risa_gl::uint8>
+					(255 * exponent(src, (255 - dest) / 128));
+			}
+
+		public:
+			risa_gl::uint32 operator()(risa_gl::uint32 src,
+									   risa_gl::uint32 dest) const
+			{
+				const risa_gl::uint8 src_high = (src & 0x00ff0000) >> 16;
+				const risa_gl::uint8 src_low = src & 0x000000ff;
+				const risa_gl::uint8 dest_high = (dest & 0x00ff0000) >> 16;
+				const risa_gl::uint8 dest_low = dest & 0x000000ff;
+
+				return
+					(compute_softlight(src_high, dest_high) << 16) |
+					compute_softlight(src_low, dest_low);
 			}
 		};
 	}
