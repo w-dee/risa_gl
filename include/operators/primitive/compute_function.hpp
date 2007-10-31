@@ -258,21 +258,18 @@ namespace risa_gl
 		class softlight_function
 		{
 		private:
-			float exponent(risa_gl::uint8 base,
-						   risa_gl::uint8 exponential) const
-			{
-				return powf(static_cast<float>(base) / 255.0f,
-							static_cast<float>(exponential) / 255.0f);
-			}
-
 			risa_gl::uint8 compute_softlight(risa_gl::uint8 src,
 											 risa_gl::uint8 dest) const
 			{
-				if (dest >= 128)
+				if (src < 128)
 					return static_cast<risa_gl::uint8>
-						(255 * exponent(src, 128 / dest));
+						(255 * 
+						 powf(dest / 255.0f,
+							  (255 - src) / 128.0f));
 				return static_cast<risa_gl::uint8>
-					(255 * exponent(src, (255 - dest) / 128));
+					(255 *
+					 powf(dest / 255.0f,
+						  128.0f / src));
 			}
 
 		public:

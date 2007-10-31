@@ -18,8 +18,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				overlay_function<source_selector,
-								 destination_selector>,
+				softlight_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				not_calculate_policy>
@@ -46,8 +45,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				overlay_function<source_selector,
-								 destination_selector>,
+				softlight_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<source_alpha_getter> >
