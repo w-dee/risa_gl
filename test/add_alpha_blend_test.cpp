@@ -105,12 +105,11 @@ public:
 		 */
 		operators::add_alpha_blend_additive_destination_operator oper;
 		oper(&src, &dest, &result);
-		std::cout << result << std::endl;
 
 		CPPUNIT_ASSERT(result.get_red() == 72);
 		CPPUNIT_ASSERT(result.get_green() == 72);
 		CPPUNIT_ASSERT(result.get_blue() == 72);
-		CPPUNIT_ASSERT(result.get_alpha() == 160);
+		CPPUNIT_ASSERT(result.get_alpha() == 162);
 
 		/**
 		 * r.color = saturation(src.color * src.a + dest.color * dest.a)
@@ -121,11 +120,10 @@ public:
 		 */
 		dest = pixel(192, 192, 192, 193);
 		oper(&src, &dest, &result);
-		std::cout << result << std::endl;
 		CPPUNIT_ASSERT(result.get_red() == 136);
 		CPPUNIT_ASSERT(result.get_green() == 136);
 		CPPUNIT_ASSERT(result.get_blue() == 136);
-		CPPUNIT_ASSERT(result.get_alpha() == 224);
+		CPPUNIT_ASSERT(result.get_alpha() == 225);
 	}
 };
 

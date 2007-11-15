@@ -130,7 +130,7 @@ namespace risa_gl
 				bit_setter,
 				add_saturation_function,
 				source_alpha_getter,
-				invert_source_alpha_getter,
+				multiply_invert_source_alpha_and_destination_alpha_getter,
 				multiply_alpha_and_alpha_policy<
 				source_alpha_getter,
 				destination_alpha_getter> >
