@@ -145,6 +145,50 @@ namespace risa_gl
 		};
 
 		/**
+		 * 除算ファンクタ
+		 * result = min(1, lhs / (1 - rhs * alpha));
+		 */
+		template <typename source_selector_type,
+				  typename destination_selector_type,
+				  typename alpha_selector_type>
+		class version5_divide_saturation_function
+		{
+		private:
+			source_selector_type src_select;
+			destination_selector_type dest_select;
+			alpha_selector_type alpha_select;
+
+		public:
+			/**
+			 * min(1, dest / (1 - src * src.a))
+			 */
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs_,
+									   risa_gl::uint32 rhs_) const
+			{
+				assert((lhs_ & 0xff00ff00) == 0);
+				assert((rhs_ & 0xff00ff00) == 0);
+
+				const risa_gl::uint32 lhs = dest_select(lhs_, rhs_);
+				const risa_gl::uint32 rhs = src_select(lhs_, rhs_);
+				const risa_gl::uint32 alpha = alpha_select(lhs_, rhs_);
+				
+				const risa_gl::uint32 low = 
+					((lhs & 0x000000ffU) << 8) /
+					(256 - (((rhs & 0x000000ffU) *
+							 (alpha & 0x000000ffU)) >> 8));
+
+				const risa_gl::uint32 high =
+					((lhs & 0x00ff0000U) >> 8) /
+					(256 - (((rhs & 0x00ff0000U) *
+							 ((alpha & 0x00ff0000U) >> 16)) >> 24));
+
+				return
+					(low > 0xff ? 0xff : low) |
+					(high > 0xff ? 0x00ff0000 : (high << 16));
+			}
+		};
+
+		/**
 		 * 比較(大)ファンクタ
 		 * result = max(lhs, rhs);
 		 */
@@ -284,6 +328,44 @@ namespace risa_gl
 				return
 					(compute_softlight(src_high, dest_high) << 16) |
 					compute_softlight(src_low, dest_low);
+			}
+		};
+
+		template <typename source_selector_type,
+				  typename destination_selector_type>
+		class color_burn_function
+		{
+		private:
+			typedef source_selector_type src_select_t;
+			typedef destination_selector_type dest_select_t;
+
+			src_select_t src_select;
+			dest_select_t dest_select;
+
+		public:
+			color_burn_function(const src_select_t& src_ = src_select_t(),
+								const dest_select_t& dest_ = dest_select_t()):
+				src_select(src_), dest_select(dest_)
+			{}
+
+
+			/**
+			 * dest / (1 - src)
+			 */
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
+									   risa_gl::uint32 rhs) const
+			{
+				const risa_gl::uint32 src = src_select(lhs, rhs);
+				const risa_gl::uint32 dest = dest_select(lhs, rhs);
+
+				const risa_gl::uint8 src_high = (src & 0x00ff0000) >> 16;
+				const risa_gl::uint8 src_low = (src & 0x000000ff);
+				const risa_gl::uint8 dest_high = (dest & 0x00ff0000) >> 16;
+				const risa_gl::uint8 dest_low = (dest & 0x000000ff);
+
+				return
+					(dest_high / (256 - src_high)) << 16 |
+					(dest_low / (256 - src_low));
 			}
 		};
 	}

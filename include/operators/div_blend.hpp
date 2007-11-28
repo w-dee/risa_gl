@@ -11,8 +11,6 @@ namespace risa_gl
 	{
 		/**
 		 * 除算ブレンディング(alphaは破壊)
-		 * r.color = src.color / dest.color
-		 * r.a = ?
 		 */
 		// {{{ div_blend_operator
 		class div_blend_operator
@@ -47,8 +45,6 @@ namespace risa_gl
 
 		/**
 		 * 除算ブレンディング(alphaはsourceを保存)
-		 * r.color = src.color * dest.color
-		 * r.a = src.a
 		 */
 		// {{{ div_blend_save_source_alpha_operator
 		class div_blend_save_source_alpha_operator
@@ -83,8 +79,6 @@ namespace risa_gl
 
 		/**
 		 * 除算ブレンディング(alphaはdestinationを保存)
-		 * r.color = src.color * dest.color
-		 * r.a = dest.a
 		 */
 		// {{{ div_blend_save_destination_alpha_operator
 		class div_blend_save_destination_alpha_operator
