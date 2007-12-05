@@ -11,8 +11,8 @@
 /**
  * 測定するオペレータの指定
  */
-//typedef risa_gl::operators::alpha_blend_save_destination_alpha_operator target_operator;
-typedef risa_gl::operators::alpha_blend_operator target_operator;
+typedef risa_gl::operators::alpha_blend_save_destination_alpha_operator target_operator;
+//typedef risa_gl::operators::alpha_blend_operator target_operator;
 
 
 template <

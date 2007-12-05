@@ -360,12 +360,17 @@ namespace risa_gl
 
 				const risa_gl::uint8 src_high = (src & 0x00ff0000) >> 16;
 				const risa_gl::uint8 src_low = (src & 0x000000ff);
-				const risa_gl::uint8 dest_high = (dest & 0x00ff0000) >> 16;
-				const risa_gl::uint8 dest_low = (dest & 0x000000ff);
+				const risa_gl::uint16 dest_high = (dest & 0x00ff0000) >> 8;
+				const risa_gl::uint16 dest_low = (dest & 0x000000ff) << 8;
 
+				const risa_gl::uint16 res_high = 
+					((65535 - dest_high) / (src_high+1));
+				const risa_gl::uint16 res_low = 
+					((65535 - dest_low) / (src_low+1));
+				
 				return
-					(dest_high / (256 - src_high)) << 16 |
-					(dest_low / (256 - src_low));
+					(res_high > 255 ? 0x00000000 : (255 - res_high) << 16) |
+					(res_low > 255 ? 0x00000000 : (255 - res_low));
 			}
 		};
 	}

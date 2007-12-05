@@ -44,29 +44,29 @@ public:
 
 		/**
 		 * (213, 213, 213), (182, 41, 41)
-		 * (218, 142, 142)
+		 * (175, 21, 21)
 		 */
 		operators::ps_color_burn_blend_operator oper;
 		oper(src.begin(), dest.begin(), result.begin());
 
-		CPPUNIT_ASSERT(result.begin()->get_red() == 219);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 142);
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 142);
+		CPPUNIT_ASSERT(result.begin()->get_red() == 175);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 20);
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 20);
 
 		std::generate(src.begin(), src.end(),
-					  generator<pixel>(pixel(255, 64, 64, 129)));
+					  generator<pixel>(pixel(255, 64, 0, 129)));
 		std::generate(dest.begin(), dest.end(),
 					  generator<pixel>(pixel(255, 64, 64, 129)));
 
 		/**
-		 * (255, 64, 64), (255, 64, 64)
-		 * (255, 74, 74)
+		 * (255, 64, 0), (255, 64, 64)
+		 * (255, 32, 32)
 		 */
 		oper(src.begin(), dest.begin(), result.begin());
 
 		CPPUNIT_ASSERT(result.begin()->get_red() == 255);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 74);
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 74);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 32);
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 32);
 	}
 
 	void ps_color_burn_blend_save_destination_alpha_test()
@@ -85,21 +85,21 @@ public:
 		operators::ps_color_burn_blend_save_destination_alpha_operator oper;
 		oper(src.begin(), dest.begin(), result.begin());
 
-		CPPUNIT_ASSERT(result.begin()->get_red() == 219);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 142);
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 142);
+		CPPUNIT_ASSERT(result.begin()->get_red() == 175);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 20);
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 20);
 		CPPUNIT_ASSERT(result.begin()->get_alpha() == 129);
 
 		std::generate(src.begin(), src.end(),
-					  generator<pixel>(pixel(255, 64, 64, 129)));
+					  generator<pixel>(pixel(255, 64, 0, 129)));
 		std::generate(dest.begin(), dest.end(),
 					  generator<pixel>(pixel(255, 64, 64, 129)));
 
 		oper(src.begin(), dest.begin(), result.begin());
 
 		CPPUNIT_ASSERT(result.begin()->get_red() == 255);
-		CPPUNIT_ASSERT(result.begin()->get_green() == 74);
-		CPPUNIT_ASSERT(result.begin()->get_blue() == 74);
+		CPPUNIT_ASSERT(result.begin()->get_green() == 32);
+		CPPUNIT_ASSERT(result.begin()->get_blue() == 32);
 		CPPUNIT_ASSERT(result.begin()->get_alpha() == 129);
 	}
 };
