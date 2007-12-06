@@ -82,9 +82,8 @@ namespace risa_gl
 				bit_setter,
 				version5_divide_saturation_function<
 						source_selector,
-						destination_selector,
-						source_alpha_getter>,
-				identity_alpha_factor,
+						destination_selector>,
+				source_alpha_getter,
 				identity_alpha_factor,
 				not_calculate_policy>
 			ps5_div_blend_operator_type;
@@ -119,9 +118,8 @@ namespace risa_gl
 				bit_setter,
 				version5_divide_saturation_function<
 						source_selector,
-						destination_selector,
-						source_alpha_getter>,
-				identity_alpha_factor,
+						destination_selector>,
+				source_alpha_getter,
 				identity_alpha_factor,
 				alpha_calculate_policy<destination_alpha_getter> >
 			ps5_div_blend_operator_type;

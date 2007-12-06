@@ -149,18 +149,16 @@ namespace risa_gl
 		 * result = min(1, lhs / (1 - rhs * alpha));
 		 */
 		template <typename source_selector_type,
-				  typename destination_selector_type,
-				  typename alpha_selector_type>
+				  typename destination_selector_type>
 		class version5_divide_saturation_function
 		{
 		private:
 			source_selector_type src_select;
 			destination_selector_type dest_select;
-			alpha_selector_type alpha_select;
 
 		public:
 			/**
-			 * min(1, dest / (1 - src * src.a))
+			 * min(1, dest / (1 - src))
 			 */
 			risa_gl::uint32 operator()(risa_gl::uint32 lhs_,
 									   risa_gl::uint32 rhs_) const
@@ -170,17 +168,14 @@ namespace risa_gl
 
 				const risa_gl::uint32 lhs = dest_select(lhs_, rhs_);
 				const risa_gl::uint32 rhs = src_select(lhs_, rhs_);
-				const risa_gl::uint32 alpha = alpha_select(lhs_, rhs_);
 				
 				const risa_gl::uint32 low = 
 					((lhs & 0x000000ffU) << 8) /
-					(256 - (((rhs & 0x000000ffU) *
-							 (alpha & 0x000000ffU)) >> 8));
+					(256 - (rhs & 0x000000ffU));
 
 				const risa_gl::uint32 high =
 					((lhs & 0x00ff0000U) >> 8) /
-					(256 - (((rhs & 0x00ff0000U) *
-							 ((alpha & 0x00ff0000U) >> 16)) >> 24));
+					(256 - ((rhs & 0x00ff0000U) >> 16));
 
 				return
 					(low > 0xff ? 0xff : low) |
