@@ -22,7 +22,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				compare_grater_function,
+				compare_greater_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				not_calculate_policy>
@@ -56,7 +56,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				compare_grater_function,
+				compare_greater_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<source_alpha_getter> >
@@ -90,7 +90,7 @@ namespace risa_gl
 				source_getter,
 				destination_getter,
 				bit_setter,
-				compare_grater_function,
+				compare_greater_function,
 				identity_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<destination_alpha_getter> >

@@ -187,7 +187,7 @@ namespace risa_gl
 		 * 比較(大)ファンクタ
 		 * result = max(lhs, rhs);
 		 */
-		class compare_grater_function
+		class compare_greater_function
 		{
 		public:
 			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
