@@ -368,6 +368,28 @@ namespace risa_gl
 					(res_low > 255 ? 0x00000000 : (255 - res_low));
 			}
 		};
+
+		class exclusion_function
+		{
+		public:
+			/**
+			 * r = lhs + rhs - 2 * lhs * rhs
+			 */
+			risa_gl::uint32 operator()(risa_gl::uint32 lhs,
+									   risa_gl::uint32 rhs) const
+			{
+				const risa_gl::uint8 lhs_high = (lhs & 0x00ff0000) >> 16;
+				const risa_gl::uint8 lhs_low = (lhs & 0x000000ff);
+				const risa_gl::uint8 rhs_high = (rhs & 0x00ff0000) >> 16;
+				const risa_gl::uint8 rhs_low = (rhs & 0x000000ff);
+
+					
+				return lhs + rhs -
+					((((lhs_high * rhs_high) << 9) & 0x01fe0000) |
+					 (((lhs_low * rhs_low) >>7) & 0x000001fe));
+			}
+
+		};
 	}
 }
 
