@@ -154,6 +154,90 @@ namespace risa_gl
 			}
 		};
 		// }}}
+
+		class ps5_difference_blend_operator
+		{
+		private:
+			typedef primitive::binomial_blend<
+				source_getter,
+				destination_getter,
+				bit_setter,
+				subtract_saturation_function<
+						compare_lesser_function,
+						compare_greater_function>,
+				source_alpha_getter,
+				identity_alpha_factor,
+				not_calculate_policy>
+			ps5_difference_blend_operator_type;
+			ps5_difference_blend_operator_type blender;
+
+		public:
+			template <typename src_itor_t,
+				typename dest_itor_t,
+				typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+
+		class ps5_difference_blend_save_source_alpha_operator
+		{
+		private:
+			typedef primitive::binomial_blend<
+				source_getter,
+				destination_getter,
+				bit_setter,
+				subtract_saturation_function<
+						compare_lesser_function,
+						compare_greater_function>,
+				source_alpha_getter,
+				identity_alpha_factor,
+				alpha_calculate_policy<source_alpha_getter> >
+				ps5_difference_blend_save_source_alpha_operator_type;
+			ps5_difference_blend_save_source_alpha_operator_type blender;
+
+		public:
+			template <typename src_itor_t,
+				typename dest_itor_t,
+				typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
+
+		class ps5_difference_blend_save_destination_alpha_operator
+		{
+		private:
+			typedef primitive::binomial_blend<
+				source_getter,
+				destination_getter,
+				bit_setter,
+				subtract_saturation_function<
+						compare_lesser_function,
+						compare_greater_function>,
+				source_alpha_getter,
+				identity_alpha_factor,
+				alpha_calculate_policy<destination_alpha_getter> >
+			ps5_difference_blend_save_destination_alpha_operator_type;
+			ps5_difference_blend_save_destination_alpha_operator_type blender;
+
+		public:
+			template <typename src_itor_t,
+				typename dest_itor_t,
+				typename result_itor_t>
+			void operator()(src_itor_t src,
+							dest_itor_t dest,
+							result_itor_t result) const
+			{
+				blender(src, dest, result);
+			}
+		};
 	}
 }
 
