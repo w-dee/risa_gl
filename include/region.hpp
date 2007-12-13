@@ -72,6 +72,9 @@ namespace risa_gl
 		}
 	};
 
+	/**
+	 * 座標系はデカルト座標系のy軸を上下反転したものを使用するつもり
+	 */
 	template <typename BaseType>
 	class region
 	{
@@ -84,18 +87,22 @@ namespace risa_gl
 		coord_type right_down;
 
 	public:
+		region():
+			left_up(), right_down()
+		{}
+
 		region(value_type left_, value_type up_,
 			   value_type right_, value_type down_):
 			left_up(left_, up_),
 			right_down(right_, down_)
 		{
 			assert(left_up.get_x() <= right_down.get_x() &&
-				   left_up.get_y() >= right_down.get_y());
+				   left_up.get_y() <= right_down.get_y());
 		}
 
 		region(const region& src):
 			left_up(src.left_up),
-			right_down(src.right.down)
+			right_down(src.right_down)
 		{}
 
 		region& operator=(const region& src)
@@ -114,7 +121,7 @@ namespace risa_gl
 			return left_up.get_x();
 		}
 
-		value_type get_up() const
+		value_type get_top() const
 		{
 			return left_up.get_y();
 		}
@@ -124,9 +131,19 @@ namespace risa_gl
 			return right_down.get_x();
 		}
 		
-		value_type get_down() const
+		value_type get_bottom() const
 		{
 			return right_down.get_y();
+		}
+
+		value_type get_width() const
+		{
+			return right_down.get_x() - left_up.get_x();
+		}
+
+		value_type get_height() const
+		{
+			return right_down.get_y() - left_up.get_y();
 		}
 
 		void set_left(value_type new_left) const
@@ -148,7 +165,6 @@ namespace risa_gl
 		{
 			right_down.set_y(new_down);
 		}
-		
 	};
 }
 
