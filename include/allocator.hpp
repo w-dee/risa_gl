@@ -2,6 +2,7 @@
 #define RISA_ALLOCATOR_HPP_
 
 #include <risa_types.hpp>
+#include <memory>
 
 namespace risa_gl {
 	/**
@@ -42,7 +43,9 @@ namespace risa_gl {
 			return &s;
 		}
 
-		pointer allocate(size_type n, const void* = 0) throw(std::bad_alloc)
+		pointer allocate(size_type n,
+						 std::allocator<void>::const_pointer = 0)
+			throw(std::bad_alloc)
 		{
 			const size_type aligned_allocate_size =
 				aligned_size + (n * sizeof(value_type)) + aligned_size;
