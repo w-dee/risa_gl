@@ -13,14 +13,11 @@ public:
 
 	void differTest()
 	{
-		float v = -1.f;
-
-		for (; v < 1.f; v+= 0.01f)
+		for (float v = -1.f; v < 1.f; v+= 0.01f)
 		{
-			std::cout << "v = "<< v << 
-				"dyn cos: " << std::cos(v) <<
-				"  static cos: " <<
-				risa_gl::math::cosine<float>::get(v) << std::endl;
+			CPPUNIT_ASSERT(
+				std::abs(std::cos(v) -
+						 risa_gl::math::cosine<float>::get(v)) < 0.01f);
 		}
 	}
 };
