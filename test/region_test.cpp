@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <region.hpp>
+#include <math/region.hpp>
 
-using namespace risa_gl;
+using namespace risa_gl::math;
 class region_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(region_test);
