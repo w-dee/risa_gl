@@ -212,6 +212,74 @@ namespace risa_gl
 			return !this->operator==(rhs);
 		}
 	};
+
+	template <typename AlgorithmType>
+	class transfor_iterator
+	{
+	public:
+		typedef AlgorithmType reverse_projector_type;
+
+		typedef reverse_projector_type::value_type  value_type;
+		typedef reverse_projector_type::pointer_type pointer_type;
+		typedef reverse_projector_type::reference_type reference_type;
+
+	private:
+		reverse_projector_type projector;
+
+	public:
+		transform_iterator(const reverse_projector_type& projector_):
+			projector(projector_)
+		{}
+		
+		~transform_iterator()
+		{}
+
+		transform_iterator& operator++()
+		{
+			projector.next();
+			return *this;
+		}
+
+		transform_iterator operator++(int)
+		{
+			transform_iterator result(projector);
+			projector.next();
+			return result;
+		}
+
+		transform_iterator& operator--()
+		{
+			projector.previous();
+			return *this;
+		}
+
+		transform_iterator operator--(int)
+		{
+			transform_iterator result(projector);
+			projector.previous();
+			return result;
+		}
+
+		reference_type operator*()
+		{
+			return projector.get_reference();
+		}
+
+		const reference_type operator*() const
+		{
+			return projector.get_reference();
+		}
+
+		pointer_type operator->()
+		{
+			return projector.get_pointer();
+		}
+
+		const pointer_type operator->() const
+		{
+			return projector.get_pointer();
+		}
+	};
 }
 
 #endif /* RISA_ITERATOR_HPP_ */
