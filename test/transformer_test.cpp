@@ -1,0 +1,92 @@
+#include <cppunit/extensions/HelperMacros.h>
+#include <transformer.hpp>
+#include <math/vector.hpp>
+
+class transformer_test : public CppUnit::TestFixture
+{
+private:
+	CPPUNIT_TEST_SUITE(transformer_test);
+	CPPUNIT_TEST(multiply2d_test);
+	CPPUNIT_TEST(multiply3d_test);
+	CPPUNIT_TEST(multiply4d_test);
+	CPPUNIT_TEST_SUITE_END();
+
+public:
+	void multiply2d_test()
+	{
+		using risa_gl::linear_transformer;
+		using risa_gl::math::vector2;
+
+		linear_transformer transformer;
+		vector2 v(2.f, 3.f);
+
+		vector2 v_t = (transformer * v);
+		CPPUNIT_ASSERT(v_t.x == v.x);
+		CPPUNIT_ASSERT(v_t.y == v.y);
+
+		const float mat[4][4] = {{ 0.f, 1.f, 0.f, 0.f},
+								 {-1.f, 0.f, 0.f, 0.f},
+								 { 0.f, 0.f, 1.f, 0.f},
+								 { 0.f, 0.f, 0.f, 1.f}};
+		transformer = linear_transformer(mat);
+
+		v_t = transformer * v;
+		CPPUNIT_ASSERT(v_t.x == -3.f);
+		CPPUNIT_ASSERT(v_t.y == 2.f);
+		
+	}
+
+	void multiply3d_test()
+	{
+		using risa_gl::linear_transformer;
+		using risa_gl::math::vector3;
+
+		linear_transformer transformer;
+		vector3 v(2.f, 3.f, 4.f);
+
+		vector3 v_t = (transformer * v);
+		CPPUNIT_ASSERT(v_t.x == v.x);
+		CPPUNIT_ASSERT(v_t.y == v.y);
+		CPPUNIT_ASSERT(v_t.z == v.z);
+
+		const float mat[4][4] = {{ 1.f, 0.f, 0.f, 0.f},
+								 { 0.f, 0.f, 1.f, 0.f},
+								 { 0.f,-1.f, 0.f, 0.f},
+								 { 0.f, 0.f, 0.f, 1.f}};
+		transformer = linear_transformer(mat);
+
+		v_t = transformer * v;
+		CPPUNIT_ASSERT(v_t.x == 2.f);
+		CPPUNIT_ASSERT(v_t.y ==-4.f);
+		CPPUNIT_ASSERT(v_t.z == 3.f);
+	}
+
+	void multiply4d_test()
+	{
+		using risa_gl::linear_transformer;
+		using risa_gl::math::vector4;
+
+		linear_transformer transformer;
+		vector4 v(2.f, 3.f, 4.f, 1.f);
+
+		vector4 v_t = (transformer * v);
+		CPPUNIT_ASSERT(v_t.x == v.x);
+		CPPUNIT_ASSERT(v_t.y == v.y);
+		CPPUNIT_ASSERT(v_t.z == v.z);
+		CPPUNIT_ASSERT(v_t.w == v.w);
+
+		const float mat[4][4] = {{ 0.f, 0.f,-1.f, 0.f},
+								 { 0.f, 1.f, 0.f, 0.f},
+								 { 1.f, 0.f, 0.f, 0.f},
+								 { 0.f, 0.f, 0.f, 1.f}};
+		transformer = linear_transformer(mat);
+
+		v_t = transformer * v;
+		CPPUNIT_ASSERT(v_t.x == 4.f);
+		CPPUNIT_ASSERT(v_t.y == 3.f);
+		CPPUNIT_ASSERT(v_t.z ==-2.f);
+		CPPUNIT_ASSERT(v_t.w == 1.f);
+	}
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(transformer_test);

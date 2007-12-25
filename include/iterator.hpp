@@ -214,14 +214,14 @@ namespace risa_gl
 	};
 
 	template <typename AlgorithmType>
-	class transfor_iterator
+	class transform_iterator
 	{
 	public:
 		typedef AlgorithmType reverse_projector_type;
 
-		typedef reverse_projector_type::value_type  value_type;
-		typedef reverse_projector_type::pointer_type pointer_type;
-		typedef reverse_projector_type::reference_type reference_type;
+		typedef typename reverse_projector_type::value_type  value_type;
+		typedef typename reverse_projector_type::pointer_type pointer_type;
+		typedef typename reverse_projector_type::reference_type reference_type;
 
 	private:
 		reverse_projector_type projector;
