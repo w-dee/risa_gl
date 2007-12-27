@@ -4,6 +4,7 @@
 #include <rectangle.hpp>
 #include <iterator.hpp>
 #include <math/vector.hpp>
+#include <math/region.hpp>
 #include <vector>
 
 namespace risa_gl
@@ -97,6 +98,33 @@ namespace risa_gl
 				coord.z * matrix[2][2] + coord.w * matrix[3][2],
 				coord.x * matrix[0][3] + coord.y * matrix[1][3] +
 				coord.z * matrix[2][3] + coord.w * matrix[3][3]);
+		}
+
+		template <typename BaseType>
+		math::coordinate<BaseType>
+		operator*(const math::coordinate<BaseType>& src) const
+		{
+			return math::coordinate<BaseType>(
+				src.get_x() * matrix[0][0] + src.get_y() * matrix[1][0],
+				src.get_x() * matrix[0][1] + src.get_y() * matrix[1][1]);
+			
+		}
+
+		template <typename BaseType>
+		math::region<BaseType>
+		operator*(const math::region<BaseType>& src) const
+		{
+			typedef math::region<BaseType> region_t;
+			typedef typename region_t::coord_type coord_t;
+		
+			const coord_t left_up =
+				*this * coord_t(src.get_left(), src.get_top());
+			const coord_t right_bottom =
+				*this * coord_t(src.get_right(), src.get_bottom());
+
+			return region_t(
+				left_up.get_x(), left_up.get_y(),
+				right_bottom.get_x(), right_bottom.get_y());
 		}
 	};
 }

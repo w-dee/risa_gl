@@ -9,9 +9,27 @@ private:
 	CPPUNIT_TEST(multiply2d_test);
 	CPPUNIT_TEST(multiply3d_test);
 	CPPUNIT_TEST(multiply4d_test);
+	CPPUNIT_TEST(region_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void region_test()
+	{
+		using risa_gl::linear_transformer;
+		using risa_gl::math::region;
+
+		typedef region<float> region_t;
+		region_t rect(-1.f, -2.f, 3.f, 4.f);
+		
+		linear_transformer transformer;
+
+		region_t rect_t = transformer * rect;
+		CPPUNIT_ASSERT(rect_t.get_left() == -1.f);
+		CPPUNIT_ASSERT(rect_t.get_top() == -2.f);
+		CPPUNIT_ASSERT(rect_t.get_right() == 3.f);
+		CPPUNIT_ASSERT(rect_t.get_bottom() == 4.f);
+	}
+
 	void multiply2d_test()
 	{
 		using risa_gl::linear_transformer;
