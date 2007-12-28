@@ -69,8 +69,8 @@ namespace risa_gl
 		math::vector2 operator*(const math::vector2& coord) const
 		{
 			return math::vector2(
-				coord.x * matrix[0][0] + coord.y * matrix[1][0],
-				coord.x * matrix[0][1] + coord.y * matrix[1][1]);
+				coord.x * matrix[0][0] + coord.y * matrix[0][1],
+				coord.x * matrix[1][0] + coord.y * matrix[1][1]);
 		}
 
 		math::vector3 operator*(const math::vector3& coord) const
@@ -105,8 +105,8 @@ namespace risa_gl
 		operator*(const math::coordinate<BaseType>& src) const
 		{
 			return math::coordinate<BaseType>(
-				src.get_x() * matrix[0][0] + src.get_y() * matrix[1][0],
-				src.get_x() * matrix[0][1] + src.get_y() * matrix[1][1]);
+				src.get_x() * matrix[0][0] + src.get_y() * matrix[0][1],
+				src.get_x() * matrix[1][0] + src.get_y() * matrix[1][1]);
 			
 		}
 

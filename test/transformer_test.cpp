@@ -45,7 +45,7 @@ public:
 			")" << std::endl;
 			
 		CPPUNIT_ASSERT(rect_t.get_left() == -2.f);
-		CPPUNIT_ASSERT(rect_t.get_top() == -1.f);
+		CPPUNIT_ASSERT(rect_t.get_top() == 1.f);
 		CPPUNIT_ASSERT(rect_t.get_right() == 4.f);
 		CPPUNIT_ASSERT(rect_t.get_bottom() == -3.f);
 	}
