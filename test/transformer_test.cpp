@@ -1,6 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <transformer.hpp>
 #include <math/vector.hpp>
+#include <iostream>
 
 class transformer_test : public CppUnit::TestFixture
 {
@@ -28,6 +29,25 @@ public:
 		CPPUNIT_ASSERT(rect_t.get_top() == -2.f);
 		CPPUNIT_ASSERT(rect_t.get_right() == 3.f);
 		CPPUNIT_ASSERT(rect_t.get_bottom() == 4.f);
+
+		const float mat[4][4] = {{ 0.f, 1.f, 0.f, 0.f},
+								 {-1.f, 0.f, 0.f, 0.f},
+								 { 0.f, 0.f, 1.f, 0.f},
+								 { 0.f, 0.f, 0.f, 1.f}};
+		transformer = linear_transformer(mat);
+
+		rect_t = transformer * rect;
+		std::cout <<
+			"(" <<
+			rect_t.get_left() << ", " << rect_t.get_top() << 
+			")-(" <<
+			rect_t.get_right() << ", " << rect_t.get_bottom() <<
+			")" << std::endl;
+			
+		CPPUNIT_ASSERT(rect_t.get_left() == -2.f);
+		CPPUNIT_ASSERT(rect_t.get_top() == -1.f);
+		CPPUNIT_ASSERT(rect_t.get_right() == 4.f);
+		CPPUNIT_ASSERT(rect_t.get_bottom() == -3.f);
 	}
 
 	void multiply2d_test()

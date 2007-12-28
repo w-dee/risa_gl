@@ -97,10 +97,7 @@ namespace risa_gl
 				   value_type right_, value_type down_):
 				left_up(left_, up_),
 				right_down(right_, down_)
-			{
-				assert(left_up.get_x() <= right_down.get_x() &&
-					   left_up.get_y() <= right_down.get_y());
-			}
+			{}
 
 			region(const region& src):
 				left_up(src.left_up),
