@@ -37,12 +37,6 @@ public:
 		transformer = linear_transformer(mat);
 
 		rect_t = transformer * rect;
-		std::cout <<
-			"(" <<
-			rect_t.get_left() << ", " << rect_t.get_top() << 
-			")-(" <<
-			rect_t.get_right() << ", " << rect_t.get_bottom() <<
-			")" << std::endl;
 			
 		CPPUNIT_ASSERT(rect_t.get_left() == -2.f);
 		CPPUNIT_ASSERT(rect_t.get_top() == 1.f);
@@ -71,7 +65,6 @@ public:
 		v_t = transformer * v;
 		CPPUNIT_ASSERT(v_t.x == -3.f);
 		CPPUNIT_ASSERT(v_t.y == 2.f);
-		
 	}
 
 	void multiply3d_test()
