@@ -20,7 +20,7 @@ namespace risa_gl {
 		typedef const types& const_reference;
 		typedef types value_type;
 		typedef size_t size_type;
-		typedef ptrdiff_t differnce_type;
+		typedef ptrdiff_t difference_type;
 
 	private:
 		typedef void* allocated_pointer_type;
