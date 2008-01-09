@@ -1,6 +1,8 @@
 #ifndef RISA_VECTOR_HPP_
 #define RISA_VECTOR_HPP_
 
+#include <ostream>
+
 namespace risa_gl
 {
 	namespace math
@@ -13,6 +15,14 @@ namespace risa_gl
 
 			float x;
 			float y;
+
+			friend std::ostream& operator<<(std::ostream& out,
+											const vector2& self)
+			{
+				return out << "(" <<
+					self.x << ", " <<
+					self.y << ")";
+			}
 		};
 
 		struct vector3 : public vector2
@@ -22,6 +32,16 @@ namespace risa_gl
 			{}
 
 			float z;
+
+			friend std::ostream& operator<<(std::ostream& out,
+											const vector3& self)
+			{
+				return out << "(" <<
+					self.x << ", " <<
+					self.y << ", " <<
+					self.z << ")";
+			}
+
 		};
 
 		struct vector4 : public vector3
@@ -32,6 +52,15 @@ namespace risa_gl
 			{}
 
 			float w;
+			friend std::ostream& operator<<(std::ostream& out,
+											const vector4& self)
+			{
+				return out << "(" <<
+					self.x << ", " <<
+					self.y << ", " <<
+					self.z << ", " <<
+					self.w << ")";
+			}
 		};
 
 	}

@@ -19,14 +19,14 @@ namespace risa_gl
 	{
 	public:
 		typedef math::matrix<float, 4, 4> matrix_t;
-		typedef math::matrix<float, 4, 1> matrix_vector;
+		typedef math::matrix<float, 1, 4> matrix_vector;
 
 	private:
 		matrix_t matrix;
 
 	public:
 		linear_transformer():
-			matrix(1)
+			matrix()
 		{}
 
 		linear_transformer(const matrix_t::elements_type& elements):
@@ -47,8 +47,8 @@ namespace risa_gl
 		{
 			matrix_vector result;
 
-			result(0) = coord.get_x();
-			result(1) = coord.get_y();
+			result(0,0) = coord.get_x();
+			result(0,1) = coord.get_y();
 
 			return result;
 		}
@@ -57,7 +57,7 @@ namespace risa_gl
 		coordinate<BaseType>
 		matrix_vector_to_coordinate(const matrix_vector& coord) const
 		{
-			return coordinate<BaseType>(coord(0), coord(1));
+			return coordinate<BaseType>(coord(0,0), coord(0,1));
 		}
 
 		matrix_vector 
@@ -65,8 +65,8 @@ namespace risa_gl
 		{
 			matrix_vector result;
 
-			result(0) = coord.x;
-			result(1) = coord.y;
+			result(0,0) = coord.x;
+			result(0,1) = coord.y;
 
 			return result;
 		}
@@ -74,7 +74,7 @@ namespace risa_gl
 		vector2
 		matrix_vector_to_vector2(const matrix_vector& coord) const
 		{
-			return vector2(coord(0), coord(1));
+			return vector2(coord(0,0), coord(0,1));
 		}
 			
 		matrix_vector 
@@ -82,9 +82,9 @@ namespace risa_gl
 		{
 			matrix_vector result;
 
-			result(0) = coord.x;
-			result(1) = coord.y;
-			result(2) = coord.z;
+			result(0,0) = coord.x;
+			result(0,1) = coord.y;
+			result(0,2) = coord.z;
 
 			return result;
 		}
@@ -92,7 +92,7 @@ namespace risa_gl
 		vector3
 		matrix_vector_to_vector3(const matrix_vector& coord) const
 		{
-			return vector3(coord(0), coord(1), coord(2));
+			return vector3(coord(0,0), coord(0,1), coord(0,2));
 		}
 
 		matrix_vector 
@@ -100,10 +100,10 @@ namespace risa_gl
 		{
 			matrix_vector result;
 
-			result(0) = coord.x;
-			result(1) = coord.y;
-			result(2) = coord.z;
-			result(3) = coord.w;
+			result(0,0) = coord.x;
+			result(0,1) = coord.y;
+			result(0,2) = coord.z;
+			result(0,3) = coord.w;
 
 			return result;
 		}
@@ -111,26 +111,26 @@ namespace risa_gl
 		vector4
 		matrix_vector_to_vector4(const matrix_vector& coord) const
 		{
-			return vector4(coord(0), coord(1), coord(2), coord(3));
+			return vector4(coord(0,0), coord(0,1), coord(0,2), coord(0,3));
 		}
 
 	public:
 		math::vector2 operator*(const math::vector2& coord) const
 		{
 			return matrix_vector_to_vector2(
-				this->matrix * vector2_to_matrix_vector(coord));
+				vector2_to_matrix_vector(coord) * this->matrix);
 		}
 
 		math::vector3 operator*(const math::vector3& coord) const
 		{
 			return matrix_vector_to_vector3(
-				this->matrix * vector3_to_matrix_vector(coord));
+				vector3_to_matrix_vector(coord) * this->matrix);
 		}
 
 		math::vector4 operator*(const math::vector4& coord) const
 		{
 			return matrix_vector_to_vector4(
-				this->matrix * vector4_to_matrix_vector(coord));
+				vector4_to_matrix_vector(coord) * this->matrix);
 		}
 
 		template <typename BaseType>
@@ -138,7 +138,7 @@ namespace risa_gl
 		operator*(const math::coordinate<BaseType>& src) const
 		{
 			return matrix_vector_to_coordinate<BaseType>(
-				this->matrix * coordinate_to_matrix_vector(src));
+				coordinate_to_matrix_vector(src) * this->matrix);
 		}
 
 		template <typename BaseType>

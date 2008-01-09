@@ -38,11 +38,12 @@ public:
 		transformer = linear_transformer(mat);
 
 		rect_t = transformer * rect;
-			
-		CPPUNIT_ASSERT(rect_t.get_left() == -2.f);
-		CPPUNIT_ASSERT(rect_t.get_top() == 1.f);
-		CPPUNIT_ASSERT(rect_t.get_right() == 4.f);
-		CPPUNIT_ASSERT(rect_t.get_bottom() == -3.f);
+
+		CPPUNIT_ASSERT(rect_t.get_left() == 2.f);
+		CPPUNIT_ASSERT(rect_t.get_top() == -1.f);
+
+		CPPUNIT_ASSERT(rect_t.get_right() == -4.f);
+		CPPUNIT_ASSERT(rect_t.get_bottom() == 3.f);
 	}
 
 	void multiply2d_test()
@@ -65,8 +66,8 @@ public:
 		transformer = linear_transformer(mat);
 
 		v_t = transformer * v;
-		CPPUNIT_ASSERT(v_t.x == 3.f);
-		CPPUNIT_ASSERT(v_t.y == -2.f);
+		CPPUNIT_ASSERT(v_t.x == -3.f);
+		CPPUNIT_ASSERT(v_t.y == 2.f);
 	}
 
 	void multiply3d_test()
@@ -91,7 +92,7 @@ public:
 
 		v_t = transformer * v;
 		CPPUNIT_ASSERT(v_t.x == 2.f);
-		CPPUNIT_ASSERT(v_t.y ==-4.f);
+		CPPUNIT_ASSERT(v_t.y == -4.f);
 		CPPUNIT_ASSERT(v_t.z == 3.f);
 	}
 

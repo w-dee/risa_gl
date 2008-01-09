@@ -1,6 +1,8 @@
 #ifndef RISA_REGION_HPP_
 #define RISA_REGION_HPP_
 
+#include <ostream>
+
 namespace risa_gl
 {
 	namespace math
@@ -71,6 +73,12 @@ namespace risa_gl
 			bool operator!=(const coordinate& rhs) const
 			{
 				return !this->operator==(rhs);
+			}
+
+			friend std::ostream& operator<<(std::ostream& out,
+											const coordinate& self)
+			{
+				return out << "(" << self.x << ", " << self.y << ")";
 			}
 		};
 
@@ -163,6 +171,14 @@ namespace risa_gl
 			void set_down(value_type new_down) const
 			{
 				right_down.set_y(new_down);
+			}
+
+			friend std::ostream& operator<<(std::ostream& out,
+										   const region& self)
+			{
+				return out << "(" <<
+					self.left_up << ", " <<
+					self.right_down << ")";
 			}
 		};
 	}
