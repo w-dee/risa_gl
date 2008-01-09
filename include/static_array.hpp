@@ -9,30 +9,30 @@ namespace risa_gl
 	{
 	public:
 		typedef BaseType value_type;
-		typedef value_type& reference_type;
-		typedef const value_type& const_reference_type;
+		typedef value_type& reference;
+		typedef const value_type& const_reference;
 
-		typedef value_type* pointer_type;
-		typedef value_type const * const_pointer_type;
+		typedef value_type* pointer;
+		typedef value_type const * const_pointer;
 
-		typedef pointer_type iterator;
-		typedef const_pointer_type const_iterator;
+		typedef pointer iterator;
+		typedef const_pointer const_iterator;
 
 		typedef size_t size_type;
 		
 		value_type elements[Length];
 
-		const_reference_type operator[](int offset) const
+		const_reference operator[](int offset) const
 		{
 			return elements[offset];
 		}
 
-		reference_type operator[](int offset)
+		reference operator[](int offset)
 		{
 			return elements[offset];
 		}
 
-		const reference_type at(int offset) const
+		const reference at(int offset) const
 		{
 			if (offset < 0 || offset >= Length)
 				throw std::out_of_range("offset is out of range.");
@@ -40,7 +40,7 @@ namespace risa_gl
 			return elements[offset];
 		}
 
-		reference_type at(int offset)
+		reference at(int offset)
 		{
 			if (offset < 0 || offset >= Length)
 				throw std::out_of_range("offset is out of range.");

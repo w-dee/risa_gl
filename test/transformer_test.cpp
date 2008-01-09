@@ -30,10 +30,11 @@ public:
 		CPPUNIT_ASSERT(rect_t.get_right() == 3.f);
 		CPPUNIT_ASSERT(rect_t.get_bottom() == 4.f);
 
-		const float mat[4][4] = {{ 0.f, 1.f, 0.f, 0.f},
-								 {-1.f, 0.f, 0.f, 0.f},
-								 { 0.f, 0.f, 1.f, 0.f},
-								 { 0.f, 0.f, 0.f, 1.f}};
+		const risa_gl::static_array<float, 16> mat = 
+			{ 0.f, 1.f, 0.f, 0.f,
+			  -1.f, 0.f, 0.f, 0.f,
+			  0.f, 0.f, 1.f, 0.f,
+			  0.f, 0.f, 0.f, 1.f};
 		transformer = linear_transformer(mat);
 
 		rect_t = transformer * rect;
@@ -56,15 +57,16 @@ public:
 		CPPUNIT_ASSERT(v_t.x == v.x);
 		CPPUNIT_ASSERT(v_t.y == v.y);
 
-		const float mat[4][4] = {{ 0.f, 1.f, 0.f, 0.f},
-								 {-1.f, 0.f, 0.f, 0.f},
-								 { 0.f, 0.f, 1.f, 0.f},
-								 { 0.f, 0.f, 0.f, 1.f}};
+		const risa_gl::static_array<float, 16> mat =
+			{ 0.f, 1.f, 0.f, 0.f,
+			  -1.f, 0.f, 0.f, 0.f,
+			  0.f, 0.f, 1.f, 0.f,
+			  0.f, 0.f, 0.f, 1.f};
 		transformer = linear_transformer(mat);
 
 		v_t = transformer * v;
-		CPPUNIT_ASSERT(v_t.x == -3.f);
-		CPPUNIT_ASSERT(v_t.y == 2.f);
+		CPPUNIT_ASSERT(v_t.x == 3.f);
+		CPPUNIT_ASSERT(v_t.y == -2.f);
 	}
 
 	void multiply3d_test()
@@ -80,10 +82,11 @@ public:
 		CPPUNIT_ASSERT(v_t.y == v.y);
 		CPPUNIT_ASSERT(v_t.z == v.z);
 
-		const float mat[4][4] = {{ 1.f, 0.f, 0.f, 0.f},
-								 { 0.f, 0.f, 1.f, 0.f},
-								 { 0.f,-1.f, 0.f, 0.f},
-								 { 0.f, 0.f, 0.f, 1.f}};
+		const risa_gl::static_array<float, 16> mat =
+			{ 1.f, 0.f, 0.f, 0.f,
+			  0.f, 0.f, 1.f, 0.f,
+			  0.f,-1.f, 0.f, 0.f,
+			  0.f, 0.f, 0.f, 1.f};
 		transformer = linear_transformer(mat);
 
 		v_t = transformer * v;
@@ -106,10 +109,11 @@ public:
 		CPPUNIT_ASSERT(v_t.z == v.z);
 		CPPUNIT_ASSERT(v_t.w == v.w);
 
-		const float mat[4][4] = {{ 0.f, 0.f,-1.f, 0.f},
-								 { 0.f, 1.f, 0.f, 0.f},
-								 { 1.f, 0.f, 0.f, 0.f},
-								 { 0.f, 0.f, 0.f, 1.f}};
+		const risa_gl::static_array<float, 16> mat = 
+			{ 0.f, 0.f,-1.f, 0.f,
+			  0.f, 1.f, 0.f, 0.f,
+			  1.f, 0.f, 0.f, 0.f,
+			  0.f, 0.f, 0.f, 1.f};
 		transformer = linear_transformer(mat);
 
 		v_t = transformer * v;

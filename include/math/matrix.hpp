@@ -60,6 +60,20 @@ namespace risa_gl
 				return elements;
 			}
 
+			matrix& negate()
+			{
+				for (typename elements_type::iterator itor = elements.begin();
+					 itor != elements.end(); ++itor)
+					*itor = -*itor;
+
+				return *this;
+			}
+
+			matrix get_negate() const
+			{
+				return matrix(*this).negate();
+			}
+
 			value_type& operator()(const int row, const int column = 0)
 			{
 				return elements[row * max_columns + column];
@@ -73,7 +87,7 @@ namespace risa_gl
 
 			template <typename destination_matrix_type>
 			matrix<value_type, max_rows, destination_matrix_type::max_columns>
-			operator*(const destination_matrix_type& rhs)
+			operator*(const destination_matrix_type& rhs) const
 			{
 				typedef destination_matrix_type rhs_type;
 				typedef matrix<value_type, max_rows, rhs_type::max_columns>
@@ -94,6 +108,33 @@ namespace risa_gl
 			matrix& operator*=(const matrix& rhs)
 			{
 				return *this = this->operator*(rhs);
+			}
+
+			matrix& operator+=(const matrix& rhs)
+			{
+				typename elements_type::iterator lhs_itor = elements.begin();
+				typename elements_type::const_iterator rhs_itor =
+					rhs.elements.begin();
+
+				while (lhs_itor != elements.end())
+					*lhs_itor++ += *rhs_itor++;
+
+				return *this;
+			}
+
+			matrix operator+(const matrix& rhs) const
+			{
+				return matrix(*this).operator+=(rhs);
+			}
+
+			matrix& operator-=(const matrix& rhs)
+			{
+				return this->operator+=(rhs.get_negate());
+			}
+
+			matrix operator-(const matrix& rhs) const
+			{
+				return matrix(*this).operator-=(rhs);
 			}
 
 			bool operator==(const matrix& src) const

@@ -27,7 +27,7 @@ namespace risa_gl
 		static iterator_type to_sequential(alignment_iterator_type itor)
 		{
 			return iterator_type(
-				reinterpret_cast<typename iterator_type::pointer_type>(
+				reinterpret_cast<typename iterator_type::pointer>(
 					itor->get()));
 		}
 
@@ -35,7 +35,7 @@ namespace risa_gl
 		to_sequential(const_alignment_iterator_type itor)
 		{
 			return const_iterator_type(
-				reinterpret_cast<typename const_iterator_type::pointer_type>(
+				reinterpret_cast<typename const_iterator_type::pointer>(
 					itor->get()));
 		}
 
@@ -43,7 +43,7 @@ namespace risa_gl
 		{
 			return alignment_iterator_type(
 				reinterpret_cast
-				<typename alignment_iterator_type::pointer_type>(&*itor));
+				<typename alignment_iterator_type::pointer>(&*itor));
 		}
 
 		static const_alignment_iterator_type
@@ -51,7 +51,7 @@ namespace risa_gl
 		{
 			return const_alignment_iterator_type(
 				reinterpret_cast
-				<typename const_alignment_iterator_type::pointer_type>(
+				<typename const_alignment_iterator_type::pointer>(
 					const_alignment_iterator_type(&*itor)));
 		}
 	};

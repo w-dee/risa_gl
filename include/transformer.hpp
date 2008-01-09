@@ -5,58 +5,32 @@
 #include <iterator.hpp>
 #include <math/vector.hpp>
 #include <math/region.hpp>
+#include <math/matrix.hpp>
 #include <vector>
 
 namespace risa_gl
 {
+	using  risa_gl::math::vector2;
+	using  risa_gl::math::vector3;
+	using  risa_gl::math::vector4;
+	using  risa_gl::math::coordinate;
+
 	class linear_transformer
 	{
+	public:
+		typedef math::matrix<float, 4, 4> matrix_t;
+		typedef math::matrix<float, 4, 1> matrix_vector;
+
 	private:
-		/// @todo ほんとはtemplateベースのコンパイル時固定長配列のほうが・・・
-		typedef std::vector<std::vector<float> > matrix_t;
 		matrix_t matrix;
-
-		static matrix_t initial()
-		{
-			matrix_t result(4);
-			std::vector<float> line;
-
-			line.resize(4);
-
-			for (int row = 0; row < 4; ++row)
-			{
-				for (int column = 0; column < 4; ++column)
-					line[column] = (row == column ? 1.0f : 0.0f);
-
-				result[row] = line;
-			}
-			
-			return result;
-		}
-
-		static matrix_t initial(const float matrces[4][4])
-		{
-			matrix_t result(4);
-			std::vector<float> line;
-
-			for (int row = 0; row < 4; ++row)
-			{
-				result[row].resize(4);
-				for (int column = 0; column < 4; ++column)
-					result[row][column] = matrces[row][column];
-			}
-			
-			return result;
-			
-		}
 
 	public:
 		linear_transformer():
-			matrix(initial())
+			matrix(1)
 		{}
-		linear_transformer(const float matrices[4][4]):
 
-			matrix(initial(matrices))
+		linear_transformer(const matrix_t::elements_type& elements):
+			matrix(elements)
 		{}
 
 		linear_transformer(const linear_transformer& src):
@@ -66,48 +40,105 @@ namespace risa_gl
 		~linear_transformer()
 		{}
 
+	private:
+		template <typename BaseType>
+		matrix_vector
+		coordinate_to_matrix_vector(const coordinate<BaseType>& coord) const
+		{
+			matrix_vector result;
+
+			result(0) = coord.get_x();
+			result(1) = coord.get_y();
+
+			return result;
+		}
+
+		template <typename BaseType>
+		coordinate<BaseType>
+		matrix_vector_to_coordinate(const matrix_vector& coord) const
+		{
+			return coordinate<BaseType>(coord(0), coord(1));
+		}
+
+		matrix_vector 
+		vector2_to_matrix_vector(const math::vector2& coord) const
+		{
+			matrix_vector result;
+
+			result(0) = coord.x;
+			result(1) = coord.y;
+
+			return result;
+		}
+
+		vector2
+		matrix_vector_to_vector2(const matrix_vector& coord) const
+		{
+			return vector2(coord(0), coord(1));
+		}
+			
+		matrix_vector 
+		vector3_to_matrix_vector(const math::vector3& coord) const
+		{
+			matrix_vector result;
+
+			result(0) = coord.x;
+			result(1) = coord.y;
+			result(2) = coord.z;
+
+			return result;
+		}
+
+		vector3
+		matrix_vector_to_vector3(const matrix_vector& coord) const
+		{
+			return vector3(coord(0), coord(1), coord(2));
+		}
+
+		matrix_vector 
+		vector4_to_matrix_vector(const math::vector4& coord) const
+		{
+			matrix_vector result;
+
+			result(0) = coord.x;
+			result(1) = coord.y;
+			result(2) = coord.z;
+			result(3) = coord.w;
+
+			return result;
+		}
+
+		vector4
+		matrix_vector_to_vector4(const matrix_vector& coord) const
+		{
+			return vector4(coord(0), coord(1), coord(2), coord(3));
+		}
+
+	public:
 		math::vector2 operator*(const math::vector2& coord) const
 		{
-			return math::vector2(
-				coord.x * matrix[0][0] + coord.y * matrix[0][1],
-				coord.x * matrix[1][0] + coord.y * matrix[1][1]);
+			return matrix_vector_to_vector2(
+				this->matrix * vector2_to_matrix_vector(coord));
 		}
 
 		math::vector3 operator*(const math::vector3& coord) const
 		{
-			return math::vector3(
-				coord.x * matrix[0][0] +
-				coord.y * matrix[1][0] +
-				coord.z * matrix[2][0],
-				coord.x * matrix[0][1] +
-				coord.y * matrix[1][1] +
-				coord.z * matrix[2][1],
-				coord.x * matrix[0][2] +
-				coord.y * matrix[1][2] +
-				coord.z * matrix[2][2]);
+			return matrix_vector_to_vector3(
+				this->matrix * vector3_to_matrix_vector(coord));
 		}
 
 		math::vector4 operator*(const math::vector4& coord) const
 		{
-			return math::vector4(
-				coord.x * matrix[0][0] + coord.y * matrix[1][0] +
-				coord.z * matrix[2][0] + coord.w * matrix[3][0],
-				coord.x * matrix[0][1] + coord.y * matrix[1][1] +
-				coord.z * matrix[2][1] + coord.w * matrix[3][1],
-				coord.x * matrix[0][2] + coord.y * matrix[1][2] +
-				coord.z * matrix[2][2] + coord.w * matrix[3][2],
-				coord.x * matrix[0][3] + coord.y * matrix[1][3] +
-				coord.z * matrix[2][3] + coord.w * matrix[3][3]);
+			return matrix_vector_to_vector4(
+				this->matrix * vector4_to_matrix_vector(coord));
 		}
 
 		template <typename BaseType>
 		math::coordinate<BaseType>
 		operator*(const math::coordinate<BaseType>& src) const
 		{
-			return math::coordinate<BaseType>(
-				src.get_x() * matrix[0][0] + src.get_y() * matrix[0][1],
-				src.get_x() * matrix[1][0] + src.get_y() * matrix[1][1]);
-			
+			return matrix_vector_to_coordinate<BaseType>(
+				this->matrix * coordinate_to_matrix_vector(src));
 		}
 
 		template <typename BaseType>

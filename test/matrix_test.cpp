@@ -8,6 +8,9 @@ using risa_gl::math::matrix;
 class matrix_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(matrix_test);
+	CPPUNIT_TEST(add_test);
+	CPPUNIT_TEST(negate_test);
+	CPPUNIT_TEST(sub_test);
 	CPPUNIT_TEST(initial_test);
 	CPPUNIT_TEST(multiply_test);
 	CPPUNIT_TEST(min_multiply_test);
@@ -15,6 +18,78 @@ class matrix_test : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void add_test()
+	{
+		typedef matrix<float, 4, 4> matrix_t;
+		matrix_t::elements_type lhs = {  0,  1,  2,  3,
+										 4,  5,  6,  7,
+										 8,  9, 10, 11,
+										 12, 13, 14, 15 };
+		matrix_t::elements_type rhs = {  16, 17, 18, 19,
+										 20, 21, 22, 23,
+										 24, 25, 26, 27,
+										 28, 29, 30, 31 };
+		matrix_t::elements_type result = { 16, 18, 20, 22,
+										   24, 26, 28, 30,
+										   32, 34, 36, 38,
+										   40, 42, 44, 46 };
+
+		matrix_t lhs_m(lhs);
+		matrix_t rhs_m(rhs);
+		matrix_t res_m(result);
+
+		CPPUNIT_ASSERT(res_m == lhs_m + rhs_m);
+
+		lhs_m += rhs_m;
+		CPPUNIT_ASSERT(res_m == lhs_m);
+	}
+
+	void negate_test()
+	{
+		typedef matrix<float, 4, 4> matrix_t;
+		matrix_t::elements_type value = {  16, 17, 18, 19,
+										   20, 21, 22, 23,
+										   24, 25, 26, 27,
+										   28, 29, 30, 31 };
+		matrix_t::elements_type result = {  -16, -17, -18, -19,
+											-20, -21, -22, -23,
+											-24, -25, -26, -27,
+											-28, -29, -30, -31 };
+
+		matrix_t val_m(value);
+		matrix_t res_m(result);
+
+		CPPUNIT_ASSERT(res_m == val_m.get_negate());
+		val_m.negate();
+		CPPUNIT_ASSERT(res_m == val_m);
+	}
+
+	void sub_test()
+	{
+		typedef matrix<float, 4, 4> matrix_t;
+		matrix_t::elements_type lhs = {  16, 17, 18, 19,
+										 20, 21, 22, 23,
+										 24, 25, 26, 27,
+										 28, 29, 30, 31 };
+		matrix_t::elements_type rhs = {  0,  1,  2,  3,
+										 4,  5,  6,  7,
+										 8,  9, 10, 11,
+										 12, 13, 14, 15 };
+		matrix_t::elements_type result = { 16, 16, 16, 16,
+										   16, 16, 16, 16,
+										   16, 16, 16, 16,
+										   16, 16, 16, 16 };
+
+		matrix_t lhs_m(lhs);
+		matrix_t rhs_m(rhs);
+		matrix_t res_m(result);
+
+		CPPUNIT_ASSERT(res_m == (lhs_m - rhs_m));
+
+		lhs_m -= rhs_m;
+		CPPUNIT_ASSERT(res_m == lhs_m);
+	}
+
 	void asymetric_multiply_test()
 	{
 		typedef matrix<float, 4, 4> matrix4_t;

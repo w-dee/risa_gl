@@ -27,7 +27,7 @@ namespace risa_gl
 
 		const int width;
 		const int height;
-		const int fragment_length;
+		const size_t fragment_length;
 
 		typedef std::vector<pixel_type,
 							aligned_allocator<pixel_type, alignment> > 
@@ -88,8 +88,9 @@ namespace risa_gl
 		{
 			assert (line < static_cast<size_t>(height));
 
-			iterator head = this->begin() + width * line;
-			iterator tail = this->begin() + (width * (line + 1));
+			iterator head = this->begin() + width * static_cast<const int>(line);
+			iterator tail =
+				this->begin() + (width * (static_cast<const int>(line) + 1));
 			return fragment_type(head, tail);
 		}
 
@@ -135,12 +136,12 @@ namespace risa_gl
 
 		iterator end()
 		{
-			return &*pixels.end();
+			return &*pixels.begin() + pixels.size();
 		}
 
 		const_iterator end() const
 		{
-			return &*pixels.end();
+			return &*pixels.begin() + pixels.size();
 		}
 
 	};
