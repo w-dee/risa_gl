@@ -86,7 +86,7 @@ namespace risa_gl
 		 * 座標系はデカルト座標系のy軸を上下反転したものを使用するつもり
 		 */
 		template <typename BaseType>
-		class region
+		class rectangle_region
 		{
 		public:
 			typedef BaseType value_type;
@@ -94,90 +94,100 @@ namespace risa_gl
 
 		private:
 			coord_type left_up;
+			coord_type right_up;
+			coord_type left_down;
 			coord_type right_down;
 
 		public:
-			region():
+			rectangle_region():
 				left_up(), right_down()
 			{}
 
-			region(value_type left_, value_type up_,
-				   value_type right_, value_type down_):
+			rectangle_region(value_type left_, value_type up_,
+							 value_type right_, value_type down_):
 				left_up(left_, up_),
+				right_up(right_, up_),
+				left_down(left_, down_),
 				right_down(right_, down_)
 			{}
 
-			region(const region& src):
+			rectangle_region(const coord_type& left_up_,
+							 const coord_type& right_up_,
+							 const coord_type& left_down_,
+							 const coord_type& right_down_):
+				left_up(left_up_),
+				right_up(right_up_),
+				left_down(left_down_),
+				right_down(right_down_)
+			{}
+
+			rectangle_region(const rectangle_region& src):
 				left_up(src.left_up),
+				right_up(src.right_up),
+				left_down(src.left_down),
 				right_down(src.right_down)
 			{}
 
-			region& operator=(const region& src)
+			rectangle_region& operator=(const rectangle_region& src)
 			{
 				if (this != &src)
 				{
 					this->left_up = src.left_up;
+					this->right_up = src.right_up;
+					this->left_down = src.left_down;
 					this->right_down = src.right_down;
 				}
 			
 				return *this;
 			}
 
-			value_type get_left() const
+			coord_type get_left_up() const
 			{
-				return left_up.get_x();
+				return left_up;
 			}
 
-			value_type get_top() const
+			coord_type get_right_up() const
 			{
-				return left_up.get_y();
+				return right_up;
 			}
 
-			value_type get_right() const
+			coord_type get_left_down() const
 			{
-				return right_down.get_x();
+				return left_down;
+			}
+
+			coord_type get_right_down() const
+			{
+				return right_down;
 			}
 		
-			value_type get_bottom() const
+			void set_left_up(const coord_type& new_coord) const
 			{
-				return right_down.get_y();
+				left_up = new_coord;
 			}
 
-			value_type get_width() const
+			void set_right_up(const coord_type& new_coord) const
 			{
-				return right_down.get_x() - left_up.get_x();
+				right_up = new_coord;
 			}
 
-			value_type get_height() const
+			void set_left_down(const coord_type& new_coord) const
 			{
-				return right_down.get_y() - left_up.get_y();
-			}
-
-			void set_left(value_type new_left) const
-			{
-				left_up.set_x(new_left);
-			}
-
-			void set_up(value_type new_up) const
-			{
-				left_up.set_y(new_up);
-			}
-
-			void set_right(value_type new_right) const
-			{
-				right_down.set_x(new_right);
+				left_down = new_coord;
 			}
 		
-			void set_down(value_type new_down) const
+			void set_right_down(const coord_type& new_coord) const
 			{
-				right_down.set_y(new_down);
+				right_down = new_coord;
 			}
 
 			friend std::ostream& operator<<(std::ostream& out,
-										   const region& self)
+										   const rectangle_region& self)
 			{
 				return out << "(" <<
 					self.left_up << ", " <<
+					self.right_up << ", " <<
+					self.left_down << ", " <<
 					self.right_down << ")";
 			}
 		};

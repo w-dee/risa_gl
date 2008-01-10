@@ -142,20 +142,18 @@ namespace risa_gl
 		}
 
 		template <typename BaseType>
-		math::region<BaseType>
-		operator*(const math::region<BaseType>& src) const
+		math::rectangle_region<BaseType>
+		operator*(const math::rectangle_region<BaseType>& src) const
 		{
-			typedef math::region<BaseType> region_t;
+			typedef math::rectangle_region<BaseType> region_t;
 			typedef typename region_t::coord_type coord_t;
 		
-			const coord_t left_up =
-				*this * coord_t(src.get_left(), src.get_top());
-			const coord_t right_bottom =
-				*this * coord_t(src.get_right(), src.get_bottom());
+			const coord_t left_up    = *this * src.get_left_up();
+			const coord_t right_up   = *this * src.get_right_up();
+			const coord_t left_down  = *this * src.get_left_down();
+			const coord_t right_down = *this * src.get_right_down();
 
-			return region_t(
-				left_up.get_x(), left_up.get_y(),
-				right_bottom.get_x(), right_bottom.get_y());
+			return region_t(left_up, right_up, left_down, right_down);
 		}
 	};
 }

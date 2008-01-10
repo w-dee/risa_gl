@@ -10,25 +10,53 @@ private:
 	CPPUNIT_TEST(multiply2d_test);
 	CPPUNIT_TEST(multiply3d_test);
 	CPPUNIT_TEST(multiply4d_test);
+	CPPUNIT_TEST(coord_test);
 	CPPUNIT_TEST(region_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void coord_test()
+	{
+		using risa_gl::linear_transformer;
+		using risa_gl::math::coordinate;
+		typedef coordinate<float> coordinate_t;
+
+		coordinate_t coord(1.f, 1.f);
+
+		linear_transformer transformer;
+
+		coordinate_t coord_t = transformer * coord;
+		CPPUNIT_ASSERT(coord_t.get_x() == 1.f);
+		CPPUNIT_ASSERT(coord_t.get_y() == 1.f);
+
+		const risa_gl::static_array<float, 16> mat =
+			{ 0.f, 1.f, 0.f, 0.f,
+			  -1.f, 0.f, 0.f, 0.f,
+			  0.f, 0.f, 1.f, 0.f,
+			  0.f, 0.f, 0.f, 1.f};
+		transformer = linear_transformer(mat);
+
+		coord_t = transformer * coord;
+		CPPUNIT_ASSERT(coord_t.get_x() == -1.f);
+		CPPUNIT_ASSERT(coord_t.get_y() ==  1.f);
+	}
+
 	void region_test()
 	{
 		using risa_gl::linear_transformer;
-		using risa_gl::math::region;
+		using risa_gl::math::rectangle_region;
 
-		typedef region<float> region_t;
+		typedef rectangle_region<float> region_t;
+		typedef region_t::coord_type coord_t;
 		region_t rect(-1.f, -2.f, 3.f, 4.f);
 		
 		linear_transformer transformer;
 
 		region_t rect_t = transformer * rect;
-		CPPUNIT_ASSERT(rect_t.get_left() == -1.f);
-		CPPUNIT_ASSERT(rect_t.get_top() == -2.f);
-		CPPUNIT_ASSERT(rect_t.get_right() == 3.f);
-		CPPUNIT_ASSERT(rect_t.get_bottom() == 4.f);
+		CPPUNIT_ASSERT(rect_t.get_left_up() == coord_t(-1.f, -2.f));
+		CPPUNIT_ASSERT(rect_t.get_right_up() == coord_t(3.f, -2.f));
+		CPPUNIT_ASSERT(rect_t.get_left_down() == coord_t(-1.f, 4.f));
+		CPPUNIT_ASSERT(rect_t.get_right_down() == coord_t(3.f, 4.f));
 
 		const risa_gl::static_array<float, 16> mat = 
 			{ 0.f, 1.f, 0.f, 0.f,
@@ -39,11 +67,10 @@ public:
 
 		rect_t = transformer * rect;
 
-		CPPUNIT_ASSERT(rect_t.get_left() == 2.f);
-		CPPUNIT_ASSERT(rect_t.get_top() == -1.f);
-
-		CPPUNIT_ASSERT(rect_t.get_right() == -4.f);
-		CPPUNIT_ASSERT(rect_t.get_bottom() == 3.f);
+		CPPUNIT_ASSERT(rect_t.get_left_up() == coord_t(2.f, -1.f));
+		CPPUNIT_ASSERT(rect_t.get_right_up() == coord_t(2.f, 3.f));
+		CPPUNIT_ASSERT(rect_t.get_left_down() == coord_t(-4.f, -1.f));
+		CPPUNIT_ASSERT(rect_t.get_right_down() == coord_t(-4.f, 3.f));
 	}
 
 	void multiply2d_test()
