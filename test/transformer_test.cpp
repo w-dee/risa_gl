@@ -12,6 +12,7 @@ private:
 	CPPUNIT_TEST(multiply2d_test);
 	CPPUNIT_TEST(multiply3d_test);
 	CPPUNIT_TEST(multiply4d_test);
+
 	CPPUNIT_TEST(coord_test);
 	CPPUNIT_TEST(region_test);
 	CPPUNIT_TEST(translate_test);
@@ -63,6 +64,17 @@ public:
 		CPPUNIT_ASSERT(range(coord.x, 0.f, 0.001f));
 		CPPUNIT_ASSERT(range(coord.y, 1.f, 0.001f));
 		CPPUNIT_ASSERT(range(coord.z, 0.f, 0.001f));
+
+		coord = vector3(0, 0, 1);
+
+		transformer = linear_transformer();
+		transformer.rotate(vector3(1.f, 1.f, 0.f), 3.1415926535f / 2.f);
+		coord = transformer * coord;
+
+		const float pos = std::sqrt(2)/2.f;
+		CPPUNIT_ASSERT(range(coord.x,  pos, 0.001f));
+		CPPUNIT_ASSERT(range(coord.y, -pos, 0.001f));
+		CPPUNIT_ASSERT(range(coord.z,  0.f, 0.001f));
 	}
 
 	void translate_test()

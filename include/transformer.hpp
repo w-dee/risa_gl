@@ -131,25 +131,21 @@ namespace risa_gl
 		void rotate(const vector3& axis, float angle)
 		{
 			const vector3 normed_axis = axis.get_norm();
-			const float cosine_result = std::cos(angle);
-			const float sine_result = std::sin(angle);
-			const float x_factor = axis.x;
-			const float y_factor = axis.y;
-			const float z_factor = axis.z;
-
-			const float x_cos = x_factor * cosine_result;
-			const float x_sin = x_factor * sine_result;
-			const float y_cos = y_factor * cosine_result;
-			const float y_sin = y_factor * sine_result;
-			const float z_cos = z_factor * cosine_result;
-			const float z_sin = z_factor * sine_result;
+			const float cos_ = std::cos(angle);
+			const float sin_ = std::sin(angle);
+			const float x = normed_axis.x;
+			const float y = normed_axis.y;
+			const float z = normed_axis.z;
+			const float x_2 = x * x;
+			const float y_2 = y * y;
+			const float z_2 = z * z;
 
 			matrix_t::elements_type rotator =
-				{ z_cos + y_cos, z_sin, -y_sin, 0,
-				  -z_sin, z_cos + x_cos, x_sin, 0,
-				  y_sin, -x_sin, y_cos + x_cos, 0,
-				  0, 0, 0, 1};
-
+				{ x_2+(1-x_2)*cos_, x*y*(1-cos_)+z*sin_, x*z*(1-cos_)-y*sin_, 0,
+				  x*y*(1-cos_)-z*sin_, y_2+(1-y_2)*cos_, y*z*(1-cos_)+x*sin_, 0,
+				  x*z*(1-cos_)+y*sin_, y*z*(1-cos_)-x*sin_, z_2+(1-z_2)*cos_, 0,
+				  0,0,0,1};
+				  
 			this->matrix = matrix_t(rotator) * this->matrix;
 		}
 
