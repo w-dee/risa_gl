@@ -3,6 +3,8 @@
 #include <math/vector.hpp>
 #include <iostream>
 
+#include "range.hpp"
+
 class transformer_test : public CppUnit::TestFixture
 {
 private:
@@ -12,9 +14,83 @@ private:
 	CPPUNIT_TEST(multiply4d_test);
 	CPPUNIT_TEST(coord_test);
 	CPPUNIT_TEST(region_test);
+	CPPUNIT_TEST(translate_test);
+	CPPUNIT_TEST(rotate_test);
+	CPPUNIT_TEST(operation_order_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void operation_order_test()
+	{
+		using risa_gl::linear_transformer;
+		using risa_gl::math::vector3;
+		
+		vector3 coord(1, 0, 0);
+
+		linear_transformer transformer;
+
+		coord = transformer * coord;
+		CPPUNIT_ASSERT(coord.x == 1.f);
+		CPPUNIT_ASSERT(coord.y == 0.f);
+		CPPUNIT_ASSERT(coord.z == 0.f);
+
+		transformer.translate(1.f, 1.f, 0.f);
+		transformer.rotate(vector3(0.f, 0.f, 1.f), 3.1415926535f / 2.f);
+		transformer.translate(-1.f, -1.f, 0.f);
+
+		coord = transformer * coord;
+		CPPUNIT_ASSERT(range(coord.x, 2.f, 0.001f));
+		CPPUNIT_ASSERT(range(coord.y, 1.f, 0.001f));
+		CPPUNIT_ASSERT(range(coord.z, 0.f, 0.001f));
+	}
+
+	void rotate_test()
+	{
+		using risa_gl::linear_transformer;
+		using risa_gl::math::vector3;
+		
+		vector3 coord(1, 0, 0);
+
+		linear_transformer transformer;
+
+		coord = transformer * coord;
+		CPPUNIT_ASSERT(coord.x == 1.f);
+		CPPUNIT_ASSERT(coord.y == 0.f);
+		CPPUNIT_ASSERT(coord.z == 0.f);
+
+		transformer.rotate(vector3(0.f, 0.f, 1.f), 3.1415926535f / 2.f);
+		coord = transformer * coord;
+		CPPUNIT_ASSERT(range(coord.x, 0.f, 0.001f));
+		CPPUNIT_ASSERT(range(coord.y, 1.f, 0.001f));
+		CPPUNIT_ASSERT(range(coord.z, 0.f, 0.001f));
+	}
+
+	void translate_test()
+	{
+		using risa_gl::linear_transformer;
+		using risa_gl::math::vector3;
+		
+		vector3 coord(1, 2, 3);
+
+		linear_transformer transformer;
+
+		coord = transformer * coord;
+		CPPUNIT_ASSERT(coord.x == 1.f);
+		CPPUNIT_ASSERT(coord.y == 2.f);
+		CPPUNIT_ASSERT(coord.z == 3.f);
+		
+		transformer.translate(-1.f, -2.f, -3.f);
+		coord = transformer * coord;
+		CPPUNIT_ASSERT(coord.x == 0.f);
+		CPPUNIT_ASSERT(coord.y == 0.f);
+		CPPUNIT_ASSERT(coord.z == 0.f);
+		
+		coord = transformer * coord;
+		CPPUNIT_ASSERT(coord.x == -1.f);
+		CPPUNIT_ASSERT(coord.y == -2.f);
+		CPPUNIT_ASSERT(coord.z == -3.f);
+	}
+
 	void coord_test()
 	{
 		using risa_gl::linear_transformer;

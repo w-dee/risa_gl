@@ -2,6 +2,7 @@
 #define RISA_VECTOR_HPP_
 
 #include <ostream>
+#include <cmath>
 
 namespace risa_gl
 {
@@ -23,6 +24,12 @@ namespace risa_gl
 					self.x << ", " <<
 					self.y << ")";
 			}
+
+			vector2 get_norm() const
+			{
+				float length = std::sqrt(x * x + y * y);
+				return vector2(x/length, y/length);
+			}
 		};
 
 		struct vector3 : public vector2
@@ -42,6 +49,11 @@ namespace risa_gl
 					self.z << ")";
 			}
 
+			vector3 get_norm() const
+			{
+				float length = std::sqrt(x * x + y * y + z * z);
+				return vector3(x/length, y/length, z/length);
+			}
 		};
 
 		struct vector4 : public vector3
@@ -60,6 +72,12 @@ namespace risa_gl
 					self.y << ", " <<
 					self.z << ", " <<
 					self.w << ")";
+			}
+
+			vector4 get_norm() const
+			{
+				float length = std::sqrt(x * x + y * y + z * z);
+				return vector4(x/length, y/length, z/length, w);
 			}
 		};
 

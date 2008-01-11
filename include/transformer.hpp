@@ -20,27 +20,11 @@ namespace risa_gl
 	public:
 		typedef math::matrix<float, 4, 4> matrix_t;
 		typedef math::matrix<float, 1, 4> matrix_vector;
+		typedef matrix_t::elements_type elements_type;
 
 	private:
 		matrix_t matrix;
 
-	public:
-		linear_transformer():
-			matrix()
-		{}
-
-		linear_transformer(const matrix_t::elements_type& elements):
-			matrix(elements)
-		{}
-
-		linear_transformer(const linear_transformer& src):
-			matrix(src.matrix)
-		{}
-
-		~linear_transformer()
-		{}
-
-	private:
 		template <typename BaseType>
 		matrix_vector
 		coordinate_to_matrix_vector(const coordinate<BaseType>& coord) const
@@ -67,6 +51,8 @@ namespace risa_gl
 
 			result(0,0) = coord.x;
 			result(0,1) = coord.y;
+			result(0,2) = 0;
+			result(0,3) = 1;
 
 			return result;
 		}
@@ -85,6 +71,7 @@ namespace risa_gl
 			result(0,0) = coord.x;
 			result(0,1) = coord.y;
 			result(0,2) = coord.z;
+			result(0,3) = 1;
 
 			return result;
 		}
@@ -115,6 +102,57 @@ namespace risa_gl
 		}
 
 	public:
+		linear_transformer():
+			matrix()
+		{}
+
+		linear_transformer(const matrix_t::elements_type& elements):
+			matrix(elements)
+		{}
+
+		linear_transformer(const linear_transformer& src):
+			matrix(src.matrix)
+		{}
+
+		~linear_transformer()
+		{}
+
+		void translate(float x_shift, float y_shift, float z_shift)
+		{
+			matrix_t::elements_type shifter = 
+				{       1,       0,       0, 0,
+				        0,       1,       0, 0,
+				        0,       0,       1, 0,
+				  x_shift, y_shift, z_shift, 1 };
+
+			this->matrix = matrix_t(shifter) * this->matrix;
+		}
+
+		void rotate(const vector3& axis, float angle)
+		{
+			const vector3 normed_axis = axis.get_norm();
+			const float cosine_result = std::cos(angle);
+			const float sine_result = std::sin(angle);
+			const float x_factor = axis.x;
+			const float y_factor = axis.y;
+			const float z_factor = axis.z;
+
+			const float x_cos = x_factor * cosine_result;
+			const float x_sin = x_factor * sine_result;
+			const float y_cos = y_factor * cosine_result;
+			const float y_sin = y_factor * sine_result;
+			const float z_cos = z_factor * cosine_result;
+			const float z_sin = z_factor * sine_result;
+
+			matrix_t::elements_type rotator =
+				{ z_cos + y_cos, z_sin, -y_sin, 0,
+				  -z_sin, z_cos + x_cos, x_sin, 0,
+				  y_sin, -x_sin, y_cos + x_cos, 0,
+				  0, 0, 0, 1};
+
+			this->matrix = matrix_t(rotator) * this->matrix;
+		}
+
 		math::vector2 operator*(const math::vector2& coord) const
 		{
 			return matrix_vector_to_vector2(

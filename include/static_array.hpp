@@ -9,6 +9,8 @@ namespace risa_gl
 	{
 	public:
 		typedef BaseType value_type;
+		typedef value_type elements_type[Length];
+
 		typedef value_type& reference;
 		typedef const value_type& const_reference;
 
@@ -20,7 +22,7 @@ namespace risa_gl
 
 		typedef size_t size_type;
 		
-		value_type elements[Length];
+		elements_type elements;
 
 		const_reference operator[](int offset) const
 		{
@@ -76,7 +78,7 @@ namespace risa_gl
 		bool operator==(const static_array& rhs) const
 		{
 			for (size_type offset = 0; offset != Length; ++offset)
-				if (this->operator[](offset) != rhs[offset])
+				if ((*this)[offset] != rhs[offset])
 					return false;
 
 			return true;
