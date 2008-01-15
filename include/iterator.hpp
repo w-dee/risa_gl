@@ -234,11 +234,11 @@ namespace risa_gl
 	class transform_iterator
 	{
 	public:
-		typedef typename BaseType value_type;
-		typedef typename BaseType* pointer;
-		typedef typename const BaseType* const_pointer;
-		typedef typename BaseType& reference;
-		typedef typename const BaseType& const_reference;
+		typedef BaseType value_type;
+		typedef BaseType* pointer;
+		typedef const BaseType* const_pointer;
+		typedef BaseType& reference;
+		typedef const BaseType& const_reference;
 		typedef std::bidirectional_iterator_tag iterator_category;
 		typedef ptrdiff_t difference_type;
 

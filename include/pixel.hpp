@@ -200,10 +200,10 @@ namespace risa_gl
 
 		pixel_type operator*(const float factor) const
 		{
-			return pixel_type(r * factor,
-							  g * factor,
-							  b * factor,
-							  a * factor);
+			return pixel_type(this->r * factor,
+							  this->g * factor,
+							  this->b * factor,
+							  this->a * factor);
 		}
 
 		byte get_red() const
