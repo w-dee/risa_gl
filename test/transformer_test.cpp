@@ -5,6 +5,8 @@
 
 #include "range.hpp"
 
+const float pi = 3.14159265358979f;
+
 class transformer_test : public CppUnit::TestFixture
 {
 private:
@@ -12,15 +14,86 @@ private:
 	CPPUNIT_TEST(multiply2d_test);
 	CPPUNIT_TEST(multiply3d_test);
 	CPPUNIT_TEST(multiply4d_test);
-
 	CPPUNIT_TEST(coord_test);
 	CPPUNIT_TEST(region_test);
 	CPPUNIT_TEST(translate_test);
 	CPPUNIT_TEST(rotate_test);
 	CPPUNIT_TEST(operation_order_test);
+	CPPUNIT_TEST(scaling_test);
+	CPPUNIT_TEST(transform_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void transform_test()
+	{
+		using risa_gl::linear_transformer;
+		using risa_gl::math::vector2;
+		using risa_gl::math::rectangle_region;
+
+		typedef rectangle_region<float> region_t;
+		typedef region_t::coord_type coord_t;
+		region_t rect_t(-2.f, -2.f, 2.f, 2.f);
+		
+		CPPUNIT_ASSERT(rect_t.get_left_up() == coord_t(-2.f, -2.f));
+		CPPUNIT_ASSERT(rect_t.get_right_up() == coord_t(2.f, -2.f));
+		CPPUNIT_ASSERT(rect_t.get_left_down() == coord_t(-2.f, 2.f));
+		CPPUNIT_ASSERT(rect_t.get_right_down() == coord_t(2.f, 2.f));
+
+		rect_t =
+			linear_transformer::transform(rect_t,
+										  vector2(0.f, 0.f),
+										  pi / 4);
+
+		CPPUNIT_ASSERT(range(rect_t.get_left_up().get_x(),
+							 0.f, 0.001f));
+		CPPUNIT_ASSERT(range(rect_t.get_left_up().get_y(),
+							 -std::sqrt(8.f), 0.001f));
+
+		CPPUNIT_ASSERT(range(rect_t.get_right_up().get_x(),
+							 std::sqrt(8.f), 0.001f));
+		CPPUNIT_ASSERT(range(rect_t.get_right_up().get_y(),
+							 0.f, 0.001f));
+
+		CPPUNIT_ASSERT(range(rect_t.get_left_down().get_x(),
+							 -std::sqrt(8.f), 0.001f));
+		CPPUNIT_ASSERT(range(rect_t.get_left_down().get_y(),
+							 0.f, 0.001f));
+
+		CPPUNIT_ASSERT(range(rect_t.get_right_down().get_x(),
+							 0.f, 0.001f));
+		CPPUNIT_ASSERT(range(rect_t.get_right_down().get_y(),
+							 std::sqrt(8.f), 0.001f));
+	}
+
+	void scaling_test()
+	{
+		using risa_gl::linear_transformer;
+		using risa_gl::math::vector3;
+		
+		vector3 coord(1, 2, 3);
+
+		linear_transformer transformer;
+
+		coord = transformer * coord;
+		CPPUNIT_ASSERT(coord.x == 1.f);
+		CPPUNIT_ASSERT(coord.y == 2.f);
+		CPPUNIT_ASSERT(coord.z == 3.f);
+
+		transformer.scaling(1.f, 1.f, 1.f);
+		coord = transformer * coord;
+		CPPUNIT_ASSERT(range(coord.x, 1.f, 0.001f));
+		CPPUNIT_ASSERT(range(coord.y, 2.f, 0.001f));
+		CPPUNIT_ASSERT(range(coord.z, 3.f, 0.001f));
+
+		transformer = linear_transformer();
+		transformer.scaling(2.f, 3.f, 4.f);
+		coord = transformer * coord;
+
+		CPPUNIT_ASSERT(range(coord.x, 2.f, 0.001f));
+		CPPUNIT_ASSERT(range(coord.y, 6.f, 0.001f));
+		CPPUNIT_ASSERT(range(coord.z,12.f, 0.001f));
+	}
+
 	void operation_order_test()
 	{
 		using risa_gl::linear_transformer;

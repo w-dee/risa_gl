@@ -230,71 +230,91 @@ namespace risa_gl
 		}
 	};
 
-	template <typename AlgorithmType>
+	template <typename BaseType, typename InterpolateType>
 	class transform_iterator
 	{
 	public:
-		typedef AlgorithmType reverse_projector_type;
+		typedef typename BaseType value_type;
+		typedef typename BaseType* pointer;
+		typedef typename const BaseType* const_pointer;
+		typedef typename BaseType& reference;
+		typedef typename const BaseType& const_reference;
+		typedef std::bidirectional_iterator_tag iterator_category;
+		typedef ptrdiff_t difference_type;
 
-		typedef typename reverse_projector_type::value_type  value_type;
-		typedef typename reverse_projector_type::pointer pointer;
-		typedef typename reverse_projector_type::reference reference;
+		typedef InterpolateType interpolate_type;
 
 	private:
-		reverse_projector_type projector;
+		pointer current;
 
 	public:
-		transform_iterator(const reverse_projector_type& projector_):
-			projector(projector_)
+		transform_iterator():
+			current()
+		{}
+
+		transform_iterator(const_pointer point):
+			current(point)
 		{}
 		
+		transform_iterator(const transform_iterator& src):
+			current(src.curent)
+		{}
+
 		~transform_iterator()
 		{}
 
+		transform_iterator& operator=(const transform_iterator& src)
+		{
+			if (this != &src)
+				current = src.current;
+
+			return *this;
+		}
+
 		transform_iterator& operator++()
 		{
-			projector.next();
+			++current;
 			return *this;
 		}
 
 		transform_iterator operator++(int)
 		{
-			transform_iterator result(projector);
-			projector.next();
+			transform_iterator result(*this);
+			++(*this);
 			return result;
 		}
 
 		transform_iterator& operator--()
 		{
-			projector.previous();
+			--current;
 			return *this;
 		}
 
 		transform_iterator operator--(int)
 		{
-			transform_iterator result(projector);
-			projector.previous();
+			transform_iterator result(*this);
+			--(*this);
 			return result;
 		}
 
 		reference operator*()
 		{
-			return projector.get_reference();
+			return *current;
 		}
 
 		const reference operator*() const
 		{
-			return projector.get_reference();
+			return *current;
 		}
 
 		pointer operator->()
 		{
-			return projector.get_pointer();
+			return current;
 		}
 
 		const pointer operator->() const
 		{
-			return projector.get_pointer();
+			return current;
 		}
 	};
 }

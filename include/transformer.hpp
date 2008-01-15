@@ -117,6 +117,17 @@ namespace risa_gl
 		~linear_transformer()
 		{}
 
+		void scaling(float x_scale, float y_scale, float z_scale)
+		{
+			matrix_t::elements_type scaler =
+				{ x_scale, 0, 0, 0,
+				  0, y_scale, 0, 0,
+				  0, 0, z_scale, 0,
+				  0, 0, 0, 1 };
+
+			this->matrix = matrix_t(scaler) * this->matrix;
+		}
+
 		void translate(float x_shift, float y_shift, float z_shift)
 		{
 			matrix_t::elements_type shifter = 
@@ -189,7 +200,22 @@ namespace risa_gl
 
 			return region_t(left_up, right_up, left_down, right_down);
 		}
+
+		template <typename BaseType>
+		static const math::rectangle_region<BaseType>
+		transform(const math::rectangle_region<BaseType>& region,
+				  const math::vector2& center,
+				  const float angle)
+		{
+			linear_transformer transformer;
+			transformer.translate(-center.x, -center.y, 0.f);
+			transformer.rotate(math::vector3(0.f, 0.f, 1.f), angle);
+			transformer.translate(center.x, center.y, 0.f);
+
+			return transformer * region;
+		}
 	};
+
 }
 
 
