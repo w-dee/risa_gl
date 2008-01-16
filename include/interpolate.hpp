@@ -3,6 +3,7 @@
 
 #include <math/vector.hpp>
 #include <vector>
+#include <cassert>
 
 namespace risa_gl
 {
@@ -20,6 +21,7 @@ namespace risa_gl
 	private:
 		const pixel_type& pixels;
 		interpolate_type coordinates;
+		const int divides;
 
 		math::vector2 get_nearest(const math::vector2& coord) const
 		{
@@ -31,14 +33,18 @@ namespace risa_gl
 		nearest(const pixel_type& pixels_,
 				const_value_type& head,
 				const_value_type& tail,
-				int divides):
+				int divides_):
 			pxiels(pixels_),
-			coordinates(head, tail)
-		{}
+			coordinates(head, tail),
+			divides(divides_)
+		{
+			assert (divides > 1);
+		}
 
 		nearest(const nearest& src):
 			pixels(src.pixels)
-			coordinates(src.coordinates)
+			coordinates(src.coordinates),
+			divides(src.divides)
 		{}
 
 		std::vector<pixel_type> interpolate() const
@@ -47,7 +53,7 @@ namespace risa_gl
 
 			for (int offset = 0; offset != divides; ++offset)
 				result.push_back(
-					get_nearest(static_cast<float>(offset) / divides));
+					get_nearest(static_cast<float>(offset) / (divides - 1)));
 
 			return result;
 		}
@@ -66,19 +72,24 @@ namespace risa_gl
 	private:
 		const pixel_store_type& pixels;
 		interpolate_type coordinates;
+		const int divides;
 
 	public:
 		bilinear(const pixel_store_type& pixels_,
 			const_value_type& head,
 			const_value_type& tail,
-				 int divides):
+				 int divides_):
 			pixels(pixels_),
-			coordinates(head, tail)
-		{}
+			coordinates(head, tail),
+			divides(divides_)
+		{
+			assert (divides > 1);
+		}
 
 		bilinear(const bilinear& src):
-			pixels(pixels_),
-			coordinates(src.coordinates)
+			pixels(src.pixels),
+			coordinates(src.coordinates),
+			divides(src.divides)
 		{}
 
 
@@ -106,7 +117,8 @@ namespace risa_gl
 			for (int offset = 0; offset != divides; ++offset)
 			{
 				const_value_type coord =
-					coordinates.blend(static_cast<float>(offset) / divides);
+					coordinates.blend(static_cast<float>(offset) /
+									  (divides - 1));
 
 				typedef math::coordinate<int> coordinate_t;
 				const coordinate_t left_up = coordinate_t(coord.x, coord.y);
