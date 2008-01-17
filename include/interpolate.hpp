@@ -57,10 +57,11 @@ namespace risa_gl
 			result[0] = pixels(static_cast<int>(coordinates.get_source().x),
 							   static_cast<int>(coordinates.get_source().y));
 
-			for (int offset = 1; offset != divides; ++offset)
+			const float jitter = 1.f / (divides - 1);
+			float value = jitter;
+			for (int offset = 1; offset != divides; ++offset, value += jitter)
 			{
-				const vector2 axis =
-					get_nearest(static_cast<float>(offset) / divides);
+				const vector2 axis = get_nearest(value);
 				result[offset] = pixels(static_cast<const int>(axis.x),
 										static_cast<const int>(axis.y));
 			}
