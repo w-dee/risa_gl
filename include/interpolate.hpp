@@ -8,41 +8,44 @@
 namespace risa_gl
 {
 	using math::dividable_vector;
+	using math::vector2;
 
 	template <typename PixelStoreType>
 	class nearest
 	{
 	public:
-		typedef typename PixelStoreType::pixel_type pixel_type;
-		typedef math::vector2 value_type;
-		typedef const math::vector2 const_value_type;
-		typedef dividable_vector<math::vector2> interpolate_type;
+		typedef PixelStoreType pixel_store_type;
+		typedef typename pixel_store_type::pixel_type pixel_type;
+		typedef vector2 value_type;
+		typedef const vector2 const_value_type;
+		typedef dividable_vector<vector2> interpolate_type;
 
 	private:
-		const pixel_type& pixels;
+		const pixel_store_type& pixels;
 		interpolate_type coordinates;
 		const int divides;
 
-		math::vector2 get_nearest(const math::vector2& coord) const
+		vector2 get_nearest(const float value) const
 		{
-			return math::vector2(
+			value_type coord = coordinates.blend(value);
+			return vector2(
 				static_cast<float>(static_cast<int>(coord.x + 0.5)),
 				static_cast<float>(static_cast<int>(coord.y + 0.5)));
 		}
 	public:
-		nearest(const pixel_type& pixels_,
+		nearest(const pixel_store_type& pixels_,
 				const_value_type& head,
 				const_value_type& tail,
-				int divides_):
-			pxiels(pixels_),
+				unsigned short divides_):
+			pixels(pixels_),
 			coordinates(head, tail),
 			divides(divides_)
 		{
-			assert (divides > 1);
+			assert (divides >= 2);
 		}
 
 		nearest(const nearest& src):
-			pixels(src.pixels)
+			pixels(src.pixels),
 			coordinates(src.coordinates),
 			divides(src.divides)
 		{}
@@ -51,9 +54,19 @@ namespace risa_gl
 		{
 			std::vector<pixel_type> result(divides);
 
-			for (int offset = 0; offset != divides; ++offset)
-				result.push_back(
-					get_nearest(static_cast<float>(offset) / (divides - 1)));
+			result[0] = pixels(static_cast<int>(coordinates.get_source().x),
+							   static_cast<int>(coordinates.get_source().y));
+
+			for (int offset = 1; offset != divides; ++offset)
+			{
+				const vector2 axis =
+					get_nearest(static_cast<float>(offset) / divides);
+				result[offset] = pixels(static_cast<const int>(axis.x),
+										static_cast<const int>(axis.y));
+			}
+			result[divides-1] =
+				pixels(static_cast<int>(coordinates.get_target().x),
+					   static_cast<int>(coordinates.get_target().y));
 
 			return result;
 		}
@@ -92,49 +105,40 @@ namespace risa_gl
 			divides(src.divides)
 		{}
 
-
-		pixel_type calculate(const pixel_type& left_up,
-							 const pixel_type& right_up,
-							 const pixel_type& left_down,
-							 const pixel_type& right_down,
-							 const float u_wait,
-							 const float v_wait) const
+		pixel_type calculate(const float offset) const
 		{
-			const float u_opposite = 1.f - u_wait;
-			const float v_opposite = 1.f - v_wait;
+			const float threshold = 0.01f;
+
+			const_value_type coord = coordinates.blend(offset);
+			const int u_floor = static_cast<int>(coord.x);
+			const int v_floor = static_cast<int>(coord.y);
+			const float u_factor = coord.x - u_floor;
+			const float v_factor = coord.y - v_floor;
+
+			const float u_opposite = 1.f - u_factor;
+			const float v_opposite = 1.f - v_factor;
+
+			const int u_ceil = u_factor < threshold ? u_floor : u_floor + 1;
+			const int v_ceil = v_factor < threshold ? v_floor : v_floor + 1;
+			
+			const pixel_type left_down = pixels(u_floor, v_floor);
+			const pixel_type left_up = pixels(u_floor, v_ceil);
+			const pixel_type right_down = pixels(u_ceil, v_floor);
+			const pixel_type right_up = pixels(u_ceil, v_ceil);
 
 			return 
-				(left_up * u_opposite + right_up * u_wait) * v_opposite +
-				(left_down * u_opposite + right_down * u_wait) * v_wait;
+				(left_up * u_opposite + right_up * u_factor) * v_opposite +
+				(left_down * u_opposite + right_down * u_factor) * v_factor;
 		}
 
-		/**
-		 * out of rangeなpixelを参照しなければならない補間をどう扱う？
-		 */
 		std::vector<pixel_type> interpolate() const
 		{
 			std::vector<pixel_type> result;
-			for (int offset = 0; offset != divides; ++offset)
-			{
-				const_value_type coord =
-					coordinates.blend(static_cast<float>(offset) /
-									  (divides - 1));
-
-				typedef math::coordinate<int> coordinate_t;
-				const coordinate_t left_up = coordinate_t(coord.x, coord.y);
-				
-				result.push_back(
-					calculate(pixels(left_up.get_x(), left_up.get_y()),
-							  pixels(left_up.get_x()+1, left_up.get_y()),
-							  pixels(left_up.get_x(), left_up.get_y()+1),
-							  pixels(left_up.get_x()+1, left_up.get_y()+1),
-							  coord.x - static_cast<float>(left_up.get_x()),
-							  coord.y - static_cast<float>(left_up.get_y())));
-			}
+			for (int offset = 0.f; offset <= 1.f; offset += 1.f / divides)
+				result.push_back(calculate(offset));
 
 			return result;
 		}
-	
 	};
 }
 #endif /* RISA_INTERPOLATE_HPP_ */

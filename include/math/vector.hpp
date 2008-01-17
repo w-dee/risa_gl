@@ -151,8 +151,8 @@ namespace risa_gl
 			const value_type target;
 
 		public:
-			dividable_vector(const value_type& src,
-							 const value_type& dest):
+			dividable_vector(const value_type src,
+							 const value_type dest):
 				source(src), target(dest)
 			{}
 
@@ -165,7 +165,18 @@ namespace risa_gl
 				assert(blend_factor >= 0.f);
 				assert(blend_factor <= 1.f);
 
-				return (target - source) * blend_factor + source;
+				const float opposite = 1.0f - blend_factor;
+				return source * opposite + target * blend_factor;
+			}
+
+			value_type get_source() const
+			{
+				return source;
+			}
+
+			value_type get_target() const
+			{
+				return target;
 			}
 		};
 	}
