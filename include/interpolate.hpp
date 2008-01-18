@@ -90,24 +90,6 @@ namespace risa_gl
 		interpolate_type coordinates;
 		const int divides;
 
-	public:
-		bilinear(const pixel_store_type& pixels_,
-			const_value_type& head,
-			const_value_type& tail,
-				 int divides_):
-			pixels(pixels_),
-			coordinates(head, tail),
-			divides(divides_)
-		{
-			assert (divides > 1);
-		}
-
-		bilinear(const bilinear& src):
-			pixels(src.pixels),
-			coordinates(src.coordinates),
-			divides(src.divides)
-		{}
-
 		float channel_blend(const float channel1,
 							const float factor,
 							const float channel2,
@@ -122,7 +104,6 @@ namespace risa_gl
 						 const pixel_type& right_up,
 						 const float u_factor,
 						 const float v_factor) const
-
 		{
 			const float u_opposite = 1.f - u_factor;
 			const float v_opposite = 1.f - v_factor;
@@ -131,25 +112,41 @@ namespace risa_gl
 
 			return pixel_type(
 				static_cast<risa_gl::byte>(
-					channel_blend(left_up.get_red(), u_opposite,
-								  right_up.get_red(), u_factor) * v_factor +
-					channel_blend(left_down.get_red(), u_opposite,
-								  right_down.get_red(), u_factor) * v_opposite),
+					channel_blend(left_up.get_red(),
+								  u_opposite,
+								  right_up.get_red(),
+								  u_factor) * v_factor +
+					channel_blend(left_down.get_red(),
+								  u_opposite,
+								  right_down.get_red(),
+								  u_factor) * v_opposite),
 				static_cast<risa_gl::byte>(
-					channel_blend(left_up.get_green(), u_opposite,
-								  right_up.get_green(), u_factor) * v_factor +
-					channel_blend(left_down.get_green(), u_opposite,
-								  right_down.get_green(), u_factor) * v_opposite),
+					channel_blend(left_up.get_green(),
+								  u_opposite,
+								  right_up.get_green(),
+								  u_factor) * v_factor +
+					channel_blend(left_down.get_green(),
+								  u_opposite,
+								  right_down.get_green(),
+								  u_factor) * v_opposite),
 				static_cast<risa_gl::byte>(
-					channel_blend(left_up.get_blue(), u_opposite,
-								  right_up.get_blue(), u_factor) * v_factor +
-					channel_blend(left_down.get_blue(), u_opposite,
-								  right_down.get_blue(), u_factor) * v_opposite),
+					channel_blend(left_up.get_blue(),
+								  u_opposite,
+								  right_up.get_blue(),
+								  u_factor) * v_factor +
+					channel_blend(left_down.get_blue(),
+								  u_opposite,
+								  right_down.get_blue(),
+								  u_factor) * v_opposite),
 				static_cast<risa_gl::byte>(
-					channel_blend(left_up.get_alpha(), u_opposite,
-								  right_up.get_alpha(), u_factor) * v_factor +
-					channel_blend(left_down.get_alpha(), u_opposite,
-								  right_down.get_alpha(), u_factor) * v_opposite));
+					channel_blend(left_up.get_alpha(),
+								  u_opposite,
+								  right_up.get_alpha(),
+								  u_factor) * v_factor +
+					channel_blend(left_down.get_alpha(),
+								  u_opposite,
+								  right_down.get_alpha(),
+								  u_factor) * v_opposite));
 		}
 
 		pixel_type calculate(const float offset) const
@@ -169,13 +166,28 @@ namespace risa_gl
 			const pixel_type right_down = pixels(u_ceil, v_floor);
 			const pixel_type right_up = pixels(u_ceil, v_ceil);
 
-			return blend(left_down,
-						 left_up,
-						 right_down,
-						 right_up,
-						 u_factor,
-						 v_factor);
+			return blend(left_down, left_up,
+						 right_down, right_up,
+						 u_factor, v_factor);
 		}
+
+	public:
+		bilinear(const pixel_store_type& pixels_,
+				 const_value_type& head,
+				 const_value_type& tail,
+				 int divides_):
+			pixels(pixels_),
+			coordinates(head, tail),
+			divides(divides_)
+		{
+			assert (divides >= 2);
+		}
+
+		bilinear(const bilinear& src):
+			pixels(src.pixels),
+			coordinates(src.coordinates),
+			divides(src.divides)
+		{}
 
 		std::vector<pixel_type> interpolate() const
 		{
@@ -200,4 +212,5 @@ namespace risa_gl
 		}
 	};
 }
+
 #endif /* RISA_INTERPOLATE_HPP_ */
