@@ -59,7 +59,8 @@ namespace risa_gl
 
 			const float jitter = 1.f / (divides - 1);
 			float value = jitter;
-			for (int offset = 1; offset != divides; ++offset, value += jitter)
+			for (int offset = 1; offset != (divides - 1);
+				 ++offset, value += jitter)
 			{
 				const vector2 axis = get_nearest(value);
 				result[offset] = pixels(static_cast<const int>(axis.x),
@@ -108,7 +109,7 @@ namespace risa_gl
 
 		pixel_type calculate(const float offset) const
 		{
-			const float threshold = 0.01f;
+			const float threshold = 0.0001f;
 
 			const_value_type coord = coordinates.blend(offset);
 			const int u_floor = static_cast<int>(coord.x);
@@ -127,6 +128,9 @@ namespace risa_gl
 			const pixel_type right_down = pixels(u_ceil, v_floor);
 			const pixel_type right_up = pixels(u_ceil, v_ceil);
 
+			assert (u_factor + u_opposite <= 1.f);
+			assert (v_factor + v_opposite <= 1.f);
+
 			return 
 				(left_up * u_opposite + right_up * u_factor) * v_opposite +
 				(left_down * u_opposite + right_down * u_factor) * v_factor;
@@ -134,9 +138,22 @@ namespace risa_gl
 
 		std::vector<pixel_type> interpolate() const
 		{
-			std::vector<pixel_type> result;
-			for (int offset = 0.f; offset <= 1.f; offset += 1.f / divides)
-				result.push_back(calculate(offset));
+			std::vector<pixel_type> result(divides);
+
+			result[0] =
+				pixels(static_cast<const int>(coordinates.get_source().x),
+					   static_cast<const int>(coordinates.get_source().y));
+
+			const float jitter = 1.f / divides;
+			float index = jitter;
+
+			for (int offset = 1; offset != (divides - 1);
+				 ++offset, index += jitter)
+				result[offset] = calculate(index);
+
+			result[divides-1] =
+				pixels(static_cast<const int>(coordinates.get_target().x),
+					   static_cast<const int>(coordinates.get_target().y));
 
 			return result;
 		}

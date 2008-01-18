@@ -7,6 +7,8 @@
 #include <allocator.hpp>
 #include <vector>
 
+#include <cassert>
+
 namespace risa_gl
 {
 	template <typename pixel_t, size_t alignment = 16>
@@ -76,11 +78,17 @@ namespace risa_gl
 
 		pixel_type& operator()(int x, int y)
 		{
+			assert (x < get_width());
+			assert (y < get_height());
+
 			return pixels[y * width + x];
 		}
 
 		const pixel_type& operator()(int x, int y) const
 		{
+			assert (x < get_width());
+			assert (y < get_height());
+
 			return pixels[y * width + x];
 		}
 

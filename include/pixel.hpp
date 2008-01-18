@@ -200,10 +200,10 @@ namespace risa_gl
 
 		pixel_type operator*(const float factor) const
 		{
-			return pixel_type(this->r * factor,
-							  this->g * factor,
-							  this->b * factor,
-							  this->a * factor);
+			return pixel_type(static_cast<byte>(this->r * factor),
+							  static_cast<byte>(this->g * factor),
+							  static_cast<byte>(this->b * factor),
+							  static_cast<byte>(this->a * factor));
 		}
 
 		byte get_red() const
@@ -264,6 +264,23 @@ namespace risa_gl
 				this->g == rhs.g &&
 				this->b == rhs.b &&
 				this->a == rhs.a;
+		}
+
+		/**
+		 * @todo 飽和加算に書き換え
+		 */
+		pixel_type& operator+=(const pixel_type& rhs)
+		{
+			this->r += rhs.r;
+			this->g += rhs.g;
+			this->b += rhs.b;
+			this->a += rhs.a;
+			return *this;
+		}
+
+		pixel_type operator+(const pixel_type& rhs) const
+		{
+			return pixel_type(*this) += rhs;
 		}
 
 		friend std::ostream& operator<<(
