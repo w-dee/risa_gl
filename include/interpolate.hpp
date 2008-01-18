@@ -2,6 +2,7 @@
 #define RISA_INTERPOLATE_HPP_
 
 #include <math/vector.hpp>
+#include <risa_types.hpp>
 #include <vector>
 #include <cassert>
 
@@ -107,6 +108,50 @@ namespace risa_gl
 			divides(src.divides)
 		{}
 
+		float channel_blend(const float channel1,
+							const float factor,
+							const float channel2,
+							const float opposite) const
+		{
+			return channel1 * factor + channel2 * opposite;
+		}
+
+		pixel_type blend(const pixel_type& left_down,
+						 const pixel_type& left_up,
+						 const pixel_type& right_down,
+						 const pixel_type& right_up,
+						 const float u_factor,
+						 const float v_factor) const
+
+		{
+			const float u_opposite = 1.f - u_factor;
+			const float v_opposite = 1.f - v_factor;
+			assert (u_factor + u_opposite <= 1.f);
+			assert (v_factor + v_opposite <= 1.f);
+
+			return pixel_type(
+				static_cast<risa_gl::byte>(
+					channel_blend(left_up.get_red(), u_opposite,
+								  right_up.get_red(), u_factor) * v_factor +
+					channel_blend(left_down.get_red(), u_opposite,
+								  right_down.get_red(), u_factor) * v_opposite),
+				static_cast<risa_gl::byte>(
+					channel_blend(left_up.get_green(), u_opposite,
+								  right_up.get_green(), u_factor) * v_factor +
+					channel_blend(left_down.get_green(), u_opposite,
+								  right_down.get_green(), u_factor) * v_opposite),
+				static_cast<risa_gl::byte>(
+					channel_blend(left_up.get_blue(), u_opposite,
+								  right_up.get_blue(), u_factor) * v_factor +
+					channel_blend(left_down.get_blue(), u_opposite,
+								  right_down.get_blue(), u_factor) * v_opposite),
+				static_cast<risa_gl::byte>(
+					channel_blend(left_up.get_alpha(), u_opposite,
+								  right_up.get_alpha(), u_factor) * v_factor +
+					channel_blend(left_down.get_alpha(), u_opposite,
+								  right_down.get_alpha(), u_factor) * v_opposite));
+		}
+
 		pixel_type calculate(const float offset) const
 		{
 			const float threshold = 0.0001f;
@@ -116,10 +161,6 @@ namespace risa_gl
 			const int v_floor = static_cast<int>(coord.y);
 			const float u_factor = coord.x - u_floor;
 			const float v_factor = coord.y - v_floor;
-
-			const float u_opposite = 1.f - u_factor;
-			const float v_opposite = 1.f - v_factor;
-
 			const int u_ceil = u_factor < threshold ? u_floor : u_floor + 1;
 			const int v_ceil = v_factor < threshold ? v_floor : v_floor + 1;
 			
@@ -128,12 +169,12 @@ namespace risa_gl
 			const pixel_type right_down = pixels(u_ceil, v_floor);
 			const pixel_type right_up = pixels(u_ceil, v_ceil);
 
-			assert (u_factor + u_opposite <= 1.f);
-			assert (v_factor + v_opposite <= 1.f);
-
-			return 
-				(left_up * u_opposite + right_up * u_factor) * v_opposite +
-				(left_down * u_opposite + right_down * u_factor) * v_factor;
+			return blend(left_down,
+						 left_up,
+						 right_down,
+						 right_up,
+						 u_factor,
+						 v_factor);
 		}
 
 		std::vector<pixel_type> interpolate() const

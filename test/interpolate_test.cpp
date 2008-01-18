@@ -38,10 +38,8 @@ public:
 		CPPUNIT_ASSERT(fragments.size() == 128);
 		for (size_t offset = 0; offset != fragments.size(); ++offset)
 		{
-			// 4点から加重平均を取るが、途中結果をすべてpixelに入れてい
-			// るため、丸め誤差で最大4の誤差が出る
 			CPPUNIT_ASSERT(range<int>(fragments[offset].get_red(),
-									  fragments[offset].get_green(), 4));
+									  fragments[offset].get_green(), 1));
 			CPPUNIT_ASSERT(fragments[offset].get_blue() == 0);
 			CPPUNIT_ASSERT(fragments[offset].get_alpha() >= 250);
 		}

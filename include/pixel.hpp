@@ -178,7 +178,6 @@ namespace risa_gl
 		{}
 
 		pixel_type(const pixel_type& source):
-//			pixel_format(source.r, source.g, source.b, source.a)
 			pixel_format(source)
 		{}
 
