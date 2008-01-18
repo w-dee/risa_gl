@@ -32,7 +32,7 @@ public:
 												 vector2(63.f, 63.f),
 												 128);
 
-		std::vector<pixel_store_type::pixel_type> fragments =
+		bilinear<pixel_store_type>::pixel_vector_type fragments =
 			bilinear_filter.interpolate();
 
 		CPPUNIT_ASSERT(fragments.size() == 128);
@@ -57,7 +57,7 @@ public:
 												 vector2(255.f, 0.f),
 												 128);
 
-		std::vector<pixel_store_type::pixel_type> fragments =
+		nearest<pixel_store_type>::pixel_vector_type fragments =
 			nearest_filter.interpolate();
 
 		CPPUNIT_ASSERT(fragments.size() == 128);

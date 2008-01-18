@@ -3,6 +3,7 @@
 
 #include <math/vector.hpp>
 #include <risa_types.hpp>
+#include <allocator.hpp>
 #include <vector>
 #include <cassert>
 
@@ -20,6 +21,10 @@ namespace risa_gl
 		typedef vector2 value_type;
 		typedef const vector2 const_value_type;
 		typedef dividable_vector<vector2> interpolate_type;
+		typedef std::vector<pixel_type,
+							aligned_allocator<pixel_type,
+											  pixel_store_type::alignment_size> > 
+		pixel_vector_type;
 
 	private:
 		const pixel_store_type& pixels;
@@ -51,9 +56,9 @@ namespace risa_gl
 			divides(src.divides)
 		{}
 
-		std::vector<pixel_type> interpolate() const
+		pixel_vector_type interpolate() const
 		{
-			std::vector<pixel_type> result(divides);
+			pixel_vector_type result(divides);
 
 			result[0] = pixels(static_cast<int>(coordinates.get_source().x),
 							   static_cast<int>(coordinates.get_source().y));
@@ -84,6 +89,11 @@ namespace risa_gl
 		typedef vector2 value_type;
 		typedef const vector2 const_value_type;
 		typedef dividable_vector<vector2> interpolate_type;
+		typedef std::vector<pixel_type,
+							aligned_allocator<
+								pixel_type,
+								pixel_store_type::alignment_size> > 
+		pixel_vector_type;
 
 	private:
 		const pixel_store_type& pixels;
@@ -189,9 +199,9 @@ namespace risa_gl
 			divides(src.divides)
 		{}
 
-		std::vector<pixel_type> interpolate() const
+		pixel_vector_type interpolate() const
 		{
-			std::vector<pixel_type> result(divides);
+			pixel_vector_type result(divides);
 
 			result[0] =
 				pixels(static_cast<const int>(coordinates.get_source().x),

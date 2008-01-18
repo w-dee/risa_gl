@@ -216,6 +216,184 @@ namespace risa_gl
 		}
 	};
 
+	template <typename PixelStoreType>
+	class region_fragments
+	{};
+
+	template <typename PixelStoreType,
+			  typename InterpolateType>
+	class basic_transformer
+	{
+	public:
+		typedef PixelStoreType pixel_store_type;
+		typedef InterpolateType interpolate_type;
+		typedef math::rectangle_region<float> region_type;
+		typedef std::vector<typename interpolate_type::pixel_vector_type>
+		fragments_type;
+
+	private:
+		linear_transformer transformer;
+		const region_type region;
+		
+		const math::vector2
+		coord_to_vector2(const region_type::coord_type& coord) const
+		{
+			return math::vector2(coord.get_x(), coord.get_y());
+		}
+
+	public:
+		basic_transformer(const region_type& region_):
+			transformer(),
+			region(region_)
+		{}
+
+		basic_transformer(const basic_transformer& src):
+			transformer(src.transformer),
+			region(src.region)
+		{}
+
+		fragments_type get_fragments(const pixel_store_type& pixels,
+									 const int x_divide,
+									 const int y_divide) const
+		{
+			assert (x_divide >= 2);
+			assert (y_divide >= 2);
+
+			const math::dividable_vector<math::vector2> y_heads
+				(coord_to_vector2(transformer * region.get_left_down()),
+				 coord_to_vector2(transformer * region.get_left_up()));
+			const math::dividable_vector<math::vector2> y_tails
+				(coord_to_vector2(transformer * region.get_right_down()),
+				 coord_to_vector2(transformer * region.get_right_up()));
+			
+			fragments_type result(y_divide);
+
+			result[0] = interpolate_type(pixels,
+										 y_heads.blend(0.f),
+										 y_tails.blend(0.f),
+										 x_divide).interpolate();
+			
+			const float jitter = x_divide / static_cast<float>(y_divide - 1);
+			float offset = jitter;
+			for (unsigned short y_div = 1; y_div != (y_divide - 1);
+				 ++y_div, offset += jitter)
+			{
+				result[y_div] = interpolate_type(pixels,
+												 y_heads.blend(jitter),
+												 y_tails.blend(jitter),
+												 x_divide).interpolate();
+			}
+
+			result[y_divide-1] = interpolate_type(pixels,
+												  y_heads.blend(1.f),
+												  y_tails.blend(1.f),
+												  x_divide).interpolate();
+
+			return result;
+		}
+	};
+
+	template <typename PixelStoreType,
+			  typename InterpolateType>
+	class rotator :
+		public basic_transformer<PixelStoreType, InterpolateType>
+	{
+	public:
+		typedef basic_transformer<PixelStoreType, InterpolateType> super_type;
+		typedef typename super_type::pixel_store_type pixel_store_type;
+		typedef typename super_type::interpolate_type interpolate_type;
+		typedef typename super_type::region_type region_type;
+		typedef typename super_type::fragments_type fragments_type;
+
+		rotator(const region_type& region,
+				const math::vector2& center,
+				const float angle):
+			super_type(region)
+		{
+			super_type::transformer.translate(-center.x, -center.y, 0);
+			super_type::transformer.rotate(math::vector3(0.f, 0.f, 1.f), angle);
+			super_type::transformer.translate(center.x, center.y, 0);
+		}
+
+		rotator(const rotator& src):
+			super_type(src)
+		{}
+
+		fragments_type get_fragments(const pixel_store_type& pixels,
+									 const int x_divide,
+									 const int y_divide) const
+		{
+			return super_type::get_fragments(pixels, x_divide, y_divide);
+		}
+	};
+
+	template <typename PixelStoreType,
+			  typename InterpolateType>
+	class scaler :
+		public basic_transformer<PixelStoreType, InterpolateType>
+	{
+	public:
+		typedef basic_transformer<PixelStoreType, InterpolateType> super_type;
+		typedef typename super_type::pixel_store_type pixel_store_type;
+		typedef typename super_type::interpolate_type interpolate_type;
+		typedef typename super_type::region_type region_type;
+		typedef typename super_type::fragments_type fragments_type;
+
+		scaler(const region_type& region,
+			   const math::vector2& center,
+			   const float x_scale,
+			   const float y_scale):
+			super_type(region)
+		{
+			super_type::transformer.translate(-center.x, -center.y, 0);
+			super_type::transformer.scaling(x_scale, y_scale, 1.f);
+			super_type::transformer.translate(center.x, center.y, 0);
+		}
+
+		scaler(const scaler& src):
+			super_type(src)
+		{}
+
+		fragments_type get_fragments(const pixel_store_type& pixels,
+									 const int x_divide,
+									 const int y_divide) const
+		{
+			return super_type::get_fragments(pixels, x_divide, y_divide);
+		}
+	};
+
+	template <typename PixelStoreType,
+			  typename InterpolateType>
+	class translator :
+		public basic_transformer<PixelStoreType, InterpolateType>
+	{
+	public:
+		typedef basic_transformer<PixelStoreType, InterpolateType> super_type;
+		typedef typename super_type::pixel_store_type pixel_store_type;
+		typedef typename super_type::interpolate_type interpolate_type;
+		typedef typename super_type::region_type region_type;
+		typedef typename super_type::fragments_type fragments_type;
+
+		translator(const region_type& region,
+				   const math::vector2& translations):
+			super_type(region)
+		{
+			super_type::transformer.translate(translations.x,
+											  translations.y, 0);
+		}
+
+		translator(const translator& src):
+			super_type(src)
+		{}
+
+		fragments_type get_fragments(const pixel_store_type& pixels,
+									 const int x_divide,
+									 const int y_divide) const
+		{
+			return super_type::get_fragments(pixels, x_divide, y_divide);
+		}
+	};
+
 }
 
 
