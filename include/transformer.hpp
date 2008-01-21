@@ -271,7 +271,7 @@ namespace risa_gl
 										 y_tails.blend(0.f),
 										 x_divide).interpolate();
 			
-			const float jitter = x_divide / static_cast<float>(y_divide - 1);
+			const float jitter = 1.f / static_cast<float>(x_divide - 1);
 			float offset = jitter;
 			for (unsigned short y_div = 1; y_div != (y_divide - 1);
 				 ++y_div, offset += jitter)

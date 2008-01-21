@@ -36,7 +36,7 @@ public:
 		typedef rectangle_region<float> region_t;
 		typedef region_t::coord_type coord_t;
 
-		region_t rect(0, 0, 63, 63);
+		region_t rect(0, 63, 63, 0);
 
 		typedef translator<risa_gl::pixel_store<risa_gl::pixel, 16>,risa_gl::nearest<risa_gl::pixel_store<risa_gl::pixel,16> > > translator_t;
 		translator_t trans(rect, risa_gl::math::vector2(-32, -32));
@@ -47,15 +47,18 @@ public:
 		
 		typedef translator_t::fragments_type fragments_t;
 		fragments_t fragments = trans.get_fragments(pixels, 64, 64);
-		for (int y = 0; y < fragments.size(); ++y)
+		for (unsigned int y = 0; y < fragments.size(); ++y)
 		{
-			for (int x = 0; x < fragments[y].size(); ++x)
+			for (unsigned int x = 0; x < fragments[y].size(); ++x)
 			{
 				if (x >= 32 && y >= 32)
 					CPPUNIT_ASSERT(fragments[y][x] ==
 								   risa_gl::pixel(255, 255, 255, 256));
 				else
+				{
+					std::cout << "(" << x << ", " << y << ") : " << fragments[y][x] << std::endl;
 					CPPUNIT_ASSERT(fragments[y][x] == risa_gl::pixel());
+				}
 			}
 		}
 	}
