@@ -4,6 +4,7 @@
 #include <pixel.hpp>
 #include "range.hpp"
 
+#include <iostream>
 
 using risa_gl::nearest;
 using risa_gl::bilinear;

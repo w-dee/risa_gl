@@ -22,14 +22,16 @@ namespace risa_gl
 		typedef const vector2 const_value_type;
 		typedef dividable_vector<vector2> interpolate_type;
 		typedef std::vector<pixel_type,
-							aligned_allocator<pixel_type,
-											  pixel_store_type::alignment_size> > 
+							aligned_allocator<
+								pixel_type,
+								pixel_store_type::alignment_size> >
 		pixel_vector_type;
 
 	private:
 		const pixel_store_type& pixels;
 		interpolate_type coordinates;
 		const int divides;
+		const pixel_type default_color;
 
 		vector2 get_nearest(const float value) const
 		{
@@ -42,10 +44,12 @@ namespace risa_gl
 		nearest(const pixel_store_type& pixels_,
 				const_value_type& head,
 				const_value_type& tail,
-				unsigned short divides_):
+				unsigned short divides_,
+				const pixel_type& default_color_ = pixel_type()):
 			pixels(pixels_),
 			coordinates(head, tail),
-			divides(divides_)
+			divides(divides_),
+			default_color(default_color_)
 		{
 			assert (divides >= 2);
 		}
@@ -53,28 +57,34 @@ namespace risa_gl
 		nearest(const nearest& src):
 			pixels(src.pixels),
 			coordinates(src.coordinates),
-			divides(src.divides)
+			divides(src.divides),
+			default_color(src.default_color)
 		{}
 
 		pixel_vector_type interpolate() const
 		{
 			pixel_vector_type result(divides);
 
-			result[0] = pixels(static_cast<int>(coordinates.get_source().x),
-							   static_cast<int>(coordinates.get_source().y));
-
 			const float jitter = 1.f / (divides - 1);
-			float value = jitter;
-			for (int offset = 1; offset != (divides - 1);
+			float value = 0.f;
+			for (int offset = 0; offset != (divides - 1);
 				 ++offset, value += jitter)
 			{
 				const vector2 axis = get_nearest(value);
-				result[offset] = pixels(static_cast<const int>(axis.x),
-										static_cast<const int>(axis.y));
+				if (pixels.is_inside(static_cast<const int>(axis.x),
+									 static_cast<const int>(axis.y)))
+					result[offset] = pixels(static_cast<const int>(axis.x),
+											static_cast<const int>(axis.y));
+				else
+					result[offset] = default_color;
 			}
-			result[divides-1] =
-				pixels(static_cast<int>(coordinates.get_target().x),
-					   static_cast<int>(coordinates.get_target().y));
+			if (pixels.is_inside(static_cast<int>(coordinates.get_target().x),
+								 static_cast<int>(coordinates.get_target().y)))
+				result[divides-1] =
+					pixels(static_cast<int>(coordinates.get_target().x),
+						   static_cast<int>(coordinates.get_target().y));
+			else
+				result[divides-1] = default_color;
 
 			return result;
 		}
@@ -99,6 +109,7 @@ namespace risa_gl
 		const pixel_store_type& pixels;
 		interpolate_type coordinates;
 		const int divides;
+		pixel_type default_color;
 
 		float channel_blend(const float channel1,
 							const float factor,
@@ -171,10 +182,18 @@ namespace risa_gl
 			const int u_ceil = u_factor < threshold ? u_floor : u_floor + 1;
 			const int v_ceil = v_factor < threshold ? v_floor : v_floor + 1;
 			
-			const pixel_type left_down = pixels(u_floor, v_floor);
-			const pixel_type left_up = pixels(u_floor, v_ceil);
-			const pixel_type right_down = pixels(u_ceil, v_floor);
-			const pixel_type right_up = pixels(u_ceil, v_ceil);
+			const pixel_type left_down =
+				pixels.is_inside(u_floor, v_floor) ?
+				pixels(u_floor, v_floor) : default_color;
+			const pixel_type left_up =
+				pixels.is_inside(u_floor, v_ceil) ?
+				pixels(u_floor, v_ceil) : default_color;
+			const pixel_type right_down =
+				pixels.is_inside(u_ceil, v_floor) ?
+				pixels(u_ceil, v_floor) : default_color;
+			const pixel_type right_up =
+				pixels.is_inside(u_ceil, v_ceil) ?
+				pixels(u_ceil, v_ceil) : default_color;
 
 			return blend(left_down, left_up,
 						 right_down, right_up,
@@ -185,10 +204,12 @@ namespace risa_gl
 		bilinear(const pixel_store_type& pixels_,
 				 const_value_type& head,
 				 const_value_type& tail,
-				 int divides_):
+				 int divides_,
+				 const pixel_type& default_color_ = pixel_type()):
 			pixels(pixels_),
 			coordinates(head, tail),
-			divides(divides_)
+			divides(divides_),
+			default_color(default_color_)
 		{
 			assert (divides >= 2);
 		}
@@ -196,21 +217,18 @@ namespace risa_gl
 		bilinear(const bilinear& src):
 			pixels(src.pixels),
 			coordinates(src.coordinates),
-			divides(src.divides)
+			divides(src.divides),
+			default_color(src.default_color)
 		{}
 
 		pixel_vector_type interpolate() const
 		{
 			pixel_vector_type result(divides);
 
-			result[0] =
-				pixels(static_cast<const int>(coordinates.get_source().x),
-					   static_cast<const int>(coordinates.get_source().y));
-
 			const float jitter = 1.f / divides;
-			float index = jitter;
+			float index = 0.f;
 
-			for (int offset = 1; offset != (divides - 1);
+			for (int offset = 0; offset != (divides - 1);
 				 ++offset, index += jitter)
 				result[offset] = calculate(index);
 

@@ -132,6 +132,16 @@ namespace risa_gl
 			return const_fragment_type(head, tail);
 		}
 
+		bool is_inside(int x, int y) const
+		{
+			if (x < 0 ||
+				x >= get_width() ||
+				y < 0 ||
+				y >= get_height())
+				return false;
+			return true;
+		}
+
 		iterator begin()
 		{
 			return &*pixels.begin();

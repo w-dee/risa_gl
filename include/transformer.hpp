@@ -216,10 +216,6 @@ namespace risa_gl
 		}
 	};
 
-	template <typename PixelStoreType>
-	class region_fragments
-	{};
-
 	template <typename PixelStoreType,
 			  typename InterpolateType>
 	class basic_transformer
@@ -231,8 +227,10 @@ namespace risa_gl
 		typedef std::vector<typename interpolate_type::pixel_vector_type>
 		fragments_type;
 
-	private:
+	protected:
 		linear_transformer transformer;
+
+	private:
 		const region_type region;
 		
 		const math::vector2

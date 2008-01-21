@@ -229,6 +229,74 @@ namespace risa_gl
 		// }}}
 
 		// {{{ monomial_predicate(単項演算)
+		template <typename src_pixel_getter_t,
+				  typename result_pixel_setter_t,
+				  typename compute_factor_t,
+				  typename src_alpha_factor_t,
+				  typename dest_alpha_factor_t,
+				  typename alpha_calculate_policy_t,
+				  typename divisor_factor_t = divide_factor<256> >
+		class monomial_predicate
+		{
+		private:
+			/*
+			 * 実行時にパラメタを与えられるように各種メソッドをメンバ
+			 * として保持。利用されない場合はインライン化と最適化で消
+			 * えるはず
+			 */
+			src_pixel_getter_t src_pixel_getter;
+			result_pixel_setter_t result_pixel_setter;
+			compute_factor_t compute_factor;
+			src_alpha_factor_t src_alpha_factor;
+			dest_alpha_factor_t dest_alpha_factor;
+			alpha_calculate_policy_t alpha_calculate_policy;
+			divisor_factor_t divisor_factor;
+
+		public:
+			typedef src_pixel_getter_t src_getter_type;
+			typedef result_pixel_setter_t result_setter_type;
+			typedef compute_factor_t compute_type;
+			typedef src_alpha_factor_t source_alpha_type;
+			typedef alpha_calculate_policy_t alpha_policy_type;
+			typedef divisor_factor_t divisor_type;
+
+			monomial_predicate(const monomial_predicate& source):
+				src_pixel_getter(source.src_pixel_getter),
+				result_pixel_setter(source.result_pixel_setter),
+				compute_factor(source.compute_factor),
+				src_alpha_factor(source.src_alpha_factor),
+				alpha_calculate_policy(source.alpha_calculate_policy),
+				divisor_factor(source.divisor_factor)
+			{}
+				
+			monomial_predicate(src_pixel_getter_t src_pixel_getter_ =
+						   src_pixel_getter_t(),
+						   result_pixel_setter_t result_pixel_setter_ =
+						   result_pixel_setter_t(),
+						   compute_factor_t compute_factor_ =
+						   compute_factor_t(),
+						   src_alpha_factor_t src_alpha_factor_ =
+						   src_alpha_factor_t(),
+						   alpha_calculate_policy_t alpha_calculate_policy_ =
+						   alpha_calculate_policy_t(),
+						   divisor_factor_t divisor_factor_ =
+						   divisor_factor_t()):
+				src_pixel_getter(src_pixel_getter_),
+				result_pixel_setter(result_pixel_setter_),
+				compute_factor(compute_factor_),
+				src_alpha_factor(src_alpha_factor_),
+				alpha_calculate_policy(alpha_calculate_policy_),
+				divisor_factor(divisor_factor_)
+			{}
+
+			template <typename src_itor_t,
+					  typename result_itor_t>
+			void operator()(src_itor_t src,
+							result_itor_t result) const
+			{
+				assert (false);
+			}
+		};
 		// }}}
 
 		// {{{ stripped_predicate(無項演算)

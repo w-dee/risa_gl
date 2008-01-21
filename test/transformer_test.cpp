@@ -1,6 +1,9 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <transformer.hpp>
 #include <math/vector.hpp>
+#include <interpolate.hpp>
+#include <pixel_store.hpp>
+#include <pixel.hpp>
 #include <iostream>
 
 #include "range.hpp"
@@ -21,9 +24,42 @@ private:
 	CPPUNIT_TEST(operation_order_test);
 	CPPUNIT_TEST(scaling_test);
 	CPPUNIT_TEST(transform_test);
+	CPPUNIT_TEST(translator_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void translator_test()
+	{
+		using risa_gl::translator;
+		using risa_gl::math::rectangle_region;
+
+		typedef rectangle_region<float> region_t;
+		typedef region_t::coord_type coord_t;
+
+		region_t rect(0, 0, 63, 63);
+
+		typedef translator<risa_gl::pixel_store<risa_gl::pixel, 16>,risa_gl::nearest<risa_gl::pixel_store<risa_gl::pixel,16> > > translator_t;
+		translator_t trans(rect, risa_gl::math::vector2(-32, -32));
+
+		risa_gl::pixel_store<risa_gl::pixel, 16> pixels(64, 64);
+		std::fill(pixels.begin(), pixels.end(),
+				  risa_gl::pixel(255, 255, 255, 256));
+		
+		typedef translator_t::fragments_type fragments_t;
+		fragments_t fragments = trans.get_fragments(pixels, 64, 64);
+		for (int y = 0; y < fragments.size(); ++y)
+		{
+			for (int x = 0; x < fragments[y].size(); ++x)
+			{
+				if (x >= 32 && y >= 32)
+					CPPUNIT_ASSERT(fragments[y][x] ==
+								   risa_gl::pixel(255, 255, 255, 256));
+				else
+					CPPUNIT_ASSERT(fragments[y][x] == risa_gl::pixel());
+			}
+		}
+	}
+
 	void transform_test()
 	{
 		using risa_gl::linear_transformer;
