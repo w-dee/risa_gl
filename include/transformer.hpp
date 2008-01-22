@@ -33,6 +33,8 @@ namespace risa_gl
 
 			result(0,0) = coord.get_x();
 			result(0,1) = coord.get_y();
+			result(0,2) = 0;
+			result(0,3) = 1;
 
 			return result;
 		}
@@ -277,8 +279,8 @@ namespace risa_gl
 				 ++y_div, offset += jitter)
 			{
 				result[y_div] = interpolate_type(pixels,
-												 y_heads.blend(jitter),
-												 y_tails.blend(jitter),
+												 y_heads.blend(offset),
+												 y_tails.blend(offset),
 												 x_divide).interpolate();
 			}
 

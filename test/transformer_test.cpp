@@ -51,14 +51,11 @@ public:
 		{
 			for (unsigned int x = 0; x < fragments[y].size(); ++x)
 			{
-				if (x >= 32 && y >= 32)
+				if (x >= 31 && y >= 31)
 					CPPUNIT_ASSERT(fragments[y][x] ==
 								   risa_gl::pixel(255, 255, 255, 256));
 				else
-				{
-					std::cout << "(" << x << ", " << y << ") : " << fragments[y][x] << std::endl;
 					CPPUNIT_ASSERT(fragments[y][x] == risa_gl::pixel());
-				}
 			}
 		}
 	}
