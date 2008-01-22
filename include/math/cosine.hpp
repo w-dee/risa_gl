@@ -35,7 +35,7 @@ namespace risa_gl
 			}
 		};
 
-		template <typename ValueType, int calc_depth = 4>
+		template <typename ValueType, int calc_depth = 7>
 		class cosine
 		{
 		public:
