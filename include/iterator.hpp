@@ -302,7 +302,7 @@ namespace risa_gl
 			return *current;
 		}
 
-		const reference operator*() const
+		const_reference operator*() const
 		{
 			return *current;
 		}

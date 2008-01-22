@@ -96,13 +96,17 @@ namespace risa_gl {
 			return false;
 		}
 
-		aligned_allocator()
+		aligned_allocator() throw()
 		{}
 
-		~aligned_allocator()
+		aligned_allocator(const aligned_allocator&) throw()
 		{}
 
-		aligned_allocator(const aligned_allocator&)
+		template <typename other>
+		aligned_allocator(const other&) throw()
+		{}
+
+		~aligned_allocator() throw()
 		{}
 
 		void construct(pointer p, const_reference value)
