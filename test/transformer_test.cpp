@@ -25,9 +25,51 @@ private:
 	CPPUNIT_TEST(scaling_test);
 	CPPUNIT_TEST(transform_test);
 	CPPUNIT_TEST(translator_test);
+	CPPUNIT_TEST(rotator_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void scaler_test()
+	{}
+	void rotator_test()
+	{
+		using risa_gl::rotator;
+		using risa_gl::math::rectangle_region;
+
+		typedef rectangle_region<float> region_t;
+		typedef region_t::coord_type coord_t;
+		typedef risa_gl::pixel pixel_t;
+		typedef risa_gl::pixel_store<pixel_t, 16> pixel_store_t;
+
+		region_t rect(0, 63, 63, 0);
+
+		typedef rotator<pixel_store_t,
+			risa_gl::nearest<pixel_store_t> > rotator_t;
+		rotator_t trans(rect, risa_gl::math::vector2(31, 31), pi / 2.f);
+
+		risa_gl::pixel_store<risa_gl::pixel, 16> pixels(64, 64);
+		std::fill(pixels.begin(), pixels.end(),
+				  risa_gl::pixel(255, 255, 255, 256));
+		
+		typedef rotator_t::fragments_type fragments_t;
+		fragments_t fragments = trans.get_fragments(pixels, 64, 64);
+// 		for (unsigned int y = 0; y < fragments.size(); ++y)
+// 			for (unsigned int x = 0; x < fragments[y].size(); ++x)
+//				std::cout << "(" << x << ", " << y << ")" << fragments[y][x] << std::endl;
+
+		for (unsigned int y = 0; y < fragments.size(); ++y)
+		{
+			for (unsigned int x = 0; x < fragments[y].size(); ++x)
+			{
+				if (x < 32 && y < 32)
+					CPPUNIT_ASSERT(fragments[y][x] ==
+								   risa_gl::pixel(255, 255, 255, 256));
+				else
+					CPPUNIT_ASSERT(fragments[y][x] == risa_gl::pixel());
+			}
+		}
+	}
+
 	void translator_test()
 	{
 		using risa_gl::translator;

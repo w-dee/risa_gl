@@ -1,5 +1,5 @@
 
-CPPS = $(wildcard *.cpp)
+CPPS = $(wildcard *_test.cpp) test_main.cpp
 
 OBJS = $(CPPS:.cpp=.o)
 
