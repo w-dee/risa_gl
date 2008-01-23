@@ -310,9 +310,9 @@ namespace risa_gl
 				const float angle):
 			super_type(region)
 		{
-			super_type::transformer.translate(-center.x, -center.y, 0);
-			super_type::transformer.rotate(math::vector3(0.f, 0.f, 1.f), angle);
 			super_type::transformer.translate(center.x, center.y, 0);
+			super_type::transformer.rotate(math::vector3(0.f, 0.f, 1.f), angle);
+			super_type::transformer.translate(-center.x, -center.y, 0);
 		}
 
 		rotator(const rotator& src):

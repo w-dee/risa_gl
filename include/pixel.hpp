@@ -265,6 +265,11 @@ namespace risa_gl
 				this->a == rhs.a;
 		}
 
+		bool operator!=(const pixel_type& rhs) const
+		{
+			return !this->operator==(rhs);
+		}
+
 		/**
 		 * @todo 飽和加算に書き換え
 		 */
