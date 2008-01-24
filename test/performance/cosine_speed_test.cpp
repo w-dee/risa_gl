@@ -173,15 +173,19 @@ double templ_cos(const double value)
 void checker5()
 {
 	unsigned long long
-		std_start = 0.0, std_end = 0.0, templ_start = 0.0, templ_end = 0.0;
+		std_start = 0, std_end = 0, templ_start = 0, templ_end = 0;
 
-	double s,t;
+	const int count = 1;
+
+	double s = 0.0, t = 0.0;
 	rdtsc(std_start);
-	s = std::cos(0.5);
+	for (int i = 0; i < count; ++i)
+		s += std::cos(0.5);
 	rdtsc(std_end);
 
 	rdtsc(templ_start);
-	t = templ_cos(0.5);
+	for (int i = 0; i < count; ++i)
+		t += templ_cos(0.5);
 	rdtsc(templ_end);
 
 	std::cout << "std::cos() used clock of " <<
@@ -189,7 +193,8 @@ void checker5()
 	std::cout << "template cosine used clock of " <<
 		(templ_end - templ_start) << std::endl;
 
-	std::cout << "std: " << s << ", template: " << t << std::endl;
+	std::cout << "std: " << (s/count) <<
+		", template: " << (t/count) << std::endl;
 
 }
 
