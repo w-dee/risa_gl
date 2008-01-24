@@ -9,7 +9,7 @@ namespace risa_gl
 	namespace math
 	{
 		template <typename ValueType, int max_depth, int depth>
-		struct cosine_recursive_implement
+		struct taylor_expansion_cosine_term
 		{
 			typedef ValueType real_type;
 
@@ -19,13 +19,13 @@ namespace risa_gl
 				return (power<real_type, n>::value(-1.0) *
 						power<real_type, n*2>::value(v)) /
 					static_cast<real_type>(factorial<n*2>::value) +
-					cosine_recursive_implement
+					taylor_expansion_cosine_term
 					<real_type, max_depth, depth - 1>::value(v);
 			}
 		};
 
 		template <typename ValueType, int max_depth>
-		struct cosine_recursive_implement<ValueType, max_depth, 1>
+		struct taylor_expansion_cosine_term<ValueType, max_depth, 1>
 		{
 			typedef ValueType real_type;
 
@@ -51,7 +51,7 @@ namespace risa_gl
 				 */
 
 				return static_cast<real_type>(1) + 
-					cosine_recursive_implement<real_type,
+					taylor_expansion_cosine_term<real_type,
 					calc_depth, calc_depth>::value(arg);
 			}
 		};
