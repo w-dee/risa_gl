@@ -51,58 +51,20 @@ public:
 		risa_gl::pixel_store<pixel_t, 16> pixels(64, 64);
  		for (int y = 0; y < pixels.get_height(); ++y)
  			for (int x = 0; x < pixels.get_width(); ++x)
-			{
-				if ((x <= 31 && y <= 31) ||
-					(x >= 32 && y >= 32))
-					pixels(x, y) = pixel_t(255, 255, 255, 256);
-				else
-					pixels(x, y) = pixel_t();
-			}
+				pixels(x, y) = pixel_t(x, y, 255, 256);
 		
-		std::cout << std::endl;
- 		for (int y = 0; y < pixels.get_height(); ++y)
-		{
-			for (int x = 0; x < pixels.get_width(); ++x)
-			{
-				if (pixels(x, y) == pixel_t())
-					std::cout << "o";
-				else
-					std::cout << "x";
-			}
-			std::cout << std::endl;
-		}
-
 		typedef rotator_t::fragments_type fragments_t;
 		fragments_t fragments = trans.get_fragments(pixels, 64, 64);
-
-		std::cout << std::endl;
- 		for (unsigned int y = 0; y < fragments.size(); ++y)
-		{
-			for (unsigned int x = 0; x < fragments[y].size(); ++x)
-			{
-				if (fragments[y][x] == pixel_t())
-					std::cout << "o";
-				else
-					std::cout << "x";
-			}
-			std::cout << std::endl;
-		}
 
 		for (unsigned int y = 0; y < fragments.size(); ++y)
 		{
 			for (unsigned int x = 0; x < fragments[y].size(); ++x)
 			{
-				if ((x <= 31 && y >= 32) ||
-					(x >= 32 && y <= 31))
-				{
-					if (fragments[y][x] !=
-								   pixel_t(255, 255, 255, 256))
-						std::cout << "(" << x << ", " << y << ")" << std::endl;
-					CPPUNIT_ASSERT(fragments[y][x] ==
-								   pixel_t(255, 255, 255, 256));
-				}
-				else
-					CPPUNIT_ASSERT(fragments[y][x] == pixel_t());
+				std::cout << "(" << x << ", " << y << "): " << 
+					fragments[y][x] << std::endl;
+				
+				CPPUNIT_ASSERT(fragments[y][x] ==
+								   pixel_t(63-y, x, 255, 256));
 			}
 		}
 	}
