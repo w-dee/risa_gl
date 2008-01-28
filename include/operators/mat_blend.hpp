@@ -16,7 +16,7 @@ namespace risa_gl
 		class mat_blend_operator
 		{
 		private:
-			typedef primitive::binomial_blend<
+			typedef primitive::monomial_function<
 				source_getter,
 				destination_getter,
 				bit_setter,

@@ -228,7 +228,7 @@ namespace risa_gl
 		};
 		// }}}
 
-		// {{{ monomial_predicate(単項演算)
+		// {{{ monomial_function(単項演算)
 		template <typename src_pixel_getter_t,
 				  typename result_pixel_setter_t,
 				  typename compute_factor_t,
@@ -236,7 +236,7 @@ namespace risa_gl
 				  typename dest_alpha_factor_t,
 				  typename alpha_calculate_policy_t,
 				  typename divisor_factor_t = divide_factor<256> >
-		class monomial_predicate
+		class monomial_function
 		{
 		private:
 			/*
@@ -260,7 +260,7 @@ namespace risa_gl
 			typedef alpha_calculate_policy_t alpha_policy_type;
 			typedef divisor_factor_t divisor_type;
 
-			monomial_predicate(const monomial_predicate& source):
+			monomial_function(const monomial_function& source):
 				src_pixel_getter(source.src_pixel_getter),
 				result_pixel_setter(source.result_pixel_setter),
 				compute_factor(source.compute_factor),
@@ -269,7 +269,7 @@ namespace risa_gl
 				divisor_factor(source.divisor_factor)
 			{}
 				
-			monomial_predicate(src_pixel_getter_t src_pixel_getter_ =
+			monomial_function(src_pixel_getter_t src_pixel_getter_ =
 						   src_pixel_getter_t(),
 						   result_pixel_setter_t result_pixel_setter_ =
 						   result_pixel_setter_t(),

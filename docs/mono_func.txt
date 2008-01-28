@@ -1,0 +1,52 @@
+mat blend
+
+ r = s.c * s.a + c.c * (1 - s.a)
+
+add alpha to alpha
+
+ r = s.c * s.a
+
+alpha to add alpha
+
+ r = s.c / s.a
+
+to opacity
+
+ r = s.c|a(1.0)
+
+to transparent
+
+ r = s.c|a(0.0)
+
+set opacity
+
+ r = s.c|i.a
+
+set color
+
+ r = i.c|s.a
+
+over blend
+ destroy source alpha
+ save source alpha
+ source is alpha pixel
+ source is add alpha pixel
+
+manipulate source alpha
+ source is perfect opacity
+ source is alpha pixel
+ source is add alpha pixel
+
+to gray scale
+
+ r = s.r * r_factor + s.g * g_factor + s.b * b_factor|s.a
+
+gamma correction
+
+ r = r_factor_map[s.r] + g_factor_map[s.g] + b_factor_map[s.b]|s.a
+
+
+ 
+・通常のブレンド演算で対応できるもの
+・一部チャネルのみを弄るもの
+・複数のチャネルを総合的に弄るもの
