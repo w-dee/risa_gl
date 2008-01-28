@@ -182,9 +182,9 @@ public:
 		CPPUNIT_ASSERT(coord.y == 0.f);
 		CPPUNIT_ASSERT(coord.z == 0.f);
 
-		transformer.translate(1.f, 1.f, 0.f);
-		transformer.rotate(vector3(0.f, 0.f, 1.f), 3.1415926535f / 2.f);
 		transformer.translate(-1.f, -1.f, 0.f);
+		transformer.rotate(vector3(0.f, 0.f, 1.f), 3.1415926535f / 2.f);
+		transformer.translate(1.f, 1.f, 0.f);
 
 		coord = transformer * coord;
 		CPPUNIT_ASSERT(range(coord.x, 2.f, 0.001f));

@@ -127,7 +127,7 @@ namespace risa_gl
 				  0, 0, z_scale, 0,
 				  0, 0, 0, 1 };
 
-			this->matrix = matrix_t(scaler) * this->matrix;
+			this->matrix = this->matrix * matrix_t(scaler);
 		}
 
 		void translate(float x_shift, float y_shift, float z_shift)
@@ -138,7 +138,7 @@ namespace risa_gl
 				        0,       0,       1, 0,
 				  x_shift, y_shift, z_shift, 1 };
 
-			this->matrix = matrix_t(shifter) * this->matrix;
+			this->matrix = this->matrix * matrix_t(shifter);
 		}
 
 		void rotate(const vector3& axis, float angle)
@@ -159,7 +159,7 @@ namespace risa_gl
 				  x*z*(1-cos_)+y*sin_, y*z*(1-cos_)-x*sin_, z_2+(1-z_2)*cos_, 0,
 				  0,0,0,1};
 				  
-			this->matrix = matrix_t(rotator) * this->matrix;
+			this->matrix = this->matrix * matrix_t(rotator);
 		}
 
 		math::vector2 operator*(const math::vector2& coord) const
@@ -268,11 +268,6 @@ namespace risa_gl
 			
 			fragments_type result(y_divide);
 
-// 			result[0] = interpolate_type(pixels,
-// 										 y_heads.blend(0.f),
-// 										 y_tails.blend(0.f),
-// 										 x_divide).interpolate();
-			
 			const float jitter = 1.f / static_cast<float>(x_divide - 1);
 			float offset = 0;
 			for (unsigned short y_div = 0; y_div != (y_divide - 1);
@@ -310,9 +305,9 @@ namespace risa_gl
 				const float angle):
 			super_type(region)
 		{
-			super_type::transformer.translate(center.x, center.y, 0);
-			super_type::transformer.rotate(math::vector3(0.f, 0.f, 1.f), angle);
 			super_type::transformer.translate(-center.x, -center.y, 0);
+			super_type::transformer.rotate(math::vector3(0.f, 0.f, 1.f), angle);
+			super_type::transformer.translate(center.x, center.y, 0);
 		}
 
 		rotator(const rotator& src):
