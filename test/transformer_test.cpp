@@ -60,9 +60,6 @@ public:
 		{
 			for (unsigned int x = 0; x < fragments[y].size(); ++x)
 			{
-				std::cout << "(" << x << ", " << y << "): " << 
-					fragments[y][x] << std::endl;
-				
 				CPPUNIT_ASSERT(fragments[y][x] ==
 								   pixel_t(63-y, x, 255, 256));
 			}

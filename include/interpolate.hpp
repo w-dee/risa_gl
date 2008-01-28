@@ -78,11 +78,13 @@ namespace risa_gl
 				else
 					result[offset] = default_color;
 			}
-			if (pixels.is_inside(static_cast<int>(coordinates.get_target().x),
-								 static_cast<int>(coordinates.get_target().y)))
+
+			if (pixels.is_inside(
+					static_cast<int>(coordinates.get_target().x + 0.5f),
+					static_cast<int>(coordinates.get_target().y + 0.5f)))
 				result[divides-1] =
-					pixels(static_cast<int>(coordinates.get_target().x),
-						   static_cast<int>(coordinates.get_target().y));
+					pixels(static_cast<int>(coordinates.get_target().x + 0.5f),
+						   static_cast<int>(coordinates.get_target().y + 0.5f));
 			else
 				result[divides-1] = default_color;
 

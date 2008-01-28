@@ -24,7 +24,7 @@ namespace risa_gl
 		public:
 			static real_type value(const real_type base)
 			{
-				return 1.f;
+				return static_cast<real_type>(1);
 			}
 		};
 	}

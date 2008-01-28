@@ -2,6 +2,10 @@
 #include <interpolate.hpp>
 #include <pixel_store.hpp>
 #include <pixel.hpp>
+#include <transformer.hpp>
+#include <math/vector.hpp>
+#include <math/region.hpp>
+#include <map>
 #include "range.hpp"
 
 #include <iostream>
@@ -9,6 +13,9 @@
 using risa_gl::nearest;
 using risa_gl::bilinear;
 using risa_gl::math::vector2;
+using risa_gl::math::vector3;
+using risa_gl::math::coordinate;
+using risa_gl::math::dividable_vector;
 
 typedef risa_gl::pixel_store<risa_gl::pixel> pixel_store_type;
 

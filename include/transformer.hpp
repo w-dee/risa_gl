@@ -268,14 +268,14 @@ namespace risa_gl
 			
 			fragments_type result(y_divide);
 
-			result[0] = interpolate_type(pixels,
-										 y_heads.blend(0.f),
-										 y_tails.blend(0.f),
-										 x_divide).interpolate();
+// 			result[0] = interpolate_type(pixels,
+// 										 y_heads.blend(0.f),
+// 										 y_tails.blend(0.f),
+// 										 x_divide).interpolate();
 			
 			const float jitter = 1.f / static_cast<float>(x_divide - 1);
-			float offset = jitter;
-			for (unsigned short y_div = 1; y_div != (y_divide - 1);
+			float offset = 0;
+			for (unsigned short y_div = 0; y_div != (y_divide - 1);
 				 ++y_div, offset += jitter)
 			{
 				result[y_div] = interpolate_type(pixels,

@@ -15,6 +15,14 @@ namespace risa_gl
 				x(x_), y(y_)
 			{}
 
+			vector2(const vector2& src):
+				x(src.x), y(src.y)
+			{}
+
+			vector2():
+				x(), y()
+			{}
+
 			float x;
 			float y;
 
