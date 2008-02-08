@@ -1,10 +1,10 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <interpolate.hpp>
-#include <pixel_store.hpp>
-#include <pixel.hpp>
-#include <transformer.hpp>
-#include <math/vector.hpp>
-#include <math/region.hpp>
+#include <risa_gl/interpolate.hpp>
+#include <risa_gl/pixel_store.hpp>
+#include <risa_gl/pixel.hpp>
+#include <risa_gl/transformer.hpp>
+#include <risa_gl/math/vector.hpp>
+#include <risa_gl/math/region.hpp>
 #include <map>
 #include "range.hpp"
 

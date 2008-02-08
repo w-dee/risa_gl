@@ -1,6 +1,6 @@
 #include <iostream>
-#include <math/cosine.hpp>
-#include <math/factorial.hpp>
+#include <risa_gl/math/cosine.hpp>
+#include <risa_gl/math/factorial.hpp>
 
  float get_cos(const float value)
 {
@@ -14,7 +14,7 @@ inline int get_fact()
 
 inline void check()
 {
-	std::cout << get_cos(3.1415926535897932384) << std::endl;
+	std::cout << get_cos(static_cast<float>(3.1415926535897932384)) << std::endl;
 	std::cout << get_fact() << std::endl;
 }
 

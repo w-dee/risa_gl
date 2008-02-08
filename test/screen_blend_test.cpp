@@ -1,6 +1,6 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <operators/screen_blend.hpp>
-#include <pixel.hpp>
+#include <risa_gl/operators/screen_blend.hpp>
+#include <risa_gl/pixel.hpp>
 
 #include <iostream>
 

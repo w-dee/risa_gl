@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <static_array.hpp>
+#include <risa_gl/static_array.hpp>
 
 using risa_gl::static_array;
 

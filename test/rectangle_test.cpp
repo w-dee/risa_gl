@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <rectangle.hpp>
-#include <pixel_store.hpp>
-#include <pixel.hpp>
+#include <risa_gl/rectangle.hpp>
+#include <risa_gl/pixel_store.hpp>
+#include <risa_gl/pixel.hpp>
 
 class rectangle_test : public CppUnit::TestFixture
 {

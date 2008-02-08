@@ -1,8 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <pixel.hpp>
-#include <iterator.hpp>
-#include <iterator_adapter.hpp>
-#include <exception.hpp>
+#include <risa_gl/pixel.hpp>
+#include <risa_gl/iterator.hpp>
+#include <risa_gl/iterator_adapter.hpp>
+#include <risa_gl/exception.hpp>
 #include <vector>
 #include <cassert>
 

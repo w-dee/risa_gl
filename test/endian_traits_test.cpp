@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <endian_traits.hpp>
+#include <risa_gl/endian_traits.hpp>
 
 class endian_traits_test : public CppUnit::TestFixture
 {

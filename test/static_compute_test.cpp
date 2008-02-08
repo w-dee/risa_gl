@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <math/cosine.hpp>
-#include <math/sine.hpp>
-#include <math/power.hpp>
+#include <risa_gl/math/cosine.hpp>
+#include <risa_gl/math/sine.hpp>
+#include <risa_gl/math/power.hpp>
 #include <cmath>
 #include <iostream>
 

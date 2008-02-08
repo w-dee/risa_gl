@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <math/matrix.hpp>
+#include <risa_gl/math/matrix.hpp>
 #include <iostream>
 #include <cmath>
 

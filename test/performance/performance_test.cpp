@@ -1,12 +1,12 @@
 #define NOMINMAX
-#include <pixel.hpp>
-#include <pixel_store.hpp>
-#include <operators/alpha_blend.hpp>
+#include <risa_gl/pixel.hpp>
+#include <risa_gl/pixel_store.hpp>
+#include <risa_gl/operators/alpha_blend.hpp>
 #include <iostream>
 #include <algorithm>
-#include <Thread/RerunnableThread.hpp>
+#include <risa_gl/Thread/RerunnableThread.hpp>
 
-#include <util/TimeCounter.hpp>
+#include <risa_gl/util/TimeCounter.hpp>
 
 /**
  * 測定するオペレータの指定

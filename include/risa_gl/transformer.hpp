@@ -1,11 +1,11 @@
 #ifndef RISA_TRANSFORMER_HPP_
 #define RISA_TRANSFORMER_HPP__
 
-#include <rectangle.hpp>
-#include <iterator.hpp>
-#include <math/vector.hpp>
-#include <math/region.hpp>
-#include <math/matrix.hpp>
+#include <risa_gl/rectangle.hpp>
+#include <risa_gl/iterator.hpp>
+#include <risa_gl/math/vector.hpp>
+#include <risa_gl/math/region.hpp>
+#include <risa_gl/math/matrix.hpp>
 #include <vector>
 
 namespace risa_gl

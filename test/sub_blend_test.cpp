@@ -1,6 +1,6 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <operators/sub_blend.hpp>
-#include <pixel.hpp>
+#include <risa_gl/operators/sub_blend.hpp>
+#include <risa_gl/pixel.hpp>
 
 class sub_blend_operator_test : public CppUnit::TestFixture
 {

@@ -1,10 +1,10 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestAssert.h>
-#include <operators/with_opacity.hpp>
-#include <operators/alpha_blend.hpp>
-#include <operators/colormap.hpp>
-#include <pixel.hpp>
-#include <pixel_store.hpp>
+#include <risa_gl/operators/with_opacity.hpp>
+#include <risa_gl/operators/alpha_blend.hpp>
+#include <risa_gl/operators/colormap.hpp>
+#include <risa_gl/pixel.hpp>
+#include <risa_gl/pixel_store.hpp>
 
 #include <iostream>
 

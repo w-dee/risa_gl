@@ -1,5 +1,5 @@
-#include <math/cosine.hpp>
-#include <util/TimeCounter.hpp>
+#include <risa_gl/math/cosine.hpp>
+#include <risa_gl/util/TimeCounter.hpp>
 #include <iostream>
 #include <vector>
 #include <cmath>

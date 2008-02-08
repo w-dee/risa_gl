@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <math/region.hpp>
+#include <risa_gl/math/region.hpp>
 
 using namespace risa_gl::math;
 class coordinate_test : public CppUnit::TestFixture

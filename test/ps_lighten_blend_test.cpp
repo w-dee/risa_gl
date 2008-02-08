@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <operators/ps_lighten_blend.hpp>
-#include <pixel.hpp>
-#include <pixel_store.hpp>
+#include <risa_gl/operators/ps_lighten_blend.hpp>
+#include <risa_gl/pixel.hpp>
+#include <risa_gl/pixel_store.hpp>
 #include <algorithm>
 
 #include <iostream>

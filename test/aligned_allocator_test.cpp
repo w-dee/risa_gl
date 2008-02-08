@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <allocator.hpp>
+#include <risa_gl/allocator.hpp>
 
 class aligned_allocator_test : public CppUnit::TestFixture
 {

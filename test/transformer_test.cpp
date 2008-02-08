@@ -1,9 +1,9 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <transformer.hpp>
-#include <math/vector.hpp>
-#include <interpolate.hpp>
-#include <pixel_store.hpp>
-#include <pixel.hpp>
+#include <risa_gl/transformer.hpp>
+#include <risa_gl/math/vector.hpp>
+#include <risa_gl/interpolate.hpp>
+#include <risa_gl/pixel_store.hpp>
+#include <risa_gl/pixel.hpp>
 #include <iostream>
 
 #include "range.hpp"

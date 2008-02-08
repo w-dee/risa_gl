@@ -1,8 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <operators/building_blocks.hpp>
-#include <operators/primitive/selector.hpp>
-#include <pixel.hpp>
-#include <risa_types.hpp>
+#include <risa_gl/operators/building_blocks.hpp>
+#include <risa_gl/operators/primitive/selector.hpp>
+#include <risa_gl/pixel.hpp>
+#include <risa_gl/risa_types.hpp>
 
 class building_blocks_test : public CppUnit::TestFixture
 {

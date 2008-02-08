@@ -1,6 +1,6 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <operators/add_alpha_blend.hpp>
-#include <pixel.hpp>
+#include <risa_gl/operators/add_alpha_blend.hpp>
+#include <risa_gl/pixel.hpp>
 
 #include <iostream>
 

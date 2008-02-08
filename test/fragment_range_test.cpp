@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <fragment_range.hpp>
-#include <pixel_store.hpp>
-#include <pixel.hpp>
+#include <risa_gl/fragment_range.hpp>
+#include <risa_gl/pixel_store.hpp>
+#include <risa_gl/pixel.hpp>
 
 class fragment_range_test : public CppUnit::TestFixture
 {
