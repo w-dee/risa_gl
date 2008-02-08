@@ -1,8 +1,8 @@
 #ifndef RISA_ALPHA_POLICY_HPP_
 #define RISA_ALPHA_POLICY_HPP_
 
-#include <risa_types.hpp>
-#include <endian_traits.hpp>
+#include <risa_gl/risa_types.hpp>
+#include <risa_gl/endian_traits.hpp>
 
 namespace risa_gl
 {

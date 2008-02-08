@@ -1,12 +1,12 @@
 #ifndef RISA_BUILDING_BLOCKS_HPP_
 #define RISA_BUILDING_BLOCKS_HPP_
 
-#include <operators/primitive/alpha_policy.hpp>
-#include <operators/primitive/compute_function.hpp>
-#include <operators/primitive/alpha_factor.hpp>
-#include <operators/primitive/pixel_property.hpp>
-#include <operators/primitive/selector.hpp>
-#include <operators/primitive/method_selector.hpp>
+#include <risa_gl/operators/primitive/alpha_policy.hpp>
+#include <risa_gl/operators/primitive/compute_function.hpp>
+#include <risa_gl/operators/primitive/alpha_factor.hpp>
+#include <risa_gl/operators/primitive/pixel_property.hpp>
+#include <risa_gl/operators/primitive/selector.hpp>
+#include <risa_gl/operators/primitive/method_selector.hpp>
 
 namespace risa_gl
 {

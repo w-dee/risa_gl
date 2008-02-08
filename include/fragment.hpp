@@ -1,7 +1,7 @@
 #ifndef RISA_FRAGMENT_HPP_
 #define RISA_FRAGMENT_HPP_
 
-#include <iterator.hpp>
+#include <risa_gl/iterator.hpp>
 
 namespace risa_gl
 {

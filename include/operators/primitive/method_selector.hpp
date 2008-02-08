@@ -1,7 +1,7 @@
 #ifndef RISA_METHOD_SELECTOR_HPP_
 #define RISA_METHOD_SELECTOR_HPP_
 
-#include <risa_types.hpp>
+#include <risa_gl/risa_types.hpp>
 
 namespace risa_gl
 {

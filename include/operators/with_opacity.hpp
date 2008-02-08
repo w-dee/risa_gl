@@ -1,7 +1,7 @@
 #ifndef RISA_WITH_OPACITY_HPP_
 #define RISA_WITH_OPACITY_HPP_
-#include <operators/primitive/blend.hpp>
-#include <operators/building_blocks.hpp>
+#include <risa_gl/operators/primitive/blend.hpp>
+#include <risa_gl/operators/building_blocks.hpp>
 
 namespace risa_gl
 {

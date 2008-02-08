@@ -1,8 +1,8 @@
 #ifndef RISA_COSINE_HPP_
 #define RISA_COSINE_HPP_
 
-#include <math/factorial.hpp>
-#include <math/power.hpp>
+#include <risa_gl/math/factorial.hpp>
+#include <risa_gl/math/power.hpp>
 
 namespace risa_gl
 {

@@ -1,10 +1,10 @@
 #ifndef RISA_PIXEL_STORE_HPP_
 #define RISA_PIXEL_STORE_HPP_
 
-#include <iterator.hpp>
-#include <iterator_adapter.hpp>
-#include <fragment.hpp>
-#include <allocator.hpp>
+#include <risa_gl/iterator.hpp>
+#include <risa_gl/iterator_adapter.hpp>
+#include <risa_gl/fragment.hpp>
+#include <risa_gl/allocator.hpp>
 #include <vector>
 
 #include <cassert>

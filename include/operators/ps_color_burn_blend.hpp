@@ -1,10 +1,10 @@
 #ifndef RISA_PS_COLOR_BURN_BLEND_HPP_
 #define RISA_PS_COLOR_BURN_BLEND_HPP_
 
-#include <operators/primitive/blend.hpp>
-#include <operators/primitive/alpha_factor.hpp>
-#include <operators/building_blocks.hpp>
-#include <operators/alpha_blend.hpp>
+#include <risa_gl/operators/primitive/blend.hpp>
+#include <risa_gl/operators/primitive/alpha_factor.hpp>
+#include <risa_gl/operators/building_blocks.hpp>
+#include <risa_gl/operators/alpha_blend.hpp>
 
 namespace risa_gl
 {

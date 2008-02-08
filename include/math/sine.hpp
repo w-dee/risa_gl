@@ -1,7 +1,7 @@
 #ifndef RISA_SINE_HPP_
 #define RISA_SINE_HPP_
 
-#include <math/cosine.hpp>
+#include <risa_gl/math/cosine.hpp>
 
 namespace risa_gl
 {

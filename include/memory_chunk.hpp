@@ -1,7 +1,7 @@
 #ifndef RISA_MEMORY_CHUNK_HPP_
 #define RISA_MEMORY_CHUNK_HPP_
 
-#include <risa_types.hpp>
+#include <risa_gl/risa_types.hpp>
 
 namespace risa_gl {
 	template <size_t chunk_size>

@@ -1,8 +1,8 @@
 #ifndef RISA_ITERATOR_ADAPTER_HPP_
 #define RISA_ITERATOR_ADAPTER_HPP_
 
-#include <iterator.hpp>
-#include <memory_chunk.hpp>
+#include <risa_gl/iterator.hpp>
+#include <risa_gl/memory_chunk.hpp>
 
 namespace risa_gl
 {

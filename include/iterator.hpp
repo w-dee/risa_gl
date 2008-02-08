@@ -1,8 +1,8 @@
 #ifndef RISA_ITERATOR_HPP_
 #define RISA_ITERATOR_HPP_
 
-#include <risa_types.hpp>
-#include <exception.hpp>
+#include <risa_gl/risa_types.hpp>
+#include <risa_gl/exception.hpp>
 #include <iterator>
 #include <cassert>
 

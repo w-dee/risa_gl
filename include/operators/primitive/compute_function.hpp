@@ -1,8 +1,8 @@
 #ifndef RISA_COMPUTE_FUNCTION_HPP_
 #define RISA_COMPUTE_FUNCTION_HPP_
 
-#include <risa_types.hpp>
-#include <operators/primitive/selector.hpp>
+#include <risa_gl/risa_types.hpp>
+#include <risa_gl/operators/primitive/selector.hpp>
 #include <cmath>
 #include <cassert>
 

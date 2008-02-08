@@ -1,6 +1,6 @@
 #ifndef RISA_MATRIX_HPP_
 #define RISA_MATRIX_HPP_
-#include <static_array.hpp>
+#include <risa_gl/static_array.hpp>
 #include <ostream>
 
 namespace risa_gl

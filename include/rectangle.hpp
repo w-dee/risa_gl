@@ -1,8 +1,8 @@
 #ifndef RISA_RECTANGLE_HPP_
 #define RISA_RECTANGLE_HPP_
 
-#include <fragment.hpp>
-#include <fragment_set.hpp>
+#include <risa_gl/fragment.hpp>
+#include <risa_gl/fragment_set.hpp>
 
 namespace risa_gl {
 

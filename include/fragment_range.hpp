@@ -1,8 +1,8 @@
 #ifndef RISA_FRAGMENT_RANGE_HPP_
 #define RISA_FRAGMENT_RANGE_HPP_
 
-#include <fragment.hpp>
-#include <iterator_adapter.hpp>
+#include <risa_gl/fragment.hpp>
+#include <risa_gl/iterator_adapter.hpp>
 
 namespace risa_gl {
 

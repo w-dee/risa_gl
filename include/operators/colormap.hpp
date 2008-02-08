@@ -1,8 +1,8 @@
 #ifndef RISA_OPERATORS_COLORMAP_HPP_
 #define RISA_OPERATORS_COLORMAP_HPP_
-#include <operators/primitive/blend.hpp>
-#include <operators/building_blocks.hpp>
-#include <pixel.hpp>
+#include <risa_gl/operators/primitive/blend.hpp>
+#include <risa_gl/operators/building_blocks.hpp>
+#include <risa_gl/pixel.hpp>
 
 namespace risa_gl
 {

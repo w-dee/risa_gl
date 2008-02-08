@@ -1,9 +1,9 @@
 #ifndef RISA_INTERPOLATE_HPP_
 #define RISA_INTERPOLATE_HPP_
 
-#include <math/vector.hpp>
-#include <risa_types.hpp>
-#include <allocator.hpp>
+#include <risa_gl/math/vector.hpp>
+#include <risa_gl/risa_types.hpp>
+#include <risa_gl/allocator.hpp>
 #include <vector>
 #include <cassert>
 
