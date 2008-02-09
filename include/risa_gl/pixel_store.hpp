@@ -5,6 +5,7 @@
 #include <risa_gl/iterator_adapter.hpp>
 #include <risa_gl/fragment.hpp>
 #include <risa_gl/allocator.hpp>
+#include <risa_gl/math/lcm.hpp>
 #include <vector>
 
 #include <cassert>
@@ -47,7 +48,10 @@ namespace risa_gl
 
 		static size_t get_fragment_size(const int bytes)
 		{
-			return (bytes + (alignment - 1)) & ~(alignment - 1);
+			const int adjusted_size =
+				math::lcm<int>(pixel_size, alignment_size);
+			return bytes + (adjusted_size - 1) -
+				((bytes + (adjusted_size - 1)) % adjusted_size);
 		}
 
 	public:
@@ -56,7 +60,12 @@ namespace risa_gl
 				height(height_),
 				fragment_length(get_fragment_size(width_ * pixel_size)),
 				pixels(fragment_length / pixel_size * height)
-		{}
+		{
+			assert (fragment_length >=
+					static_cast<size_t>(width_ * pixel_size));
+			assert ((fragment_length % pixel_size) == 0);
+			assert ((fragment_length % alignment_size) == 0);
+		}
 
 		~pixel_store()
 		{}
@@ -81,7 +90,7 @@ namespace risa_gl
 			assert (x < get_width());
 			assert (y < get_height());
 
-			return pixels[y * width + x];
+			return pixels[y * fragment_length / pixel_size + x];
 		}
 
 		const pixel_type& operator()(int x, int y) const
@@ -89,7 +98,7 @@ namespace risa_gl
 			assert (x < get_width());
 			assert (y < get_height());
 
-			return pixels[y * width + x];
+			return pixels[y * fragment_length / pixel_size + x];
 		}
 
 		fragment_type get_fragment(size_t line)
