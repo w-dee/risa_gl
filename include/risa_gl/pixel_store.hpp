@@ -12,15 +12,18 @@
 
 namespace risa_gl
 {
-	template <typename pixel_t, size_t alignment = 16>
+	template <typename pixel_t,
+			  typename allocator_t =
+			  risa_gl::aligned_allocator<pixel_t, 16> >
 	class pixel_store
 	{
 		friend class pixel_store_test;
-
 	public:
 		typedef pixel_t pixel_type;
+		typedef allocator_t allocator_type;
+
 		enum {
-			alignment_size = alignment,
+			alignment_size = allocator_type::alignment_size,
 			pixel_size = sizeof(pixel_type)
 		};
 
@@ -33,7 +36,7 @@ namespace risa_gl
 		const size_t fragment_length;
 
 		typedef std::vector<pixel_type,
-							aligned_allocator<pixel_type, alignment> > 
+							allocator_type > 
 		pixel_vector_type;
 		pixel_vector_type pixels;
 

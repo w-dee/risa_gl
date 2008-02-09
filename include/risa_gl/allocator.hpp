@@ -2,16 +2,22 @@
 #define RISA_ALLOCATOR_HPP_
 
 #include <risa_gl/risa_types.hpp>
+#include <risa_gl/allocate_implements.hpp>
 #include <memory>
 
 namespace risa_gl {
 	/**
-	 * @todo マルチスレッド初期化への対応
 	 */
-	template <typename types, size_t aligned_size>
+	template <typename types,
+			  size_t aligned_size,
+			  typename allocate_implement_type =
+			  default_allocate_implements>
 	class aligned_allocator
 	{
 		friend class aligned_allocator_test;
+
+	private:
+		typedef allocate_implement_type impl_type;
 
 	public:
 		typedef types* pointer;
@@ -22,6 +28,11 @@ namespace risa_gl {
 		typedef size_t size_type;
 		typedef ptrdiff_t difference_type;
 
+		enum
+		{
+			alignment_size = aligned_size
+		};
+
 	private:
 		typedef void* allocated_pointer_type;
 		typedef void* aligned_pointer_type;
@@ -30,7 +41,8 @@ namespace risa_gl {
 		template <typename U>
 		struct rebind
 		{
-			typedef aligned_allocator<U, aligned_size> other;
+			typedef 
+			aligned_allocator<U, aligned_size, allocate_implement_type> other;
 		};
 
 		pointer address(reference r)
@@ -52,7 +64,7 @@ namespace risa_gl {
 
 			allocated_pointer_type p =
 				reinterpret_cast<allocated_pointer_type>
-				(new byte[aligned_allocate_size]);
+				(impl_type::allocate(aligned_allocate_size));
 
 			size_type offset =
 				(reinterpret_cast<size_type>(p)+aligned_size) % aligned_size;
@@ -78,7 +90,7 @@ namespace risa_gl {
 			size_type* org_pointer = reinterpret_cast<size_type*>(p);
 			--org_pointer;
 			byte* allocate_pointer = reinterpret_cast<byte*>(*org_pointer);
-			delete[] allocate_pointer;
+			impl_type::deallocate(allocate_pointer);
 		}
 
 		size_type max_size() const
@@ -107,6 +119,97 @@ namespace risa_gl {
 		{}
 
 		~aligned_allocator() throw()
+		{}
+
+		void construct(pointer p, const_reference value)
+		{
+			new (p) types(value);
+		}
+
+		void destroy(pointer p)
+		{
+			p->~types();
+		}
+	};
+
+	template <typename types,
+			  typename allocate_implement_type =
+			  default_allocate_implements>
+	class normal_allocator
+	{
+	private:
+		typedef allocate_implement_type impl_type;
+
+	public:
+		typedef types* pointer;
+		typedef const types* const_pointer;
+		typedef types& reference;
+		typedef const types& const_reference;
+		typedef types value_type;
+		typedef size_t size_type;
+		typedef ptrdiff_t difference_type;
+
+		enum
+		{
+			alignment_size = 1
+		};
+
+	public:
+		template <typename U>
+		struct rebind
+		{
+			typedef normal_allocator<U, allocate_implement_type> other;
+		};
+
+		pointer address(reference r)
+		{
+			return &r;
+		}
+
+		const_pointer address(const_reference s)
+		{
+			return &s;
+		}
+
+		pointer allocate(size_type n,
+						 std::allocator<void>::const_pointer = 0)
+			throw(std::bad_alloc)
+		{
+			return reinterpret_cast<pointer>
+				(impl_type::allocate(n));
+		}
+
+		void deallocate(pointer p, size_type /*n*/)
+		{
+			impl_type::deallocate(reinterpret_cast<byte*>(p));
+		}
+
+		size_type max_size() const
+		{
+			return 2UL * 1024 * 1024 * 1024 / sizeof(types);
+		}
+
+		bool operator==(const normal_allocator&) const
+		{
+			return true;
+		}
+
+		bool operator!=(const normal_allocator&) const
+		{
+			return false;
+		}
+
+		normal_allocator() throw()
+		{}
+
+		normal_allocator(const normal_allocator&) throw()
+		{}
+
+		template <typename other>
+		normal_allocator(const other&) throw()
+		{}
+
+		~normal_allocator() throw()
 		{}
 
 		void construct(pointer p, const_reference value)

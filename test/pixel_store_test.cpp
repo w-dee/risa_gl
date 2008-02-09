@@ -2,6 +2,9 @@
 #include <risa_gl/pixel_store.hpp>
 #include <risa_gl/pixel.hpp>
 
+
+static size_t another_allocator_note;
+
 class pixel_store_test : public CppUnit::TestFixture
 {
 private:
@@ -9,9 +12,48 @@ private:
 	CPPUNIT_TEST(allocate_test);
 	CPPUNIT_TEST(fragment_test);
 	CPPUNIT_TEST(fragment_size_test);
+	CPPUNIT_TEST(another_allocator_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+
+	
+	struct another_allocator
+	{
+		static risa_gl::byte* allocate(size_t size)
+		{
+			size_t temp = another_allocator_note;
+			another_allocator_note = size;
+			return reinterpret_cast<risa_gl::byte*>(temp);
+		}
+
+		static void deallocate(risa_gl::byte* p)
+		{
+			another_allocator_note = reinterpret_cast<size_t>(p);
+		}
+	};
+
+	void another_allocator_test()
+	{
+		using namespace risa_gl;
+
+		typedef normal_allocator<pixel, another_allocator> allocator_t;
+
+		typedef pixel_store<pixel, allocator_t>
+			another_allocate_pixel_store_t;
+
+		void* pointer_save = malloc(10 * 10 * sizeof(pixel));
+		another_allocator_note = reinterpret_cast<size_t>(pointer_save);
+		{
+			another_allocate_pixel_store_t pixel(10, 10);
+			CPPUNIT_ASSERT(another_allocator_note != (10 * 4 * 10));
+		}
+		CPPUNIT_ASSERT(another_allocator_note ==
+			reinterpret_cast<size_t>(pointer_save));
+
+		free(pointer_save);
+	}
+
 	template <int size>
 	struct dummy_pixel
 	{
@@ -22,7 +64,8 @@ public:
 	{
 		using namespace risa_gl;
 		typedef dummy_pixel<3> pixel_3_t;
-		typedef pixel_store<pixel_3_t, 18> pixel_3_store_t;
+		typedef pixel_store<pixel_3_t,
+			aligned_allocator<pixel_3_t, 18> > pixel_3_store_t;
 
 		pixel_3_store_t pix_3(28, 28);
 		CPPUNIT_ASSERT((pix_3.get_fragment_length() % 18) == 0);
@@ -45,7 +88,8 @@ public:
 			pix_3.get_fragment_length());
 
 		typedef dummy_pixel<4> pixel_5_t;
-		typedef pixel_store<pixel_5_t, 19> pixel_5_store_t;
+		typedef pixel_store<pixel_5_t, 
+			aligned_allocator<pixel_5_t, 19> > pixel_5_store_t;
 
 		pixel_5_store_t pix_5(19, 19);
 		CPPUNIT_ASSERT((pix_5.get_fragment_length() % sizeof(pixel_5_t)) == 0);
@@ -66,7 +110,8 @@ public:
 	{
 		using namespace risa_gl;
 
-		typedef pixel_store<pixel, 16> pixel_store_type;
+		typedef pixel_store<pixel,
+			aligned_allocator<pixel, 16> > pixel_store_type;
 		typedef pixel_store_type::fragment_type fragment_type;
 		typedef pixel_store_type::const_fragment_type const_fragment_type;
 		typedef fragment_type::iterator frag_itor_type;
@@ -105,7 +150,8 @@ public:
 	void allocate_test()
 	{
 		using namespace risa_gl;
-		pixel_store<pixel, 16> pixels1(257, 100);
+		pixel_store<pixel,
+			aligned_allocator<pixel, 16> > pixels1(257, 100);
 		
 		CPPUNIT_ASSERT(pixels1.get_width() == 257);
 		CPPUNIT_ASSERT(pixels1.get_height() == 100);

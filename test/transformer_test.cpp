@@ -40,7 +40,8 @@ public:
 		typedef rectangle_region<float> region_t;
 		typedef region_t::coord_type coord_t;
 		typedef risa_gl::pixel pixel_t;
-		typedef risa_gl::pixel_store<pixel_t, 16> pixel_store_t;
+		typedef risa_gl::pixel_store<pixel_t,
+			risa_gl::aligned_allocator<pixel_t, 16> > pixel_store_t;
 
 		region_t rect(0, 63, 63, 0);
 
@@ -48,7 +49,8 @@ public:
 			risa_gl::nearest<pixel_store_t> > rotator_t;
 		rotator_t trans(rect, vector2(31.5, 31.5), pi / 2.f);
 
-		risa_gl::pixel_store<pixel_t, 16> pixels(64, 64);
+		risa_gl::pixel_store<pixel_t,
+			risa_gl::aligned_allocator<pixel_t, 16> > pixels(64, 64);
  		for (int y = 0; y < pixels.get_height(); ++y)
  			for (int x = 0; x < pixels.get_width(); ++x)
 				pixels(x, y) = pixel_t(x, y, 255, 256);
@@ -76,10 +78,18 @@ public:
 
 		region_t rect(0, 63, 63, 0);
 
-		typedef translator<risa_gl::pixel_store<risa_gl::pixel, 16>,risa_gl::nearest<risa_gl::pixel_store<risa_gl::pixel,16> > > translator_t;
+		typedef translator<
+			risa_gl::pixel_store<risa_gl::pixel,
+			risa_gl::aligned_allocator<risa_gl::pixel, 16> >,
+			risa_gl::nearest<
+			risa_gl::pixel_store<
+			risa_gl::pixel,
+			risa_gl::aligned_allocator<risa_gl::pixel, 16> > > >
+			translator_t;
 		translator_t trans(rect, risa_gl::math::vector2(-32, -32));
 
-		risa_gl::pixel_store<risa_gl::pixel, 16> pixels(64, 64);
+		risa_gl::pixel_store<risa_gl::pixel,
+			risa_gl::aligned_allocator<risa_gl::pixel, 16> > pixels(64, 64);
 		std::fill(pixels.begin(), pixels.end(),
 				  risa_gl::pixel(255, 255, 255, 256));
 		
