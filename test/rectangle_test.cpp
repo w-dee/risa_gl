@@ -13,7 +13,7 @@ public:
 	void rect_test()
 	{
 		using namespace risa_gl;
-		typedef pixel_store<pixel, 16> pixel_store_type;
+		typedef pixel_store<pixel> pixel_store_type;
 		typedef rectangle<pixel_store_type,
 			alignment_iterator<pixel_store_type,
 			pixel_store_type::alignment_size> > rectangle_type;
