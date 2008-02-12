@@ -122,10 +122,10 @@ namespace risa_gl
 		void scaling(float x_scale, float y_scale, float z_scale)
 		{
 			matrix_t::elements_type scaler =
-				{ x_scale, 0, 0, 0,
-				  0, y_scale, 0, 0,
-				  0, 0, z_scale, 0,
-				  0, 0, 0, 1 };
+				{ { x_scale, 0, 0, 0,
+					0, y_scale, 0, 0,
+					0, 0, z_scale, 0,
+					0, 0, 0, 1 } };
 
 			this->matrix = this->matrix * matrix_t(scaler);
 		}
@@ -133,10 +133,10 @@ namespace risa_gl
 		void translate(float x_shift, float y_shift, float z_shift)
 		{
 			matrix_t::elements_type shifter = 
-				{       1,       0,       0, 0,
-				        0,       1,       0, 0,
-				        0,       0,       1, 0,
-				  x_shift, y_shift, z_shift, 1 };
+				{ {       1,       0,       0, 0,
+						  0,       1,       0, 0,
+						  0,       0,       1, 0,
+						  x_shift, y_shift, z_shift, 1 } };
 
 			this->matrix = this->matrix * matrix_t(shifter);
 		}
@@ -154,10 +154,13 @@ namespace risa_gl
 			const float z_2 = z * z;
 
 			matrix_t::elements_type rotator =
-				{ x_2+(1-x_2)*cos_, x*y*(1-cos_)+z*sin_, x*z*(1-cos_)-y*sin_, 0,
-				  x*y*(1-cos_)-z*sin_, y_2+(1-y_2)*cos_, y*z*(1-cos_)+x*sin_, 0,
-				  x*z*(1-cos_)+y*sin_, y*z*(1-cos_)-x*sin_, z_2+(1-z_2)*cos_, 0,
-				  0,0,0,1};
+				{ { x_2+(1-x_2)*cos_, x*y*(1-cos_)+z*sin_,
+					x*z*(1-cos_)-y*sin_, 0,
+					x*y*(1-cos_)-z*sin_, y_2+(1-y_2)*cos_,
+					y*z*(1-cos_)+x*sin_, 0,
+					x*z*(1-cos_)+y*sin_, y*z*(1-cos_)-x*sin_,
+					z_2+(1-z_2)*cos_, 0,
+					0,0,0,1} };
 				  
 			this->matrix = this->matrix * matrix_t(rotator);
 		}

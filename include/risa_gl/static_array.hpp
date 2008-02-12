@@ -5,7 +5,7 @@
 namespace risa_gl
 {
 	template <typename BaseType, int Length>
-	class static_array
+	struct static_array
 	{
 	public:
 		typedef BaseType value_type;
