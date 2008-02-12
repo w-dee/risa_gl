@@ -37,14 +37,16 @@ namespace risa_gl
 		 * アルファ値計算ポリシー
 		 * @param calculator
 		 */
-		template <typename calculator>
+		template <typename calculator_type>
 		class alpha_calculate_policy
 		{
-		public:
-			alpha_calculate_policy()
-			{}
+		private:
+			calculator_type calculator;
 
-			alpha_calculate_policy(const alpha_calculate_policy&)
+		public:
+			alpha_calculate_policy(
+				calculator_type calculator_ = calculator_type()):
+				calculator(calculator_)
 			{}
 
 			template <typename bit_t,
@@ -62,7 +64,7 @@ namespace risa_gl
 					converter.little_to_current_offset(
 						result->alpha_position) * 8;
 
-				return ((calculator()(src, dest)-1) << alpha_mask_position) |
+				return ((calculator(src, dest)-1) << alpha_mask_position) |
 					(bits & ~(0xff << alpha_mask_position));
 			}
 		};

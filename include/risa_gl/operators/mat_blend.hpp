@@ -10,97 +10,97 @@ namespace risa_gl
 	namespace operators
 	{
 		/**
-		 * マット合成(alphaは破壊)
+		 * マット合成(alphaは合成)
 		 */
-		// {{{ mat_blend_operator
-		class mat_blend_operator
+		// {{{ mat_blend_save_calculate_alpha_operator
+		class mat_blend_save_calculate_alpha_operator
 		{
 		private:
 			typedef primitive::monomial_function<
 				source_getter,
-				destination_getter,
+				dynamic_constant_getter,
 				bit_setter,
-				add_saturation_function,
-				identity_alpha_factor,
-				identity_alpha_factor,
-				not_calculate_policy>
+				plus_function,
+				source_alpha_getter,
+				invert_source_alpha_getter,
+				multiply_alpha_and_alpha_policy<
+				source_alpha_getter,
+				constant_alpha_factor> >
 			mat_blend_opeartor_type;
 
 			mat_blend_opeartor_type blender;
 		public:
+			template <typename pixel_type>
+			mat_blend_save_calculate_alpha_operator(
+				const pixel_type& pixel_):
+				blender(
+					source_getter(),
+					dynamic_constant_getter(pixel_.get_bit_representation()),
+					bit_setter(),
+					plus_function(),
+					source_alpha_getter(),
+					invert_source_alpha_getter(),
+					multiply_alpha_and_alpha_policy<
+					source_alpha_getter,
+					constant_alpha_factor>(
+						source_alpha_getter(),
+						constant_alpha_factor(pixel_.get_alpha())))
+			{}
 
 			template <typename src_itor_t,
-					  typename dest_itor_t,
 					  typename result_itor_t>
 			void operator()(src_itor_t src,
-							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				blender(src, dest, result);
+				blender(src, result);
 			}
 		};
 		// }}}
 
 		/**
-		 * マット合成(alphaはsourceを保存)
+		 * マット合成(alphaは加算用として合成)
 		 */
-		// {{{ mat_blend_save_source_alpha_operator
-		class mat_blend_save_source_alpha_operator
+		// {{{ mat_additive_blend_save_calculate_alpha_operator
+		class mat_additive_blend_save_calculate_alpha_operator
 		{
 		private:
-			typedef primitive::binomial_blend<
+			typedef primitive::monomial_function<
 				source_getter,
-				destination_getter,
+				dynamic_constant_getter,
 				bit_setter,
-				add_saturation_function,
+				plus_function,
 				identity_alpha_factor,
-				identity_alpha_factor,
-				alpha_calculate_policy<source_alpha_getter> >
-			mat_blend_save_source_alpha_opeartor_type;
+				invert_source_alpha_getter,
+				multiply_alpha_and_alpha_policy<
+				source_alpha_getter,
+				constant_alpha_factor> >
+			mat_additive_blend_save_calculate_alpha_operator_type;
 
-			mat_blend_save_source_alpha_opeartor_type blender;
+			mat_additive_blend_save_calculate_alpha_operator_type blender;
 		public:
+			template <typename pixel_type>
+			mat_additive_blend_save_calculate_alpha_operator(
+				const pixel_type& pixel_):
+				blender(
+					source_getter(),
+					dynamic_constant_getter(pixel_.get_bit_representation()),
+					bit_setter(),
+					plus_function(),
+					identity_alpha_factor(),
+					invert_source_alpha_getter(),
+					multiply_alpha_and_alpha_policy<
+					source_alpha_getter,
+					constant_alpha_factor>(
+						source_alpha_getter(),
+						constant_alpha_factor(pixel_.get_alpha())))
+			{}
 
 			template <typename src_itor_t,
-					  typename dest_itor_t,
 					  typename result_itor_t>
 			void operator()(src_itor_t src,
-							dest_itor_t dest,
 							result_itor_t result) const
 			{
-				blender(src, dest, result);
-			}
-		};
-		// }}}
-
-		/**
-		 * マット合成(alphaはdestinationを保存)
-		 */
-		// {{{ mat_blend_save_destination_alpha_operator
-		class mat_blend_save_destination_alpha_operator
-		{
-		private:
-			typedef primitive::binomial_blend<
-				source_getter,
-				destination_getter,
-				bit_setter,
-				add_saturation_function,
-				identity_alpha_factor,
-				identity_alpha_factor,
-				alpha_calculate_policy<destination_alpha_getter> >
-			mat_blend_save_destination_alpha_opeartor_type;
-
-			mat_blend_save_destination_alpha_opeartor_type blender;
-		public:
-
-			template <typename src_itor_t,
-					  typename dest_itor_t,
-					  typename result_itor_t>
-			void operator()(src_itor_t src,
-							dest_itor_t dest,
-							result_itor_t result) const
-			{
-				blender(src, dest, result);
+				blender(src, result);
 			}
 		};
 		// }}}

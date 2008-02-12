@@ -238,6 +238,11 @@ namespace risa_gl
 			multiply_type_factor<destination_alpha_getter> >
 		multiply_invert_source_alpha_and_destination_alpha_getter;
 
+		typedef multiply_factor<
+			invert_source_alpha_getter,
+			multiply_type_factor<constant_alpha_factor> >
+		multiply_invert_source_alpha_and_constant_alpha_getter;
+
 		class multiply_constant_and_source_opacity_getter
 		{
 		private:
@@ -371,24 +376,36 @@ namespace risa_gl
 		// }}}
 
 		// {{{ multiply alpha and alpha policy
-		template <typename source_getter,
-				  typename destination_getter>
+		template <typename source_getter_type,
+				  typename destination_getter_type>
 		class multiply_alpha_and_alpha_policy
 		{
 		private:
-			template <typename source_getter_type,
-					  typename destination_getter_type>
+			template <typename source_getter_t,
+					  typename destination_getter_t>
 			struct alpha_and_alpha_calculator
 			{
+				source_getter_t source_getter;
+				destination_getter_t destination_getter;
+
+				alpha_and_alpha_calculator(
+					source_getter_t source_getter_ =
+					source_getter_t(),
+					destination_getter_t destination_getter_ =
+					destination_getter_t()):
+					source_getter(source_getter_),
+					destination_getter(destination_getter_)
+				{}
+					
 				template <typename src_itor_t,
 						  typename dest_itor_t>
 				risa_gl::uint32 operator()(src_itor_t src,
 										   dest_itor_t dest) const
 				{
 					const int src_alpha = 
-						source_getter_type()(src, dest);
+						source_getter(src, dest);
 					const int dest_alpha =
-						destination_getter_type()(src, dest);
+						destination_getter(src, dest);
 
 					/**
 					 * mean to
@@ -398,7 +415,26 @@ namespace risa_gl
 						((src_alpha * dest_alpha) >> 8);
 				}
 			};
+
+			typedef alpha_and_alpha_calculator<source_getter_type,
+										   destination_getter_type>
+			alpha_and_alpha_type;
+			typedef alpha_calculate_policy<alpha_and_alpha_type>
+			alpha_setter_type;
+
+			alpha_setter_type alpha_setter;
+
 		public:
+			multiply_alpha_and_alpha_policy(
+				source_getter_type source_getter_ =
+				source_getter_type(),
+				destination_getter_type destination_getter_ =
+				destination_getter_type()):
+				alpha_setter(
+					alpha_and_alpha_type(source_getter_, destination_getter_))
+			{}
+
+
 			template <typename bit_t,
 					  typename result_itor_t,
 					  typename src_itor_t,
@@ -408,10 +444,7 @@ namespace risa_gl
 										src_itor_t src,
 										dest_itor_t dest) const
 			{
-				return alpha_calculate_policy<
-					alpha_and_alpha_calculator<
-					source_getter,
-					destination_getter> >()(bits, result, src, dest);
+				return alpha_setter(bits, result, src, dest);
 			}
 		};
 		// }}}
