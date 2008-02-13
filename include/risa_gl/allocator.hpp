@@ -59,37 +59,50 @@ namespace risa_gl {
 						 std::allocator<void>::const_pointer = 0)
 			throw(std::bad_alloc)
 		{
+			const size_type pointer_size = sizeof(void*);
 			const size_type aligned_allocate_size =
-				aligned_size + (n * sizeof(value_type)) + aligned_size;
+				pointer_size + (n * sizeof(value_type)) + aligned_size;
 
 			allocated_pointer_type p =
 				reinterpret_cast<allocated_pointer_type>
 				(impl_type::allocate(aligned_allocate_size));
 
 			size_type offset =
-				(reinterpret_cast<size_type>(p)+aligned_size) % aligned_size;
+				(reinterpret_cast<size_type>(p)+pointer_size) % aligned_size;
 
 			aligned_pointer_type aligned_pointer =
 				reinterpret_cast<aligned_pointer_type>
-				(reinterpret_cast<byte*>(p) + aligned_size);
-			if (offset != 0)
-				aligned_pointer = reinterpret_cast<byte*>(p) +
-					aligned_size - offset;
+				(reinterpret_cast<byte*>(p) +
+				 pointer_size + aligned_size - offset);
 			
 			/* save original allocation pointer. */
-			size_type* org_pointer =
-				reinterpret_cast<size_type*>(aligned_pointer);
-			--org_pointer;
-			*org_pointer = reinterpret_cast<size_type>(p);
+			size_type pointer_save_offset = 
+				(reinterpret_cast<size_type>(aligned_pointer) -
+				 pointer_size) % pointer_size;
+			
+			assert ((reinterpret_cast<size_type>(p) -
+					 reinterpret_cast<size_type>(aligned_pointer)) >=
+					(pointer_save_offset + pointer_size));
+
+			*reinterpret_cast<void**>(
+				reinterpret_cast<byte*>(aligned_pointer) -
+				(pointer_save_offset + pointer_size)) = p;
 
 			return reinterpret_cast<pointer>(aligned_pointer);
 		}
 
-		void deallocate(pointer p, size_type /*n*/)
+		void deallocate(pointer aligned_pointer, size_type /*n*/)
 		{
-			size_type* org_pointer = reinterpret_cast<size_type*>(p);
-			--org_pointer;
-			byte* allocate_pointer = reinterpret_cast<byte*>(*org_pointer);
+			size_type pointer_size = sizeof(void*);
+			size_type pointer_save_offset = 
+				(reinterpret_cast<size_type>(aligned_pointer) -
+				 pointer_size) % pointer_size;
+			
+			byte* allocate_pointer =
+				*reinterpret_cast<byte**>(
+					reinterpret_cast<byte*>(aligned_pointer) -
+					(pointer_save_offset + pointer_size));
+
 			impl_type::deallocate(allocate_pointer);
 		}
 
