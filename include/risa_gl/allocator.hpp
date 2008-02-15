@@ -4,6 +4,7 @@
 #include <risa_gl/risa_types.hpp>
 #include <risa_gl/allocate_implements.hpp>
 #include <memory>
+#include <cassert>
 
 namespace risa_gl {
 	/**
@@ -80,8 +81,8 @@ namespace risa_gl {
 				(reinterpret_cast<size_type>(aligned_pointer) -
 				 pointer_size) % pointer_size;
 			
-			assert ((reinterpret_cast<size_type>(p) -
-					 reinterpret_cast<size_type>(aligned_pointer)) >=
+			assert((reinterpret_cast<size_type>(aligned_pointer) -
+					 reinterpret_cast<size_type>(p)) >=
 					(pointer_save_offset + pointer_size));
 
 			*reinterpret_cast<void**>(
