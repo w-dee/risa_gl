@@ -17,9 +17,9 @@ private:
 public:
 	void equal_test()
 	{
-		array_t lhs = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		array_t lhs = { {0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } };
 		array_t rhs1 = lhs;
-		array_t rhs2 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 0 };
+		array_t rhs2 = { {0, 1, 2, 3, 4, 5, 6, 7, 8, 0 } };
 
 		CPPUNIT_ASSERT(lhs == rhs1);
 		CPPUNIT_ASSERT(!(lhs == rhs2));
@@ -27,9 +27,9 @@ public:
 
 	void not_equal_test()
 	{
-		array_t lhs = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		array_t lhs = { {0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } };
 		array_t rhs1 = lhs;
-		array_t rhs2 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 0 };
+		array_t rhs2 = { {0, 1, 2, 3, 4, 5, 6, 7, 8, 0 } };
 
 		CPPUNIT_ASSERT(!(lhs != rhs1));
 		CPPUNIT_ASSERT(lhs != rhs2);
