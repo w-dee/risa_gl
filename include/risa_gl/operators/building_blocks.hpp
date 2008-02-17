@@ -69,6 +69,13 @@ namespace risa_gl
 		typedef alpha_factor<destination_selector,
 							 get_alpha_method_selector>
 		destination_alpha_getter;
+
+		typedef inverse_alpha_factor<source_selector,
+									 get_alpha_method_selector>
+		inverse_source_alpha_getter;
+		typedef inverse_alpha_factor<destination_selector,
+									 get_alpha_method_selector>
+		inverse_destination_alpha_getter;
 		// }}}
 
 		// {{{ invert alpha getter

@@ -7,7 +7,7 @@ TARGET = unit_test
 EXT = .exe
 DEPENDS = $(OBJS:.o=.d)
 INCLUDES = ../include
-CXXFLAGS += -I$(INCLUDES) -g -Wall -Wunused -fno-default-inline
+CXXFLAGS += -I$(INCLUDES) -O0 -g -Wall -Wunused -fno-default-inline
 ifeq ($(CXX),g++-dw2)
 LIBCPPUNIT = -lcppunit-dw2
 else

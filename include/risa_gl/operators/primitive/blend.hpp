@@ -312,21 +312,21 @@ namespace risa_gl
 				risa_gl::uint32 res_pixel =
 					compute_factor(
 						divisor_factor((lower_mask()(src_pixel) *
-										src_alpha_factor(src, result)) &
-									   0xff00ff00),
+										src_alpha_factor(src, result))) &
+						0x00ff00ff,
 						divisor_factor((lower_mask()(const_pixel) *
-										constant_alpha_factor(src, result)) &
-									   0xff00ff00));
+										constant_alpha_factor(src, result))) &
+									   0x00ff00ff);
 				assert((res_pixel | 0x00ff00ff) == 0x00ff00ff);
 
 				const risa_gl::uint32 res_pixel2 =
 					(compute_factor(
 						divisor_factor(((higher_mask()(src_pixel)>>8) *
-										src_alpha_factor(src, result)) &
-									   0xff00ff00),
+										src_alpha_factor(src, result))) &
+									   0x00ff00ff,
 						divisor_factor(((higher_mask()(const_pixel)>>8) *
-										constant_alpha_factor(src, result)) &
-									   0xff00ff00)) << 8);
+										constant_alpha_factor(src, result))) &
+									   0x00ff00ff) << 8);
 
 				assert((res_pixel2 | 0xff00ff00) == 0xff00ff00);
 

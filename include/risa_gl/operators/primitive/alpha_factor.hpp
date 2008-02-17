@@ -56,6 +56,24 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * selectorを利用して対象からalpha値を取り出し、逆数を返す
+		 * @param
+		 */
+		 template <typename selector,
+				   typename method_selector>
+		 class inverse_alpha_factor
+		 {
+		 public:
+			 template <typename src_itor_t,
+					   typename dest_itor_t>
+			 risa_gl::uint32 operator()(src_itor_t src,
+										dest_itor_t dest) const
+			 {
+				 return 256 / method_selector()(selector()(src, dest));
+			 }
+		 };
+
 		template <int min, int max, int projection_min, int projection_max>
 		class scale_factor
 		{
