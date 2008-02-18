@@ -158,6 +158,18 @@ namespace risa_gl
 			}
 		};
 
+		class full_transparent_alpha_factor
+		{
+		public:
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t,
+									   dest_itor_t) const
+			{
+				return 1;
+			}
+		};			
+			
 		/**
 		 * 実行時にセットされた定数を返すalpha factor
 		 */
