@@ -20,22 +20,22 @@ public:
 		CPPUNIT_ASSERT(reg1.get_right_down() == region_t::coord_type());
 
 		region_t reg2(1, 2, 3, 4);
-		CPPUNIT_ASSERT(reg2.get_left_up() == region_t::coord_type(1, 2));
-		CPPUNIT_ASSERT(reg2.get_right_up() == region_t::coord_type(3, 2));
-		CPPUNIT_ASSERT(reg2.get_left_down() == region_t::coord_type(1, 4));
-		CPPUNIT_ASSERT(reg2.get_right_down() == region_t::coord_type(3, 4));
-
+		CPPUNIT_ASSERT(reg2.get_left_down() == region_t::coord_type(1, 2));
+		CPPUNIT_ASSERT(reg2.get_right_down() == region_t::coord_type(3, 2));
+		CPPUNIT_ASSERT(reg2.get_left_up() == region_t::coord_type(1, 4));
+		CPPUNIT_ASSERT(reg2.get_right_up() == region_t::coord_type(3, 4));
+		
 		region_t reg3 = reg2;
-		CPPUNIT_ASSERT(reg3.get_left_up() == region_t::coord_type(1, 2));
-		CPPUNIT_ASSERT(reg3.get_right_up() == region_t::coord_type(3, 2));
-		CPPUNIT_ASSERT(reg3.get_left_down() == region_t::coord_type(1, 4));
-		CPPUNIT_ASSERT(reg3.get_right_down() == region_t::coord_type(3, 4));
+		CPPUNIT_ASSERT(reg3.get_left_down() == region_t::coord_type(1, 2));
+		CPPUNIT_ASSERT(reg3.get_right_down() == region_t::coord_type(3, 2));
+		CPPUNIT_ASSERT(reg3.get_left_up() == region_t::coord_type(1, 4));
+		CPPUNIT_ASSERT(reg3.get_right_up() == region_t::coord_type(3, 4));
 
 		reg1 = reg3;
-		CPPUNIT_ASSERT(reg1.get_left_up() == region_t::coord_type(1, 2));
-		CPPUNIT_ASSERT(reg1.get_right_up() == region_t::coord_type(3, 2));
-		CPPUNIT_ASSERT(reg1.get_left_down() == region_t::coord_type(1, 4));
-		CPPUNIT_ASSERT(reg1.get_right_down() == region_t::coord_type(3, 4));
+		CPPUNIT_ASSERT(reg1.get_left_down() == region_t::coord_type(1, 2));
+		CPPUNIT_ASSERT(reg1.get_right_down() == region_t::coord_type(3, 2));
+		CPPUNIT_ASSERT(reg1.get_left_up() == region_t::coord_type(1, 4));
+		CPPUNIT_ASSERT(reg1.get_right_up() == region_t::coord_type(3, 4));
 	}
 	
 

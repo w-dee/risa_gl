@@ -1,11 +1,12 @@
 #ifndef RISA_TRANSFORMER_HPP_
-#define RISA_TRANSFORMER_HPP__
+#define RISA_TRANSFORMER_HPP_
 
 #include <risa_gl/rectangle.hpp>
 #include <risa_gl/iterator.hpp>
 #include <risa_gl/math/vector.hpp>
 #include <risa_gl/math/region.hpp>
 #include <risa_gl/math/matrix.hpp>
+#include <risa_gl/math/differential.hpp>
 #include <vector>
 
 namespace risa_gl
@@ -203,7 +204,7 @@ namespace risa_gl
 			const coord_t left_down  = *this * src.get_left_down();
 			const coord_t right_down = *this * src.get_right_down();
 
-			return region_t(left_up, right_up, left_down, right_down);
+			return region_t(left_down, right_down, left_up, right_up);
 		}
 
 		template <typename BaseType>
@@ -221,87 +222,117 @@ namespace risa_gl
 		}
 	};
 
-	template <typename PixelStoreType,
-			  typename InterpolateType>
+	template <typename ValueType = float>
 	class basic_transformer
 	{
 	public:
-		typedef PixelStoreType pixel_store_type;
-		typedef InterpolateType interpolate_type;
-		typedef math::rectangle_region<float> region_type;
-		typedef std::vector<typename interpolate_type::pixel_vector_type>
-		fragments_type;
+		typedef ValueType value_type;
+		typedef math::rectangle_region<value_type> region_type;
+
+		template <typename ValueType_>
+		class projected_region
+		{
+		public:
+			typedef math::rectangle_region<ValueType_> region_type;
+
+		private:
+			region_type region;
+			math::vector4 x_difference;
+			math::vector4 y_difference;
+
+		public:
+			projected_region(const region_type& region_,
+							 const math::vector4& x_diff,
+							 const math::vector4& y_diff):
+				region(region_),
+				x_difference(x_diff),
+				y_difference(y_diff)
+			{}
+
+			region_type get_region() const
+			{
+				return region;
+			}
+
+			math::vector4 get_x_difference() const
+			{
+				return x_difference;
+			}
+
+			math::vector4 get_y_difference() const
+			{
+				return y_difference;
+			}
+		};
+
+		typedef projected_region<value_type> projected_type;
 
 	protected:
 		linear_transformer transformer;
-
 	private:
 		const region_type region;
+		value_type x_valiation;
+		value_type y_valiation;
 		
-		const math::vector2
-		coord_to_vector2(const region_type::coord_type& coord) const
+		const math::vector4
+		coord_to_vector4(const typename region_type::coord_type& coord) const
 		{
-			return math::vector2(coord.get_x(), coord.get_y());
+			return math::vector4(coord.get_x(), coord.get_y(), 0, 1);
 		}
 
 	public:
-		basic_transformer(const region_type& region_):
+		basic_transformer(const region_type& region_,
+						  const value_type& x_diff = 1,
+						  const value_type& y_diff = 1):
 			transformer(),
-			region(region_)
+			region(region_),
+			x_valiation(x_diff),
+			y_valiation(y_diff)
 		{}
 
 		basic_transformer(const basic_transformer& src):
 			transformer(src.transformer),
-			region(src.region)
+			region(src.region),
+			x_valiation(src.x_valiation),
+			y_valiation(src.y_valiation)
 		{}
 
-		fragments_type get_fragments(const pixel_store_type& pixels,
-									 const int x_divide,
-									 const int y_divide) const
+		region_type get_transformed_region() const
 		{
-			assert (x_divide >= 2);
-			assert (y_divide >= 2);
+			return transformer * region;
+		}
 
-			const math::dividable_vector<math::vector2> y_heads
-				(coord_to_vector2(transformer * region.get_left_down()),
-				 coord_to_vector2(transformer * region.get_left_up()));
-			const math::dividable_vector<math::vector2> y_tails
-				(coord_to_vector2(transformer * region.get_right_down()),
-				 coord_to_vector2(transformer * region.get_right_up()));
-			
-			fragments_type result(y_divide);
+		math::vector4 get_transformed_x_valiation() const
+		{
+			return transformer * 
+				coord_to_vector4(
+					typename region_type::coord_type(x_valiation, 0));
+		}
 
-			const float jitter = 1.f / static_cast<float>(x_divide - 1);
-			float offset = 0;
-			for (unsigned short y_div = 0; y_div != (y_divide - 1);
-				 ++y_div, offset += jitter)
-			{
-				result[y_div] = interpolate_type(pixels,
-												 y_heads.blend(offset),
-												 y_tails.blend(offset),
-												 x_divide).interpolate();
-			}
+		math::vector4 get_transformed_y_valiation() const
+		{
+			return transformer * 
+				coord_to_vector4(
+					typename region_type::coord_type(0, y_valiation));
+		}
 
-			result[y_divide-1] = interpolate_type(pixels,
-												  y_heads.blend(1.f),
-												  y_tails.blend(1.f),
-												  x_divide).interpolate();
-
-			return result;
+		projected_region<value_type> get_projected_region() const
+		{
+			return projected_region<value_type>(
+				get_transformed_region(),
+				get_transformed_x_valiation(),
+				get_transformed_y_valiation());
 		}
 	};
 
-	template <typename PixelStoreType,
-			  typename InterpolateType>
+	template <typename ValueType>
 	class rotator :
-		public basic_transformer<PixelStoreType, InterpolateType>
+		public basic_transformer<ValueType>
 	{
 	public:
-		typedef basic_transformer<PixelStoreType, InterpolateType> super_type;
-		typedef typename super_type::pixel_store_type pixel_store_type;
-		typedef typename super_type::interpolate_type interpolate_type;
+		typedef basic_transformer<ValueType> super_type;
 		typedef typename super_type::region_type region_type;
-		typedef typename super_type::fragments_type fragments_type;
+		typedef typename super_type::projected_type projected_type;
 
 		rotator(const region_type& region,
 				const math::vector2& center,
@@ -317,31 +348,29 @@ namespace risa_gl
 			super_type(src)
 		{}
 
-		fragments_type get_fragments(const pixel_store_type& pixels,
-									 const int x_divide,
-									 const int y_divide) const
+		projected_type get_projected_region() const
 		{
-			return super_type::get_fragments(pixels, x_divide, y_divide);
+			return super_type::get_projected_region();
 		}
+		
 	};
 
-	template <typename PixelStoreType,
-			  typename InterpolateType>
+	template <typename ValueType>
 	class scaler :
-		public basic_transformer<PixelStoreType, InterpolateType>
+		public basic_transformer<ValueType>
 	{
 	public:
-		typedef basic_transformer<PixelStoreType, InterpolateType> super_type;
-		typedef typename super_type::pixel_store_type pixel_store_type;
-		typedef typename super_type::interpolate_type interpolate_type;
+		typedef basic_transformer<ValueType> super_type;
 		typedef typename super_type::region_type region_type;
-		typedef typename super_type::fragments_type fragments_type;
+		typedef typename super_type::projected_type projected_type;
 
 		scaler(const region_type& region,
 			   const math::vector2& center,
 			   const float x_scale,
-			   const float y_scale):
-			super_type(region)
+			   const float y_scale,
+			   const int x_stepping = 1,
+			   const int y_stepping = 1):
+			super_type(region, x_stepping, y_stepping)
 		{
 			super_type::transformer.translate(-center.x, -center.y, 0);
 			super_type::transformer.scaling(x_scale, y_scale, 1.f);
@@ -352,25 +381,21 @@ namespace risa_gl
 			super_type(src)
 		{}
 
-		fragments_type get_fragments(const pixel_store_type& pixels,
-									 const int x_divide,
-									 const int y_divide) const
+		projected_type get_projected_region() const
 		{
-			return super_type::get_fragments(pixels, x_divide, y_divide);
+			return super_type::get_projected_region();
 		}
+		
 	};
 
-	template <typename PixelStoreType,
-			  typename InterpolateType>
+	template <typename ValueType>
 	class translator :
-		public basic_transformer<PixelStoreType, InterpolateType>
+		public basic_transformer<ValueType>
 	{
 	public:
-		typedef basic_transformer<PixelStoreType, InterpolateType> super_type;
-		typedef typename super_type::pixel_store_type pixel_store_type;
-		typedef typename super_type::interpolate_type interpolate_type;
+		typedef basic_transformer<ValueType> super_type;
 		typedef typename super_type::region_type region_type;
-		typedef typename super_type::fragments_type fragments_type;
+		typedef typename super_type::projected_type projected_type;
 
 		translator(const region_type& region,
 				   const math::vector2& translations):
@@ -384,14 +409,12 @@ namespace risa_gl
 			super_type(src)
 		{}
 
-		fragments_type get_fragments(const pixel_store_type& pixels,
-									 const int x_divide,
-									 const int y_divide) const
+		projected_type get_projected_region() const
 		{
-			return super_type::get_fragments(pixels, x_divide, y_divide);
+			return super_type::get_projected_region();
 		}
+		
 	};
-
 }
 
 

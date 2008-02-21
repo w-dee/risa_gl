@@ -103,18 +103,18 @@ namespace risa_gl
 				left_up(), right_down()
 			{}
 
-			rectangle_region(value_type left_, value_type up_,
-							 value_type right_, value_type down_):
+			rectangle_region(value_type left_, value_type down_,
+							 value_type right_, value_type up_):
 				left_up(left_, up_),
 				right_up(right_, up_),
 				left_down(left_, down_),
 				right_down(right_, down_)
 			{}
 
-			rectangle_region(const coord_type& left_up_,
-							 const coord_type& right_up_,
-							 const coord_type& left_down_,
-							 const coord_type& right_down_):
+			rectangle_region(const coord_type& left_down_,
+							 const coord_type& right_down_,
+							 const coord_type& left_up_,
+							 const coord_type& right_up_):
 				left_up(left_up_),
 				right_up(right_up_),
 				left_down(left_down_),
@@ -185,10 +185,10 @@ namespace risa_gl
 										   const rectangle_region& self)
 			{
 				return out << "(" <<
-					self.left_up << ", " <<
-					self.right_up << ", " <<
 					self.left_down << ", " <<
-					self.right_down << ")";
+					self.right_down << ", " <<
+					self.left_up << ", " <<
+					self.right_up << ")";
 			}
 		};
 	}

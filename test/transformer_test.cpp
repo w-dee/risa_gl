@@ -36,37 +36,21 @@ public:
 		using risa_gl::math::rectangle_region;
 		using risa_gl::math::vector2;
 
-		typedef risa_gl::scaler<risa_gl::pixel_store<risa_gl::pixel>, 
-			risa_gl::nearest<risa_gl::pixel_store<risa_gl::pixel> > > scaler_t;
+		typedef risa_gl::scaler<float> scaler_t;
 
-		rectangle_region<float> region(15.75, 47.25, 47.25, 15.75);
+		rectangle_region<float> region(0, 0, 64, 64);
 		scaler_t trans(region,
-					   vector2(31.5, 31.5),
+					   vector2(32, 32),
 					   2.f, 2.f);
 
-		risa_gl::pixel_store<risa_gl::pixel> pixels(64, 64);
-		for (int y = 32; y != 64; ++y)
-			for (int x = 32; x != 64; ++x)
-				pixels(x, y) = risa_gl::pixel(255, 255, 255, 256);
-
-		typedef scaler_t::fragments_type fragments_t;
-		fragments_t fragments =
-			trans.get_fragments(pixels, 64, 64);
-
-		for (unsigned int y = 0; y != fragments.size(); ++y)
-		{
-			for (unsigned int x = 0; x != fragments[y].size(); ++x)
-			{
-				if (x >= 32 && y >= 32)
-				{
-					CPPUNIT_ASSERT(fragments[y][x] ==
-								   risa_gl::pixel(255, 255, 255, 256));
-				}
-				else
-					CPPUNIT_ASSERT(fragments[y][x] ==
-								   risa_gl::pixel(0, 0, 0, 256));
-			}
-		}
+		scaler_t::projected_type projected = trans.get_projected_region();
+		rectangle_region<float> projected_region = projected.get_region();
+		CPPUNIT_ASSERT(
+			projected_region.get_left_down() ==
+			risa_gl::coordinate<float>(-32, -32));
+		CPPUNIT_ASSERT(
+			projected_region.get_right_up() ==
+			risa_gl::coordinate<float>(96, 96));
 	}
 
 	void rotator_test()
@@ -81,29 +65,20 @@ public:
 		typedef risa_gl::pixel_store<pixel_t,
 			risa_gl::aligned_allocator<pixel_t, 16> > pixel_store_t;
 
-		region_t rect(0, 63, 63, 0);
+		typedef rotator<float> rotator_t;
+		rotator_t trans(region_t(0, 0, 64, 64),
+						vector2(32, 32),
+						pi / 2.f);
 
-		typedef rotator<pixel_store_t,
-			risa_gl::nearest<pixel_store_t> > rotator_t;
-		rotator_t trans(rect, vector2(31.5, 31.5), pi / 2.f);
-
-		risa_gl::pixel_store<pixel_t,
-			risa_gl::aligned_allocator<pixel_t, 16> > pixels(64, 64);
- 		for (int y = 0; y < pixels.get_height(); ++y)
- 			for (int x = 0; x < pixels.get_width(); ++x)
-				pixels(x, y) = pixel_t(x, y, 255, 256);
-		
-		typedef rotator_t::fragments_type fragments_t;
-		fragments_t fragments = trans.get_fragments(pixels, 64, 64);
-
-		for (unsigned int y = 0; y < fragments.size(); ++y)
-		{
-			for (unsigned int x = 0; x < fragments[y].size(); ++x)
-			{
-				CPPUNIT_ASSERT(fragments[y][x] ==
-								   pixel_t(63-y, x, 255, 256));
-			}
-		}
+		rotator_t::projected_type projected = trans.get_projected_region();
+		rectangle_region<float> projected_region = projected.get_region();
+		std::cout << projected_region.get_left_down() << std::endl;
+		CPPUNIT_ASSERT(
+			projected_region.get_left_down() ==
+			risa_gl::coordinate<float>(64, 0));
+		CPPUNIT_ASSERT(
+			projected_region.get_right_up() ==
+			risa_gl::coordinate<float>(0, 64));
 	}
 
 	void translator_test()
@@ -114,36 +89,18 @@ public:
 		typedef rectangle_region<float> region_t;
 		typedef region_t::coord_type coord_t;
 
-		region_t rect(0, 63, 63, 0);
+		typedef translator<float> translator_t;
+		translator_t trans(region_t(0, 0, 64, 64),
+						   risa_gl::math::vector2(-32, -32));
 
-		typedef translator<
-			risa_gl::pixel_store<risa_gl::pixel,
-			risa_gl::aligned_allocator<risa_gl::pixel, 16> >,
-			risa_gl::nearest<
-			risa_gl::pixel_store<
-			risa_gl::pixel,
-			risa_gl::aligned_allocator<risa_gl::pixel, 16> > > >
-			translator_t;
-		translator_t trans(rect, risa_gl::math::vector2(-32, -32));
-
-		risa_gl::pixel_store<risa_gl::pixel,
-			risa_gl::aligned_allocator<risa_gl::pixel, 16> > pixels(64, 64);
-		std::fill(pixels.begin(), pixels.end(),
-				  risa_gl::pixel(255, 255, 255, 256));
-		
-		typedef translator_t::fragments_type fragments_t;
-		fragments_t fragments = trans.get_fragments(pixels, 64, 64);
-		for (unsigned int y = 0; y < fragments.size(); ++y)
-		{
-			for (unsigned int x = 0; x < fragments[y].size(); ++x)
-			{
-				if (x >= 31 && y >= 31)
-					CPPUNIT_ASSERT(fragments[y][x] ==
-								   risa_gl::pixel(255, 255, 255, 256));
-				else
-					CPPUNIT_ASSERT(fragments[y][x] == risa_gl::pixel());
-			}
-		}
+		translator_t::projected_type projected = trans.get_projected_region();
+		rectangle_region<float> projected_region = projected.get_region();
+		CPPUNIT_ASSERT(
+			projected_region.get_left_down() ==
+			risa_gl::coordinate<float>(-32, -32));
+		CPPUNIT_ASSERT(
+			projected_region.get_right_up() ==
+			risa_gl::coordinate<float>(32, 32));
 	}
 
 	void transform_test()
@@ -156,34 +113,34 @@ public:
 		typedef region_t::coord_type coord_t;
 		region_t rect_t(-2.f, -2.f, 2.f, 2.f);
 		
-		CPPUNIT_ASSERT(rect_t.get_left_up() == coord_t(-2.f, -2.f));
-		CPPUNIT_ASSERT(rect_t.get_right_up() == coord_t(2.f, -2.f));
-		CPPUNIT_ASSERT(rect_t.get_left_down() == coord_t(-2.f, 2.f));
-		CPPUNIT_ASSERT(rect_t.get_right_down() == coord_t(2.f, 2.f));
+		CPPUNIT_ASSERT(rect_t.get_left_down() == coord_t(-2.f, -2.f));
+		CPPUNIT_ASSERT(rect_t.get_right_down() == coord_t(2.f, -2.f));
+		CPPUNIT_ASSERT(rect_t.get_left_up() == coord_t(-2.f, 2.f));
+		CPPUNIT_ASSERT(rect_t.get_right_up() == coord_t(2.f, 2.f));
 
 		rect_t =
 			linear_transformer::transform(rect_t,
 										  vector2(0.f, 0.f),
 										  pi / 4);
 
-		CPPUNIT_ASSERT(range(rect_t.get_left_up().get_x(),
-							 0.f, 0.001f));
-		CPPUNIT_ASSERT(range(rect_t.get_left_up().get_y(),
-							 -std::sqrt(8.f), 0.001f));
-
-		CPPUNIT_ASSERT(range(rect_t.get_right_up().get_x(),
-							 std::sqrt(8.f), 0.001f));
-		CPPUNIT_ASSERT(range(rect_t.get_right_up().get_y(),
-							 0.f, 0.001f));
-
 		CPPUNIT_ASSERT(range(rect_t.get_left_down().get_x(),
-							 -std::sqrt(8.f), 0.001f));
-		CPPUNIT_ASSERT(range(rect_t.get_left_down().get_y(),
 							 0.f, 0.001f));
+		CPPUNIT_ASSERT(range(rect_t.get_left_down().get_y(),
+							 -std::sqrt(8.f), 0.001f));
 
 		CPPUNIT_ASSERT(range(rect_t.get_right_down().get_x(),
-							 0.f, 0.001f));
+							 std::sqrt(8.f), 0.001f));
 		CPPUNIT_ASSERT(range(rect_t.get_right_down().get_y(),
+							 0.f, 0.001f));
+
+		CPPUNIT_ASSERT(range(rect_t.get_left_up().get_x(),
+							 -std::sqrt(8.f), 0.001f));
+		CPPUNIT_ASSERT(range(rect_t.get_left_up().get_y(),
+							 0.f, 0.001f));
+
+		CPPUNIT_ASSERT(range(rect_t.get_right_up().get_x(),
+							 0.f, 0.001f));
+		CPPUNIT_ASSERT(range(rect_t.get_right_up().get_y(),
 							 std::sqrt(8.f), 0.001f));
 	}
 
@@ -336,10 +293,10 @@ public:
 		linear_transformer transformer;
 
 		region_t rect_t = transformer * rect;
-		CPPUNIT_ASSERT(rect_t.get_left_up() == coord_t(-1.f, -2.f));
-		CPPUNIT_ASSERT(rect_t.get_right_up() == coord_t(3.f, -2.f));
-		CPPUNIT_ASSERT(rect_t.get_left_down() == coord_t(-1.f, 4.f));
-		CPPUNIT_ASSERT(rect_t.get_right_down() == coord_t(3.f, 4.f));
+		CPPUNIT_ASSERT(rect_t.get_left_down() == coord_t(-1.f, -2.f));
+		CPPUNIT_ASSERT(rect_t.get_right_down() == coord_t(3.f, -2.f));
+		CPPUNIT_ASSERT(rect_t.get_left_up() == coord_t(-1.f, 4.f));
+		CPPUNIT_ASSERT(rect_t.get_right_up() == coord_t(3.f, 4.f));
 
 		const risa_gl::static_array<float, 16> mat = 
 			{ { 0.f, 1.f, 0.f, 0.f,
@@ -350,10 +307,10 @@ public:
 
 		rect_t = transformer * rect;
 
-		CPPUNIT_ASSERT(rect_t.get_left_up() == coord_t(2.f, -1.f));
-		CPPUNIT_ASSERT(rect_t.get_right_up() == coord_t(2.f, 3.f));
-		CPPUNIT_ASSERT(rect_t.get_left_down() == coord_t(-4.f, -1.f));
-		CPPUNIT_ASSERT(rect_t.get_right_down() == coord_t(-4.f, 3.f));
+		CPPUNIT_ASSERT(rect_t.get_left_down() == coord_t(2.f, -1.f));
+		CPPUNIT_ASSERT(rect_t.get_right_down() == coord_t(2.f, 3.f));
+		CPPUNIT_ASSERT(rect_t.get_left_up() == coord_t(-4.f, -1.f));
+		CPPUNIT_ASSERT(rect_t.get_right_up() == coord_t(-4.f, 3.f));
 	}
 
 	void multiply2d_test()
