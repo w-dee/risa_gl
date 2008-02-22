@@ -228,22 +228,24 @@ namespace risa_gl
 	public:
 		typedef ValueType value_type;
 		typedef math::rectangle_region<value_type> region_type;
+		typedef typename region_type::coord_type coord_type;
 
 		template <typename ValueType_>
 		class projected_region
 		{
 		public:
 			typedef math::rectangle_region<ValueType_> region_type;
+			typedef typename region_type::coord_type coord_type;
 
 		private:
 			region_type region;
-			math::vector4 x_difference;
-			math::vector4 y_difference;
+			coord_type x_difference;
+			coord_type y_difference;
 
 		public:
 			projected_region(const region_type& region_,
-							 const math::vector4& x_diff,
-							 const math::vector4& y_diff):
+							 const coord_type& x_diff,
+							 const coord_type& y_diff):
 				region(region_),
 				x_difference(x_diff),
 				y_difference(y_diff)
@@ -254,14 +256,22 @@ namespace risa_gl
 				return region;
 			}
 
-			math::vector4 get_x_difference() const
+			coord_type get_x_difference() const
 			{
-				return x_difference;
+				return
+					coord_type(x_difference.get_x() -
+							   region.get_left_down().get_x(),
+							   x_difference.get_y() -
+							   region.get_left_down().get_y());
 			}
 
-			math::vector4 get_y_difference() const
+			coord_type get_y_difference() const
 			{
-				return y_difference;
+				return
+					coord_type(y_difference.get_x() -
+							   region.get_left_down().get_x(),
+							   y_difference.get_y() -
+							   region.get_left_down().get_y());
 			}
 		};
 
@@ -271,8 +281,8 @@ namespace risa_gl
 		linear_transformer transformer;
 	private:
 		const region_type region;
-		value_type x_valiation;
-		value_type y_valiation;
+		coord_type x_valiation;
+		coord_type y_valiation;
 		
 		const math::vector4
 		coord_to_vector4(const typename region_type::coord_type& coord) const
@@ -286,8 +296,10 @@ namespace risa_gl
 						  const value_type& y_diff = 1):
 			transformer(),
 			region(region_),
-			x_valiation(x_diff),
-			y_valiation(y_diff)
+			x_valiation(region.get_left_down().get_x() + x_diff,
+						region.get_left_down().get_y()),
+			y_valiation(region.get_left_down().get_x(),
+						region.get_left_down().get_y() + y_diff)
 		{}
 
 		basic_transformer(const basic_transformer& src):
@@ -302,23 +314,19 @@ namespace risa_gl
 			return transformer * region;
 		}
 
-		math::vector4 get_transformed_x_valiation() const
+		coord_type get_transformed_x_valiation() const
 		{
-			return transformer * 
-				coord_to_vector4(
-					typename region_type::coord_type(x_valiation, 0));
+			return (transformer * x_valiation);
 		}
 
-		math::vector4 get_transformed_y_valiation() const
+		coord_type get_transformed_y_valiation() const
 		{
-			return transformer * 
-				coord_to_vector4(
-					typename region_type::coord_type(0, y_valiation));
+			return (transformer * y_valiation);
 		}
 
-		projected_region<value_type> get_projected_region() const
+		projected_type get_projected_region() const
 		{
-			return projected_region<value_type>(
+			return projected_type(
 				get_transformed_region(),
 				get_transformed_x_valiation(),
 				get_transformed_y_valiation());

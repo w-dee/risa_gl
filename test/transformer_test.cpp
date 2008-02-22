@@ -35,6 +35,7 @@ public:
 		using risa_gl::scaler;
 		using risa_gl::math::rectangle_region;
 		using risa_gl::math::vector2;
+		using risa_gl::math::vector4;
 
 		typedef risa_gl::scaler<float> scaler_t;
 
@@ -51,6 +52,14 @@ public:
 		CPPUNIT_ASSERT(
 			projected_region.get_right_up() ==
 			risa_gl::coordinate<float>(96, 96));
+
+		risa_gl::coordinate<float> x_diff = projected.get_x_difference();
+		risa_gl::coordinate<float> y_diff = projected.get_y_difference();
+
+		CPPUNIT_ASSERT(range(x_diff.get_x(), 2.f, 0.01f));
+		CPPUNIT_ASSERT(range(x_diff.get_y(), 0.f, 0.01f));
+		CPPUNIT_ASSERT(range(y_diff.get_x(), 0.f, 0.01f));
+		CPPUNIT_ASSERT(range(y_diff.get_y(), 2.f, 0.01f));
 	}
 
 	void rotator_test()
@@ -72,13 +81,14 @@ public:
 
 		rotator_t::projected_type projected = trans.get_projected_region();
 		rectangle_region<float> projected_region = projected.get_region();
-		std::cout << projected_region.get_left_down() << std::endl;
 		CPPUNIT_ASSERT(
-			projected_region.get_left_down() ==
-			risa_gl::coordinate<float>(64, 0));
+			range<float>(projected_region.get_left_down().get_x(), 64.f, 0.01));
 		CPPUNIT_ASSERT(
-			projected_region.get_right_up() ==
-			risa_gl::coordinate<float>(0, 64));
+			range<float>(projected_region.get_left_down().get_y(), 0.f, 0.01));
+		CPPUNIT_ASSERT(
+			range<float>(projected_region.get_right_up().get_x(), 0.f, 0.01));
+		CPPUNIT_ASSERT(
+			range<float>(projected_region.get_right_up().get_y(), 64.f, 0.01));
 	}
 
 	void translator_test()
@@ -96,11 +106,14 @@ public:
 		translator_t::projected_type projected = trans.get_projected_region();
 		rectangle_region<float> projected_region = projected.get_region();
 		CPPUNIT_ASSERT(
-			projected_region.get_left_down() ==
-			risa_gl::coordinate<float>(-32, -32));
+			range(projected_region.get_left_down().get_x(), -32.f, 0.01f));
 		CPPUNIT_ASSERT(
-			projected_region.get_right_up() ==
-			risa_gl::coordinate<float>(32, 32));
+			range(projected_region.get_left_down().get_y(), -32.f, 0.01f));
+
+		CPPUNIT_ASSERT(
+			range(projected_region.get_right_up().get_x(), 32.f, 0.01f));
+		CPPUNIT_ASSERT(
+			range(projected_region.get_right_up().get_y(), 32.f, 0.01f));
 	}
 
 	void transform_test()
@@ -113,10 +126,14 @@ public:
 		typedef region_t::coord_type coord_t;
 		region_t rect_t(-2.f, -2.f, 2.f, 2.f);
 		
-		CPPUNIT_ASSERT(rect_t.get_left_down() == coord_t(-2.f, -2.f));
-		CPPUNIT_ASSERT(rect_t.get_right_down() == coord_t(2.f, -2.f));
-		CPPUNIT_ASSERT(rect_t.get_left_up() == coord_t(-2.f, 2.f));
-		CPPUNIT_ASSERT(rect_t.get_right_up() == coord_t(2.f, 2.f));
+		CPPUNIT_ASSERT(range(rect_t.get_left_down().get_x(), -2.f, 0.01f));
+		CPPUNIT_ASSERT(range(rect_t.get_left_down().get_y(), -2.f, 0.01f));
+		CPPUNIT_ASSERT(range(rect_t.get_right_down().get_x(), 2.f, 0.01f));
+		CPPUNIT_ASSERT(range(rect_t.get_right_down().get_y(), -2.f, 0.01f));
+		CPPUNIT_ASSERT(range(rect_t.get_left_up().get_x(), -2.f, 0.01f));
+		CPPUNIT_ASSERT(range(rect_t.get_left_up().get_y(), 2.f, 0.01f));
+		CPPUNIT_ASSERT(range(rect_t.get_right_up().get_x(), 2.f, 0.01f));
+		CPPUNIT_ASSERT(range(rect_t.get_right_up().get_y(), 2.f, 0.01f));
 
 		rect_t =
 			linear_transformer::transform(rect_t,
