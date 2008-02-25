@@ -20,9 +20,9 @@ namespace risa_gl
 				zero_alpha_factor,
 				alpha_calculate_policy<
 				destination_alpha_getter> >
-			color_copy_opeartor_type;
+			color_copy_operator_type;
 
-			color_copy_opeartor_type blender;
+			color_copy_operator_type blender;
 		public:
 
 			/**

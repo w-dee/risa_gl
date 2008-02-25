@@ -27,9 +27,9 @@ namespace risa_gl
 				source_alpha_getter,
 				invert_source_alpha_getter,
 				not_calculate_policy>
-			alpha_blend_opeartor_type;
+			alpha_blend_operator_type;
 
-			alpha_blend_opeartor_type blender;
+			alpha_blend_operator_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -63,9 +63,9 @@ namespace risa_gl
 				source_alpha_getter,
 				invert_source_alpha_getter,
 				alpha_calculate_policy<source_alpha_getter> >
-			alpha_blend_save_source_alpha_opeartor_type;
+			alpha_blend_save_source_alpha_operator_type;
 
-			alpha_blend_save_source_alpha_opeartor_type blender;
+			alpha_blend_save_source_alpha_operator_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -99,9 +99,9 @@ namespace risa_gl
 				source_alpha_getter,
 				invert_source_alpha_getter,
 				alpha_calculate_policy<destination_alpha_getter> >
-			alpha_blend_save_destination_alpha_opeartor_type;
+			alpha_blend_save_destination_alpha_operator_type;
 
-			alpha_blend_save_destination_alpha_opeartor_type blender;
+			alpha_blend_save_destination_alpha_operator_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -136,9 +136,9 @@ namespace risa_gl
 				multiply_alpha_and_alpha_policy<
 				source_alpha_getter,
 				destination_alpha_getter> >
-			alpha_blend_save_calculate_alpha_opeartor_type;
+			alpha_blend_save_calculate_alpha_operator_type;
 
-			alpha_blend_save_calculate_alpha_opeartor_type blender;
+			alpha_blend_save_calculate_alpha_operator_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -174,9 +174,9 @@ namespace risa_gl
 				multiply_alpha_and_alpha_policy<
 				source_alpha_getter,
 				destination_alpha_getter> >
-			alpha_blend_save_calculate_additive_alpha_opeartor_type;
+			alpha_blend_save_calculate_additive_alpha_operator_type;
 
-			alpha_blend_save_calculate_additive_alpha_opeartor_type blender;
+			alpha_blend_save_calculate_additive_alpha_operator_type blender;
 		public:
 
 			template <typename src_itor_t,

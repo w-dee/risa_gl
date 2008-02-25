@@ -26,9 +26,9 @@ namespace risa_gl
 				identity_alpha_factor,
 				identity_alpha_factor,
 				not_calculate_policy>
-			mul_blend_opeartor_type;
+			mul_blend_operator_type;
 
-			mul_blend_opeartor_type blender;
+			mul_blend_operator_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -60,9 +60,9 @@ namespace risa_gl
 				identity_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<source_alpha_getter> >
-			mul_blend_save_source_alpha_opeartor_type;
+			mul_blend_save_source_alpha_operator_type;
 
-			mul_blend_save_source_alpha_opeartor_type blender;
+			mul_blend_save_source_alpha_operator_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -94,9 +94,9 @@ namespace risa_gl
 				identity_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<destination_alpha_getter> >
-			mul_blend_save_destination_alpha_opeartor_type;
+			mul_blend_save_destination_alpha_operator_type;
 
-			mul_blend_save_destination_alpha_opeartor_type blender;
+			mul_blend_save_destination_alpha_operator_type blender;
 		public:
 
 			template <typename src_itor_t,

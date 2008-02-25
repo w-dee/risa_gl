@@ -26,9 +26,9 @@ namespace risa_gl
 				multiply_alpha_and_alpha_policy<
 				source_alpha_getter,
 				constant_alpha_factor> >
-			mat_blend_opeartor_type;
+			mat_blend_operator_type;
 
-			mat_blend_opeartor_type blender;
+			mat_blend_operator_type blender;
 		public:
 			template <typename pixel_type>
 			mat_blend_save_calculate_alpha_operator(

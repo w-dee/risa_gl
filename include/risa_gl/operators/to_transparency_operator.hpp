@@ -24,9 +24,9 @@ namespace risa_gl
 				identity_alpha_factor,
 				identity_alpha_factor,
 				alpha_calculate_policy<full_transparent_alpha_factor> >
-			to_transparency_opeartor_type;
+			to_transparency_operator_type;
 
-			to_transparency_opeartor_type blender;
+			to_transparency_operator_type blender;
 		public:
 			template <typename src_itor_t,
 					  typename result_itor_t>

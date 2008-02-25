@@ -20,9 +20,9 @@ namespace risa_gl
 				identity_alpha_factor,
 				alpha_calculate_policy<
 				source_alpha_getter> >
-			alpha_copy_opeartor_type;
+			alpha_copy_operator_type;
 
-			alpha_copy_opeartor_type blender;
+			alpha_copy_operator_type blender;
 		public:
 
 			/**
@@ -51,9 +51,9 @@ namespace risa_gl
 				identity_alpha_factor,
 				alpha_calculate_policy<
 				source_opacity_getter> >
-			alpha_copy_opeartor_type;
+			alpha_copy_operator_type;
 
-			alpha_copy_opeartor_type blender;
+			alpha_copy_operator_type blender;
 		public:
 
 			/**

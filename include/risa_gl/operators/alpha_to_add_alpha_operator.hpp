@@ -24,9 +24,9 @@ namespace risa_gl
 				source_alpha_getter,
 				identity_alpha_factor,
 				alpha_calculate_policy<source_alpha_getter>	>
-			alpha_to_add_alpha_opeartor_type;
+			alpha_to_add_alpha_operator_type;
 
-			alpha_to_add_alpha_opeartor_type blender;
+			alpha_to_add_alpha_operator_type blender;
 		public:
 			template <typename src_itor_t,
 					  typename result_itor_t>
