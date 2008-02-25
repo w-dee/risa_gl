@@ -302,7 +302,7 @@ namespace risa_gl
 	/**
 	 * デフォルトピクセルクラスのエイリアス
 	 */
-	typedef class pixel_type<rgba> pixel;
+	typedef pixel_type<rgba> pixel;
 
 	/**
 	 * ピクセルコンバータ

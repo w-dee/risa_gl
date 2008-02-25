@@ -4,15 +4,18 @@
 #include <risa_gl/operators/alpha_blend.hpp>
 #include <iostream>
 #include <algorithm>
-#include <risa_gl/Thread/RerunnableThread.hpp>
+#include <Thread/RerunnableThread.hpp>
 
-#include <risa_gl/util/TimeCounter.hpp>
+#include <util/TimeCounter.hpp>
 
 /**
  * 測定するオペレータの指定
  */
+#ifdef ALPHA_BLEND_TEST
+typedef risa_gl::operators::alpha_blend_operator target_operator;
+#else
 typedef risa_gl::operators::alpha_blend_save_destination_alpha_operator target_operator;
-//typedef risa_gl::operators::alpha_blend_operator target_operator;
+#endif
 
 
 template <
