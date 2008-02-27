@@ -172,6 +172,35 @@ namespace risa_gl
 				return method_selecter()(selector()(src, dest));
 			}
 		};
+
+		template <typename function_t, typename stub_t>
+		class functional_getter
+		{
+		public:
+			typedef function_t function_type;
+			typedef stub_t stub_type;
+
+		private:
+			function_type function;
+			stub_type stub;
+
+		public:
+			functional_getter(const function_type& function_ = function_type(),
+							  const stub_type& stub_ = stub_type()):
+				function(function_),
+				stub(stub_)
+			{}
+
+			template <typename src_itor_t,
+					  typename dest_itor_t>
+			risa_gl::uint32 operator()(src_itor_t src,
+									   dest_itor_t dest) const
+			{
+				typename src_itor_t::value_type temp;
+				temp.set_bit_representation(stub(src, dest));
+				return function(temp);
+			}
+		};
 	}
 }
 
