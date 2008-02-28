@@ -121,10 +121,17 @@ namespace risa_gl
 		/**
 		 * src_typeを適用した結果をoperator()の引数にかけて返す
 		 */
-		template <typename src_type>
+		template <typename src_type, int divisor = 256>
 		class multiply_type_factor
 		{
+		private:
+			src_type source;
+
 		public:
+			multiply_type_factor(const src_type& source_ = src_type()):
+				source(source_)
+			{}
+
 			template <typename src_itor_t,
 					  typename dest_itor_t,
 					  typename value_type_t>
@@ -132,7 +139,7 @@ namespace risa_gl
 									   dest_itor_t dest,
 									   value_type_t value) const
 			{
-				return (src_type()(src, dest) * value) >> 8;
+				return (source(src, dest) * value) / divisor;
 			}
 		};
 		// }}}
