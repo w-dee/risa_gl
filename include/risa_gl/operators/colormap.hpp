@@ -334,12 +334,14 @@ namespace risa_gl
 
 		public:
 			colormap_alpha_blend(const pixel& color):
-				blender(src_getter_type(color.get_bit_representation()),
-						dest_getter_type(),
-						result_setter_type(),
-						compute_type(),
-						source_alpha_type(color.get_alpha()),
-						destination_alpha_type(color.get_alpha()))
+				blender(dynamic_constant_getter(color.get_bit_representation()),
+						destination_getter(),
+						bit_setter(),
+						plus_function(),
+						multiply_constant_and_source_opacity_getter(
+							color.get_alpha()),
+						multiply_invert_constant_and_source_opacity_getter(
+							color.get_alpha()))
 			{}
 			
 			/**
