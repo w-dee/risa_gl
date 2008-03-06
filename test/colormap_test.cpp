@@ -102,7 +102,7 @@ public:
 		std::generate(color_map.begin(), color_map.end(),
 					  generator<opaque>(opaque(65)));
 
-		operators::colormap_6bpp_transparency_save_alpha
+		operators::colormap_6bpp_transparency_save_destination_alpha
 			oper(pixel(128, 128, 128, 129));
 		oper(color_map.begin(), pixels.begin(), pixels.begin());
 		CPPUNIT_ASSERT(pixels.begin()->get_red() == 128);

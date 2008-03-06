@@ -41,7 +41,8 @@ namespace risa_gl
 		 * destinationが65levelの透過性を持つカラーマップ処理。
 		 * alphaは不定
 		 * sourceはopaqueであること
-		 * r = color.rgb * scale(source.opaque)
+		 * r = color.color * scale(source.opaque) +
+		 *					 dest.color * (1-scale(source.opaque))
 		 */
 		// {{{ colormap_6bpp_transparency
 		class colormap_6bpp_transparency
@@ -49,34 +50,25 @@ namespace risa_gl
 		private:
 			typedef binomial_blend<
 				dynamic_constant_getter,
-				zero_getter,
+				destination_getter,
 				bit_setter,
 				plus_function,
 				scaled_source_opacity_getter<1, 65, 1, 256>,
-				zero_alpha_factor,
+				scaled_invert_source_opacity_getter<1, 65, 1, 256>,
 				not_calculate_policy>
 			colormap_operator_type;
 			colormap_operator_type blender;
 
 			colormap_6bpp_transparency();
-		public:
-			typedef colormap_operator_type base_type;
-			typedef base_type::src_getter_type src_getter_type;
-			typedef base_type::dest_getter_type dest_getter_type;
-			typedef base_type::result_setter_type result_setter_type;
-			typedef base_type::compute_type compute_type;
-			typedef base_type::source_alpha_type source_alpha_type;
-			typedef base_type::destination_alpha_type destination_alpha_type;
-			typedef base_type::alpha_policy_type alpha_policy_type;
-			typedef base_type::divisor_type divisor_type;
 
+		public:
 			colormap_6bpp_transparency(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
 			
 			/**
-			 * @param src 無視される
-			 * @param dest opaque値
+			 * @param src opaque値へのイテレータ
+			 * @param dest 下敷きとなるピクセルイテレータ
 			 * @param result 結果を受け取るイテレータ
 			 */
 			template <typename src_itor_t,
@@ -95,37 +87,29 @@ namespace risa_gl
 		 * destinationが65levelの透過性を持つカラーマップ処理。
 		 * alphaは保存
 		 * sourceはopaqueであること
-		 * r = color.rgb * scale(source.opaque)
+		 * r = color.color * scale(source.opaque) +
+		 *					 dest.color * (1-scale(source.opaque))
+		 * r.a = dest.a
 		 */
-		// {{{ colormap_6bpp_transparency_save_alpha
-		class colormap_6bpp_transparency_save_alpha
+		// {{{ colormap_6bpp_transparency_save_destination_alpha
+		class colormap_6bpp_transparency_save_destination_alpha
 		{
 		private:
 			typedef binomial_blend<
 				dynamic_constant_getter,
-				zero_getter,
+				destination_getter,
 				bit_setter,
 				plus_function,
 				scaled_source_opacity_getter<1, 65, 1, 256>,
-				zero_alpha_factor,
+				scaled_invert_source_opacity_getter<1, 65, 1, 256>,
 				alpha_calculate_policy<
-				scaled_source_opacity_getter<1, 65, 1, 256> > >
+				destination_alpha_getter> >
 			colormap_operator_type;
 			colormap_operator_type blender;
 
-			colormap_6bpp_transparency_save_alpha();
+			colormap_6bpp_transparency_save_destination_alpha();
 		public:
-			typedef colormap_operator_type base_type;
-			typedef base_type::src_getter_type src_getter_type;
-			typedef base_type::dest_getter_type dest_getter_type;
-			typedef base_type::result_setter_type result_setter_type;
-			typedef base_type::compute_type compute_type;
-			typedef base_type::source_alpha_type source_alpha_type;
-			typedef base_type::destination_alpha_type destination_alpha_type;
-			typedef base_type::alpha_policy_type alpha_policy_type;
-			typedef base_type::divisor_type divisor_type;
-
-			colormap_6bpp_transparency_save_alpha(const pixel& color):
+			colormap_6bpp_transparency_save_destination_alpha(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
 			
@@ -168,17 +152,8 @@ namespace risa_gl
 			colormap_operator_type blender;
 
 			colormap_6bpp_alpha_blend();
-		public:
-			typedef colormap_operator_type base_type;
-			typedef base_type::src_getter_type src_getter_type;
-			typedef base_type::dest_getter_type dest_getter_type;
-			typedef base_type::result_setter_type result_setter_type;
-			typedef base_type::compute_type compute_type;
-			typedef base_type::source_alpha_type source_alpha_type;
-			typedef base_type::destination_alpha_type destination_alpha_type;
-			typedef base_type::alpha_policy_type alpha_policy_type;
-			typedef base_type::divisor_type divisor_type;
 
+		public:
 			colormap_6bpp_alpha_blend(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -222,17 +197,8 @@ namespace risa_gl
 			colormap_operator_type blender;
 
 			colormap_6bpp_add_blend();
-		public:
-			typedef colormap_operator_type base_type;
-			typedef base_type::src_getter_type src_getter_type;
-			typedef base_type::dest_getter_type dest_getter_type;
-			typedef base_type::result_setter_type result_setter_type;
-			typedef base_type::compute_type compute_type;
-			typedef base_type::source_alpha_type source_alpha_type;
-			typedef base_type::destination_alpha_type destination_alpha_type;
-			typedef base_type::alpha_policy_type alpha_policy_type;
-			typedef base_type::divisor_type divisor_type;
 
+		public:
 			colormap_6bpp_add_blend(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -275,17 +241,8 @@ namespace risa_gl
 			colormap_operator_type blender;
 
 			colormap_transparency();
-		public:
-			typedef colormap_operator_type base_type;
-			typedef base_type::src_getter_type src_getter_type;
-			typedef base_type::dest_getter_type dest_getter_type;
-			typedef base_type::result_setter_type result_setter_type;
-			typedef base_type::compute_type compute_type;
-			typedef base_type::source_alpha_type source_alpha_type;
-			typedef base_type::destination_alpha_type destination_alpha_type;
-			typedef base_type::alpha_policy_type alpha_policy_type;
-			typedef base_type::divisor_type divisor_type;
 
+		public:
 			colormap_transparency(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -329,17 +286,8 @@ namespace risa_gl
 			colormap_operator_type blender;
 
 			colormap_transparency_save_alpha();
-		public:
-			typedef colormap_operator_type base_type;
-			typedef base_type::src_getter_type src_getter_type;
-			typedef base_type::dest_getter_type dest_getter_type;
-			typedef base_type::result_setter_type result_setter_type;
-			typedef base_type::compute_type compute_type;
-			typedef base_type::source_alpha_type source_alpha_type;
-			typedef base_type::destination_alpha_type destination_alpha_type;
-			typedef base_type::alpha_policy_type alpha_policy_type;
-			typedef base_type::divisor_type divisor_type;
 
+		public:
 			colormap_transparency_save_alpha(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}
@@ -383,17 +331,8 @@ namespace risa_gl
 			colormap_operator_type blender;
 
 			colormap_alpha_blend();
-		public:
-			typedef colormap_operator_type base_type;
-			typedef base_type::src_getter_type src_getter_type;
-			typedef base_type::dest_getter_type dest_getter_type;
-			typedef base_type::result_setter_type result_setter_type;
-			typedef base_type::compute_type compute_type;
-			typedef base_type::source_alpha_type source_alpha_type;
-			typedef base_type::destination_alpha_type destination_alpha_type;
-			typedef base_type::alpha_policy_type alpha_policy_type;
-			typedef base_type::divisor_type divisor_type;
 
+		public:
 			colormap_alpha_blend(const pixel& color):
 				blender(src_getter_type(color.get_bit_representation()),
 						dest_getter_type(),
@@ -442,17 +381,8 @@ namespace risa_gl
 			colormap_operator_type blender;
 
 			colormap_add_blend();
-		public:
-			typedef colormap_operator_type base_type;
-			typedef base_type::src_getter_type src_getter_type;
-			typedef base_type::dest_getter_type dest_getter_type;
-			typedef base_type::result_setter_type result_setter_type;
-			typedef base_type::compute_type compute_type;
-			typedef base_type::source_alpha_type source_alpha_type;
-			typedef base_type::destination_alpha_type destination_alpha_type;
-			typedef base_type::alpha_policy_type alpha_policy_type;
-			typedef base_type::divisor_type divisor_type;
 
+		public:
 			colormap_add_blend(const pixel& color):
 				blender(dynamic_constant_getter(color.get_bit_representation()))
 			{}

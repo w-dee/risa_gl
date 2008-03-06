@@ -118,12 +118,11 @@ namespace risa_gl
 
 		/**
 		 * アルファブレンディング
-		 * r.color = src.color * src.a + dest.color * (1 - src.a)
+		 * r.color = src.color * src.a + dest.color * dest.a * (1 - src.a)
 		 * r.a = src.a * src.a + dest.a * (1 - src.a)
 		 */
-		// {{{ alpha_blend_save_calculate_alpha_operator
-
-		class alpha_blend_save_calculate_alpha_operator
+		// {{{ alpha_blend_transmissive_destination_operator
+		class alpha_blend_transmissive_destination_operator
 		{
 		private:
 			typedef primitive::binomial_blend<
@@ -132,13 +131,13 @@ namespace risa_gl
 				bit_setter,
 				plus_function,
 				source_alpha_getter,
-				invert_source_alpha_getter,
+				multiply_invert_source_alpha_and_destination_alpha_getter,
 				multiply_alpha_and_alpha_policy<
 				source_alpha_getter,
 				destination_alpha_getter> >
-			alpha_blend_save_calculate_alpha_operator_type;
+			alpha_blend_transmissive_destination_operator_type;
 
-			alpha_blend_save_calculate_alpha_operator_type blender;
+			alpha_blend_transmissive_destination_operator_type blender;
 		public:
 
 			template <typename src_itor_t,
@@ -157,26 +156,26 @@ namespace risa_gl
 		/**
 		 * アルファブレンディング
 		 * destinationをalpha加算用としてブレンド
-		 * r.color = sat(src.color * src.a + dest.color * dest.a * (1 - src.a))
+		 * r.color = sat(src.color * src.a + dest.color * (1 - src.a))
 		 * r.a = src.a * src.a + dest.a * (1 - src.a)
 		 */
-		// {{{ alpha_blend_save_calculate_additive_alpha_operator
-		class alpha_blend_save_calculate_additive_alpha_operator
+		// {{{ alpha_blend_additive_destination_operator
+		class alpha_blend_additive_destination_operator
 		{
 		private:
 			typedef primitive::binomial_blend<
 				source_getter,
 				destination_getter,
 				bit_setter,
-				plus_function,
+				add_saturation_function,
 				source_alpha_getter,
-				multiply_invert_source_alpha_and_destination_alpha_getter,
+				invert_source_alpha_getter,
 				multiply_alpha_and_alpha_policy<
 				source_alpha_getter,
 				destination_alpha_getter> >
-			alpha_blend_save_calculate_additive_alpha_operator_type;
+			alpha_blend_additive_destination_operator_type;
 
-			alpha_blend_save_calculate_additive_alpha_operator_type blender;
+			alpha_blend_additive_destination_operator_type blender;
 		public:
 
 			template <typename src_itor_t,

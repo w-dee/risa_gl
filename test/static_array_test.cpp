@@ -37,7 +37,7 @@ public:
 
 	void dereference_test()
 	{
-		array_t array = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+		array_t array = { {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} };
 		for (int offset = 0; offset != static_cast<int>(array.size()); ++offset)
 			CPPUNIT_ASSERT(array[offset] == offset);
 	}

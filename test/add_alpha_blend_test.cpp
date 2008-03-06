@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <risa_gl/operators/add_alpha_blend.hpp>
 #include <risa_gl/pixel.hpp>
-
+#include "range.hpp"
 #include <iostream>
 
 class add_alpha_blend_operator_test : public CppUnit::TestFixture
@@ -97,33 +97,35 @@ public:
 		pixel result;
 
 		/**
-		 * r.color = saturation(src.color * src.a + dest.color * dest.a)
+		 * r.color = saturation(src.color * src.a + dest.color * (1 - src.a))
 		 * r.a = src.a + dest.a - (src.a * dest.a)
 		 *
 		 * (128, 128, 128, 129) (64, 64, 64, 65)
-		 * (72, 72, 72, 160)
+		 * 64 + 32 = 96
+		 * (96, 96, 96, 160)
 		 */
 		operators::add_alpha_blend_additive_destination_operator oper;
 		oper(&src, &dest, &result);
 
-		CPPUNIT_ASSERT(result.get_red() == 72);
-		CPPUNIT_ASSERT(result.get_green() == 72);
-		CPPUNIT_ASSERT(result.get_blue() == 72);
-		CPPUNIT_ASSERT(result.get_alpha() == 162);
+		CPPUNIT_ASSERT(range<int>(result.get_red(), 96, 1));
+		CPPUNIT_ASSERT(range<int>(result.get_green(), 96, 1));
+		CPPUNIT_ASSERT(range<int>(result.get_blue(), 96, 1));
+		CPPUNIT_ASSERT(range<int>(result.get_alpha(), 162, 1));
 
 		/**
 		 * r.color = saturation(src.color * src.a + dest.color * dest.a)
 		 * r.a = src.a + dest.a - (src.a * dest.a)
 		 *
 		 * (128, 128, 128, 129) (192, 192, 192, 193)
-		 * (136, 136, 136, 224)
+		 * 64 + 96 = 160
+		 * (160, 160, 160, 224)
 		 */
 		dest = pixel(192, 192, 192, 193);
 		oper(&src, &dest, &result);
-		CPPUNIT_ASSERT(result.get_red() == 136);
-		CPPUNIT_ASSERT(result.get_green() == 136);
-		CPPUNIT_ASSERT(result.get_blue() == 136);
-		CPPUNIT_ASSERT(result.get_alpha() == 225);
+		CPPUNIT_ASSERT(range<int>(result.get_red(), 160, 1));
+		CPPUNIT_ASSERT(range<int>(result.get_green(), 160, 1));
+		CPPUNIT_ASSERT(range<int>(result.get_blue(), 160, 1));
+		CPPUNIT_ASSERT(range<int>(result.get_alpha(), 225, 1));
 	}
 };
 
