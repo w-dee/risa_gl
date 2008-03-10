@@ -1,8 +1,8 @@
 #ifndef RISA_PS_SCREEN_BLEND_HPP_
 #define RISA_PS_SCREEN_BLEND_HPP_
 
-#include <risa_gl/operators/primitive/blend.hpp>
-#include <risa_gl/operators/primitive/alpha_factor.hpp>
+#include <risa_gl/primitive/blend.hpp>
+#include <risa_gl/primitive/alpha_factor.hpp>
 #include <risa_gl/operators/building_blocks.hpp>
 #include <risa_gl/operators/screen_blend.hpp>
 #include <risa_gl/operators/alpha_blend.hpp>

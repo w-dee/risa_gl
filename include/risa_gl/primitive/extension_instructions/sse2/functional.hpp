@@ -1,7 +1,7 @@
 #ifndef RISA_PRIMITIVE_EXT_INST_SSE2_FUNCTIONAL_HPP_
 #define RISA_PRIMITIVE_EXT_INST_SSE2_FUNCTIONAL_HPP_
 
-#include <risa_gl/operators/primitive/extension_instructions/sse2/risa_sse2_types.hpp>
+#include <risa_gl/primitive/extension_instructions/sse2/risa_sse2_types.hpp>
 
 namespace risa_gl
 {
@@ -30,7 +30,7 @@ namespace risa_gl
 				}
 			};
 
-			class add_saturation
+			class vertical_add_saturation
 			{
 			public:
 				word_type operator()(const word_type& mem1,
@@ -40,7 +40,7 @@ namespace risa_gl
 				}
 			};
 
-			class add
+			class vertical_add
 			{
 			public:
 				word_type operator()(const word_type& mem1,
@@ -50,13 +50,13 @@ namespace risa_gl
 				}
 			};
 
-			class mulutiply_high
+			class vertical_mulutiply_high
 			{
 			public:
-				word_type operator()(const word_type* mem1,
-									 const word_type* mem2) const
+				word_type operator()(const word_type& mem1,
+									 const word_type& mem2) const
 				{
-					return _mm_mulhi_epu16(*mem1, *mem2);
+					return _mm_mulhi_epu16(mem1, mem2);
 				}
 			};
 		}

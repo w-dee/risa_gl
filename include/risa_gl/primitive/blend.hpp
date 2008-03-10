@@ -2,9 +2,9 @@
 #define RISA_PRIMITIVE_HPP_
 #include <risa_gl/iterator.hpp>
 #include <risa_gl/risa_types.hpp>
-#include <risa_gl/operators/primitive/compute_function.hpp>
-#include <risa_gl/operators/primitive/selector.hpp>
-#include <risa_gl/operators/primitive/alpha_factor.hpp>
+#include <risa_gl/primitive/compute_function.hpp>
+#include <risa_gl/primitive/selector.hpp>
+#include <risa_gl/primitive/alpha_factor.hpp>
 
 namespace risa_gl
 {

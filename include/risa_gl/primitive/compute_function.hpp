@@ -2,7 +2,7 @@
 #define RISA_COMPUTE_FUNCTION_HPP_
 
 #include <risa_gl/risa_types.hpp>
-#include <risa_gl/operators/primitive/selector.hpp>
+#include <risa_gl/primitive/selector.hpp>
 #include <cmath>
 #include <cassert>
 

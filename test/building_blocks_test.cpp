@@ -1,6 +1,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <risa_gl/operators/building_blocks.hpp>
-#include <risa_gl/operators/primitive/selector.hpp>
+#include <risa_gl/primitive/selector.hpp>
 #include <risa_gl/pixel.hpp>
 #include <risa_gl/risa_types.hpp>
 
