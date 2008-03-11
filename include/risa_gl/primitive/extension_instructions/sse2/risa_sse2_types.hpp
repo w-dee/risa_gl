@@ -11,7 +11,7 @@ namespace risa_gl
 		namespace sse2
 		{
 			typedef __m128i word_type;
-			typedef risa_gl::static_array<char, 16> native_word_type;
+			typedef risa_gl::static_array<unsigned char, 16> native_word_type;
 		}
 	}
 }

@@ -5,21 +5,20 @@
 
 namespace risa_gl
 {
-	namespace primitive
+	namespace extension_instruction
 	{
 		// {{{ trinomial_blend(三項演算)
 		// }}}
 
 		// {{{  binomial_blend (二項演算)
-		template <typename instruction_set_t,
-				  typename src_pixel_getter_t,
+		template <typename src_pixel_getter_t,
 				  typename dest_pixel_getter_t,
 				  typename result_pixel_setter_t,
 				  typename compute_factor_t,
 				  typename src_alpha_factor_t,
 				  typename dest_alpha_factor_t,
 				  typename alpha_calculate_policy_t,
-				  typename divisor_factor_t = divide_factor<256> >
+				  typename divisor_factor_t>
 		class binomial_blend
 		{
 		private:
@@ -28,7 +27,6 @@ namespace risa_gl
 			 * として保持。利用されない場合はインライン化と最適化で消
 			 * えるはず
 			 */
-			instruction_set_t instruction_set;
 			src_pixel_getter_t src_pixel_getter;
 			dest_pixel_getter_t dest_pixel_getter;
 			result_pixel_setter_t result_pixel_setter;
@@ -98,18 +96,31 @@ namespace risa_gl
 							result_itor_t result) const
 			{
 
-				const instruction_set_type::word_type
+				const word_type
 					src_pixel =	src_pixel_getter(src, dest);
-				const instruction_set_type::word_type
+				const word_type
 					dest_pixel = dest_pixel_getter(src, dest);
 
-				risa_gl::uint32 res_pixel =
-					compute_factor(
-						divisor_factor(src_pixel *
-										src_alpha_factor(src, dest)),
-						divisor_factor(dest_pixel *
-										dest_alpha_factor(src, dest)));
+				word_type res_pixel =
+					odd_shifter(
+						compute_factor(
+							divisor_factor(
+								multier(odd_mask(src_pixel),
+										src_alpha_factor(src, dest))),
+							divisor_factor(
+								multier(odd_mask(dest_pixel),
+										dest_alpha_factor(src, dest)))));
+				const word_type res_pixel2 =
+					even_shifter(
+						compute_factor(
+							divisor_factor(
+								multier(even_mask(src_pixel),
+										src_alpha_factor(src, dest))),
+							divisor_factor(
+								multier(even_mask(dest_pixel),
+										dest_alpha_factor(src, dest)))));
 
+				res_pixel = mixer(res_pixel, res_pixel2);
 				// アルファ値の計算
 				// 結果セット
 				result_pixel_setter(result, 
@@ -130,7 +141,7 @@ namespace risa_gl
 				  typename src_alpha_factor_t,
 				  typename constant_alpha_factor_t,
 				  typename alpha_calculate_policy_t,
-				  typename divisor_factor_t = divide_factor<256> >
+				  typename divisor_factor_t>
 		class monomial_function
 		{
 		private:
