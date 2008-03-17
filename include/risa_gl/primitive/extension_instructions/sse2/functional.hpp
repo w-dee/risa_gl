@@ -10,6 +10,26 @@ namespace risa_gl
 	{
 		namespace sse2
 		{
+			struct odd_mask
+			{
+				word_type operator()(const word_type& source) const
+				{
+					// source & 0x00ff00ff00ff00ff00ff00ff00ff00ff
+					const word_type mask = _mm_set1_epi16(0x00ff);
+					return _mm_and_si128(source, mask);
+				}
+			};
+
+			struct even_mask
+			{
+				word_type operator()(const word_type& source) const
+				{
+					// source & 0xff00ff00ff00ff00ff00ff00ff00ff00
+					const word_type mask = _mm_set1_epi16(0xff00);
+					return _mm_and_si128(source, mask);
+				}
+			};
+
 			class converter
 			{
 			public:
@@ -17,7 +37,7 @@ namespace risa_gl
 					const word_type& src) const
 				{
 					native_word_type result;
-					_mm_store_si128(
+					_mm_storeu_si128(
 						reinterpret_cast<word_type*>(&result[0]),
 						src);
 					return result;
@@ -26,106 +46,106 @@ namespace risa_gl
 				word_type to_word_type(
 					native_word_type& src) const
 				{
-					return _mm_load_si128(
+					return _mm_loadu_si128(
 						reinterpret_cast<const word_type*>(&src));
 				}
 
-				word_type zero() const
+				native_word_type
+				to_native_word_type_on_alignment(
+					native_word_type* result,
+					const word_type& src) const
+				{
+					_mm_storeu_si128(
+						reinterpret_cast<word_type*>(&(result[0])),
+						src);
+					return *result;
+				}
+
+				word_type
+				to_word_type_on_alignment(native_word_type& src) const
+				{
+					return _mm_load_si128(
+						reinterpret_cast<const word_type*>(&src));
+				}
+			};
+
+			struct zero_getter
+			{
+				template <typename lhs_type, typename rhs_type>
+				word_type operator()(lhs_type, rhs_type) const
 				{
 					return _mm_setzero_si128();
 				}
+			};
 
-				word_type to_fill_value(risa_gl::byte value) const
-				{
-					return _mm_set1_epi8(value);
-				}
+			template <typename selector_type, typename alpha_getter_type>
+			struct fill_getter
+			{
+				selector_type selector;
+				alpha_getter_type alpha_getter;
 
-				word_type to_fill_value(risa_gl::word value) const
+				template <typename lhs_type, typename rhs_type>
+				word_type operator()(lhs_type lhs, rhs_type rhs) const
 				{
+					risa_gl::word value = alpha_getter(selector(lhs, rhs));
 					return _mm_set1_epi16(value);
 				}
+			};
 
-				word_type to_fill_values(risa_gl::word value1,
-										 risa_gl::word value2,
-										 risa_gl::word value3,
-										 risa_gl::word value4) const
-				{
-					return _mm_set_epi16(
-						value4, value4,
-						value3, value3,
-						value2, value2,
-						value1, value1);
-				}
-
-				word_type to_fill_values(risa_gl::byte value1,
-										 risa_gl::byte value2,
-										 risa_gl::byte value3,
-										 risa_gl::byte value4) const
-				{
-					return _mm_set_epi8(
-						value4, value4, value4, value4,
-						value3, value3, value3, value3,
-						value2, value2, value2, value2,
-						value1, value1, value1, value1);
-				}
-
-				word_type odd_mask(const word_type& source) const
-				{
-					// source & 0x00ff00ff00ff00ff00ff00ff00ff00ff
-					const word_type mask = to_fill_value(
-						static_cast<const risa_gl::word>(0x00ff));
-					return _mm_and_si128(source, mask);
-				}
-
-				word_type even_mask(const word_type& source) const
-				{
-					// source & 0xff00ff00ff00ff00ff00ff00ff00ff00
-					const word_type mask = to_fill_value(
-						static_cast<const risa_gl::word>(0xff00));
-					return _mm_and_si128(source, mask);
-				}
-
-				template <int shift>
-				word_type logical_left_byte_shift(const word_type& source) const
+			template <int shift>
+			struct logical_left_byte_shift
+			{
+				word_type operator()(const word_type& source) const
 				{
 					return _mm_slli_si128(source, shift);
 				}
+			};
 
-				word_type logical_left_32bit_packed_shift(
-					const word_type& source, int shift) const
+			struct logical_left_32bit_packed_shift
+			{
+				word_type operator()(const word_type& source, int shift) const
 				{
 					return _mm_slli_epi32(source, shift);
 				}
+			};
 
-				word_type logical_left_16bit_packed_shift(
-					const word_type& source, int shift) const
+			struct logical_left_16bit_packed_shift
+			{
+				word_type operator()(const word_type& source, int shift) const
 				{
 					return _mm_slli_epi16(source, shift);
 				}
+			};
 
-				template <int shift>
-				word_type logical_right_byte_shift(const word_type& source) const
+			template <int shift>
+			struct logical_right_byte_shift
+			{
+				word_type operator()(const word_type& source) const
 				{
 					return _mm_srli_si128(source, shift);
 				}
+			};
 
-				word_type logical_right_32bit_packed_shift(
-					const word_type& source, int shift) const
+			template <int shift>
+			struct logical_right_32bit_packed_shift
+			{
+				word_type operator()(word_type source) const
 				{
 					return _mm_srli_epi32(source, shift);
 				}
+			};
 
-
-				word_type logical_right_16bit_packed_shift(
-					const word_type& source, int shift) const
+			template <int shift>
+			struct logical_right_16bit_packed_shift
+			{
+				word_type operator()(word_type source) const
 				{
 					return _mm_srli_epi16(source, shift);
 				}
 			};
 
-			class vertical_add_saturation
+			struct vertical_add_saturation
 			{
-			public:
 				word_type operator()(const word_type& mem1,
 									 const word_type& mem2) const
 				{
@@ -133,9 +153,8 @@ namespace risa_gl
 				}
 			};
 
-			class vertical_add
+			struct vertical_add
 			{
-			public:
 				word_type operator()(const word_type& mem1,
 									 const word_type& mem2) const
 				{
@@ -143,9 +162,8 @@ namespace risa_gl
 				}
 			};
 
-			class vertical_sub_saturation
+			struct vertical_sub_saturation
 			{
-			public:
 				word_type operator()(const word_type& mem1,
 									 const word_type& mem2) const
 				{
@@ -153,9 +171,8 @@ namespace risa_gl
 				}
 			};
 
-			class vertical_sub
+			struct vertical_sub
 			{
-			public:
 				word_type operator()(const word_type& mem1,
 									 const word_type& mem2) const
 				{
@@ -163,17 +180,16 @@ namespace risa_gl
 				}
 			};
 
-			class vertical_not
+			struct vertical_not
 			{
 			private:
 				const word_type mask;
 
 				word_type gen_mask() const
 				{
-					converter convert;
-					return convert.to_fill_value(
-						static_cast<risa_gl::byte>(0xff));
+					return _mm_set1_epi8(0xff);
 				}
+
 			public:
 				vertical_not():
 					mask(gen_mask())
@@ -189,9 +205,8 @@ namespace risa_gl
 				}
 			};
 
-			class vertical_or
+			struct vertical_or
 			{
-			public:
 				word_type operator()(const word_type& mem1,
 									 const word_type& mem2) const
 				{
@@ -199,9 +214,8 @@ namespace risa_gl
 				}
 			};
 
-			class vertical_multiply
+			struct vertical_multiply
 			{
-			public:
 				word_type operator()(const word_type& mem1,
 									 const word_type& mem2) const
 				{
@@ -209,9 +223,8 @@ namespace risa_gl
 				}
 			};
 
-			class vertical_compare
+			struct vertical_compare
 			{
-			public:
 				word_type operator()(const word_type& mem1,
 									 const word_type& mem2) const
 				{

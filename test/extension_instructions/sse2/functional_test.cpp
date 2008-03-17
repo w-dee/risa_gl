@@ -3,6 +3,7 @@
 #include <risa_gl/primitive/extension_instructions/sse2/risa_sse2_types.hpp>
 #include <risa_gl/allocator.hpp>
 
+#include <iostream>
 
 using namespace risa_gl::ext_instruction::sse2;
 
@@ -21,32 +22,34 @@ public:
 	void multiply_high_test()
 	{
 		converter convert;
+
+		unsigned int native_alpha_factors[4] =
+			{ 0x00000000, 0x003f003f, 0x007f007f, 0x00ff00ff };
 		word_type alpha_factors =
-			convert.to_fill_values(static_cast<risa_gl::word>(0),
-								   static_cast<risa_gl::word>(63),
-								   static_cast<risa_gl::word>(127),
-								   static_cast<risa_gl::word>(255));
+			convert.to_word_type(
+				*reinterpret_cast<native_word_type*>(native_alpha_factors));
 
 		native_word_type value = {{ 255, 255, 255, 255,
 									255, 255, 255, 255,
 									127, 127, 127, 127,
 									63, 63, 63, 63 }};
+		
 		word_type src_values = convert.to_word_type(value);
 
-		word_type odd_mask = convert.odd_mask(src_values);
-		word_type even_mask =
-			convert.logical_right_32bit_packed_shift(
-				convert.even_mask(src_values), 8);
+		word_type odd_mask_ = odd_mask()(src_values);
+		word_type even_mask_ =
+			logical_right_32bit_packed_shift<8>()(
+				even_mask()(src_values));
 
 		vertical_multiply func;
 		
 		word_type odd_result =
-			convert.logical_right_16bit_packed_shift(
-				func(odd_mask, alpha_factors), 8);
+			logical_right_16bit_packed_shift<8>()(
+				func(odd_mask_, alpha_factors));
 
 		word_type even_result = 
-			convert.logical_right_16bit_packed_shift(
-				func(even_mask, alpha_factors), 8);
+			logical_right_16bit_packed_shift<8>()(
+				func(even_mask_, alpha_factors));
 
 		native_word_type compare_result =
 			convert.to_native_word_type(
@@ -58,7 +61,8 @@ public:
 		native_word_type result =
 			convert.to_native_word_type(
 				vertical_or()(odd_result, 
-							  convert.logical_left_byte_shift<1>(even_result)));
+							  logical_left_byte_shift<1>()(even_result)));
+
 
 		CPPUNIT_ASSERT(result[ 0] == 0);
 		CPPUNIT_ASSERT(result[ 1] == 0);
@@ -82,8 +86,7 @@ public:
 	{
 		converter convert;
 		native_word_type value = convert.to_native_word_type(
-			vertical_not()(convert.to_fill_value(
-							   static_cast<risa_gl::byte>(0xaa))));
+			vertical_not()(_mm_set1_epi8(0xaa)));
 
 		for (size_t offset = 0; offset < sizeof(native_word_type); ++offset)
 			CPPUNIT_ASSERT(value[offset] == 0x55);
@@ -92,37 +95,15 @@ public:
 	void fill_values_test()
 	{
 		converter convert;
-		native_word_type value = convert.to_native_word_type(convert.zero());
+		native_word_type value =
+			convert.to_native_word_type(zero_getter()(1,2));
+
 		for (size_t offset = 0; offset < sizeof(native_word_type); ++offset)
 			CPPUNIT_ASSERT(value[offset] == 0);
 
-		value = convert.to_native_word_type(
-			convert.to_fill_value(static_cast<risa_gl::byte>(0xff)));
+		value = convert.to_native_word_type(_mm_set1_epi8(0xff));
 		for (size_t offset = 0; offset < sizeof(native_word_type); ++offset)
 			CPPUNIT_ASSERT(value[offset] == 0xff);
-		
-		value = convert.to_native_word_type(
-			convert.to_fill_values(static_cast<risa_gl::byte>(0),
-								   static_cast<risa_gl::byte>(64),
-								   static_cast<risa_gl::byte>(128),
-								   static_cast<risa_gl::byte>(255)));
-
-		CPPUNIT_ASSERT(value[ 0] == 0);
-		CPPUNIT_ASSERT(value[ 1] == 0);
-		CPPUNIT_ASSERT(value[ 2] == 0);
-		CPPUNIT_ASSERT(value[ 3] == 0);
-		CPPUNIT_ASSERT(value[ 4] == 64);
-		CPPUNIT_ASSERT(value[ 5] == 64);
-		CPPUNIT_ASSERT(value[ 6] == 64);
-		CPPUNIT_ASSERT(value[ 7] == 64);
-		CPPUNIT_ASSERT(value[ 8] == 128);
-		CPPUNIT_ASSERT(value[ 9] == 128);
-		CPPUNIT_ASSERT(value[10] == 128);
-		CPPUNIT_ASSERT(value[11] == 128);
-		CPPUNIT_ASSERT(value[12] == 255);
-		CPPUNIT_ASSERT(value[13] == 255);
-		CPPUNIT_ASSERT(value[14] == 255);
-		CPPUNIT_ASSERT(value[15] == 255);
 	}
 
 	void vertical_add_saturation_test()

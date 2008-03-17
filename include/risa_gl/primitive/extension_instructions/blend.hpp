@@ -101,6 +101,15 @@ namespace risa_gl
 				const word_type
 					dest_pixel = dest_pixel_getter(src, dest);
 
+
+				/**
+				 * result = src (*) src_factor (+) dest (*) dest_factor;
+				 *        = comp_func(op(src(), src_factor()),
+				 *                    op(dest(), dest_factor()));
+				 *
+				 *          op() == operator(*);
+				 *          comp_func() == operator(+);
+				 */
 				word_type res_pixel =
 					odd_shifter(
 						compute_factor(
