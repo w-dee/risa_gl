@@ -14,6 +14,18 @@ namespace risa_gl
 	typedef signed char int8;
 	typedef signed short int16;
 	typedef signed int int32;
+
+	template <typename T>
+	struct type_traits
+	{
+		typedef typename T::value_type value_type;
+	};
+
+	template <typename T>
+	struct type_traits<T*>
+	{
+		typedef T value_type;
+	};
 }
 
 #endif /* RISA_RISA_TYPES_HPP_ */

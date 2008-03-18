@@ -43,6 +43,14 @@ namespace risa_gl
 		private:
 			calculator_type calculator;
 
+			template <int alpha_position>
+			static int init_alpha_position()
+			{
+				typedef endian_traits<risa_gl::uint32> endian_traits_t;
+				endian_traits_t converter;
+				return converter.little_to_current_offset(alpha_position) * 8;
+			}
+			
 		public:
 			alpha_calculate_policy(
 				calculator_type calculator_ = calculator_type()):
@@ -58,12 +66,9 @@ namespace risa_gl
 									   src_itor_t src,
 									   dest_itor_t dest) const
 			{
-				typedef endian_traits<risa_gl::uint32> endian_traits_t;
-				endian_traits_t converter;
-				const size_t alpha_mask_position =
-					converter.little_to_current_offset(
-						result->alpha_position) * 8;
-
+				const int alpha_mask_position =
+					init_alpha_position<
+					type_traits<result_itor_t>::value_type::alpha_position>();
 				return ((calculator(src, dest)-1) << alpha_mask_position) |
 					(bits & ~(0xff << alpha_mask_position));
 			}
