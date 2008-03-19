@@ -6,7 +6,7 @@ namespace risa_gl
 {
 	namespace primitive
 	{
-		namespace extension_instructions
+		namespace ext
 		{
 			/**
 			 * 何もしないsetter

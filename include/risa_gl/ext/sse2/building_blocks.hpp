@@ -1,14 +1,14 @@
-#include <risa_gl/primitive/extension_instructions/risa_sse2_types.hpp>
-#include <risa_gl/primitive/extension_instructions/functional.hpp>
-#include <risa_gl/primitive/extension_instructions/alpha_factor.hpp>
+#include <risa_gl/ext/risa_sse2_types.hpp>
+#include <risa_gl/ext/functional.hpp>
+#include <risa_gl/ext/alpha_factor.hpp>
 
 namespace risa_gl
 {
-	namespace extension_instructions
+	namespace ext
 	{
 		namespace sse2
 		{
-			namespace ext_inst = risa_gl::extension_instructions;
+			namespace ext_inst = risa_gl::ext;
 
 			struct source_selector
 			{

@@ -9,7 +9,7 @@ namespace risa_gl {
 	/**
 	 * @todo l.c.m. g.c.d.を使ったより効率的なアライメント位置の取得
 	 */
-	template <typename pixel_store_t, size_t fragment_size>
+	template <typename pixel_store_t>
 	class fragment_range
 	{
 	public:

@@ -1,23 +1,25 @@
 #ifndef RISA_PRIMITIVE_EXT_INST_SSE2_ALPHA_FACTOR_HPP_
 #define RISA_PRIMITIVE_EXT_INST_SSE2_ALPHA_FACTOR_HPP_
 
-#include <risa_gl/primitive/extension_instructions/sse2/risa_sse2_types.hpp>
-#include <risa_gl/primitive/extension_instructions/sse2/functional.hpp>
+#include <risa_gl/ext/sse2/risa_sse2_types.hpp>
+#include <risa_gl/ext/sse2/functional.hpp>
+#include <risa_gl/endian_traits.hpp>
 
-namespace risa_gl {
-	namespace ext_instruction 
+namespace risa_gl
+{
+	namespace ext
 	{
 		namespace sse2
 		{
 			class identity_alpha_factor
 			{
 			private:
-				const word_type identity_value;
+				const aligned_wideword_type identity_value;
 				
-				static word_type identity_init()
+				static aligned_wideword_type identity_init()
 				{
-					unsigned int init_value = 256;
-					return _mm_load_ss(reinterpret_cast<float*>(&init_value));
+					int init_value = 256;
+					return _mm_set1_epi32(init_value);
 				}
 			public:
 				identity_alpha_factor():
@@ -26,8 +28,8 @@ namespace risa_gl {
 
 				template <typename src_itor_t,
 						  typename dest_itor_t>
-				word_type operator()(src_itor_t src,
-									 dest_itor_t dest) const
+				aligned_wideword_type operator()(src_itor_t src,
+												 dest_itor_t dest) const
 				{
 					return identity_value;
 				}
@@ -38,10 +40,10 @@ namespace risa_gl {
 			public:
 				template <typename src_itor_t,
 						  typename dest_itor_t>
-				word_type operator()(src_itor_t src,
-									 dest_itor_t dest) const
+				aligned_wideword_type operator()(src_itor_t src,
+												 dest_itor_t dest) const
 				{
-					return converter().zero();
+					return _mm_setzero_si128();
 				}
 			};
 
@@ -54,7 +56,7 @@ namespace risa_gl {
 
 				static int init_alpha_offset()
 				{
-					endian_trait endian;
+					risa_gl::endian_traits<pixel_type> endian;
 					return 
 						endian.to_big_to_current_offset(
 							pixel_type::alpha_position);
@@ -67,11 +69,11 @@ namespace risa_gl {
 
 				template <typename src_itor_t,
 						  typename dest_itor_t>
-				word_type_ operator()(src_itor_t src,
-									  dest_itor_t dest) const
+				aligned_wideword_type operator()(src_itor_t src,
+												 dest_itor_t dest) const
 				{
-					return __mm_srli_epi32(*selector(src, dest),
-										   alpha_offset * 8);
+					return _mm_srli_epi32(*selector(src, dest),
+										  alpha_offset * 8);
 				}
 			};
 		}
