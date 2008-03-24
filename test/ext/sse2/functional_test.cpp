@@ -1,7 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <risa_gl/ext/sse2/primitive/functional.hpp>
+#include <risa_gl/ext/sse2/primitive/pixel_property.hpp>
 #include <risa_gl/ext/sse2/primitive/blend.hpp>
-#include <risa_gl/ext/sse2/risa_sse2_types.hpp>
+#include <risa_gl/ext/sse2/risa_types.hpp>
 #include <risa_gl/pixel.hpp>
 #include <risa_gl/pixel_store.hpp>
 #include <risa_gl/allocator.hpp>

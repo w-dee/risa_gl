@@ -39,10 +39,10 @@ version:
 	$(CXX) --version
 
 performance_test_mt: performance/performance_test.cpp
-	$(CXX) -DMT -DNDEBUG -O3 --param inline-unit-growth=2000 --param large-function-growth=2000 --param max-inline-insns-single=2000 -D_WIN32_WINNT=0x0501 -I../include -I../../cpp_lib -Winline -Wall $(LIBS) -o $@ $< 
+	$(CXX) $(PERF_FLAGS) -DMT -DNDEBUG -O3 --param inline-unit-growth=2000 --param large-function-growth=2000 --param max-inline-insns-single=2000 -D_WIN32_WINNT=0x0501 -I../include -I../../cpp_lib -Winline -Wall $(LIBS) -o $@ $< 
 
 performance_test: performance/performance_test.cpp
-	$(CXX) -O3 -DNDEBUG --param inline-unit-growth=2000 --param large-function-growth=2000 --param max-inline-insns-single=2000 -D_WIN32_WINNT=0x0501 -I../include -I../../cpp_lib -Winline -Wall $(LIBS) -o $@ $< 
+	$(CXX) $(PERF_FLAGS) -O3 -DNDEBUG --param inline-unit-growth=2000 --param large-function-growth=2000 --param max-inline-insns-single=2000 -D_WIN32_WINNT=0x0501 -I../include -I../../cpp_lib -Winline -Wall $(LIBS) -o $@ $< 
 
 
 -include $(DEPENDS)

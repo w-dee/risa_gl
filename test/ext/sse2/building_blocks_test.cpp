@@ -31,7 +31,7 @@ public:
 
 	void destination_selector_test()
 	{
-		source_selector selector;
+		destination_selector selector;
 		int src = 1;
 		int dest = 2;
 
@@ -48,29 +48,41 @@ public:
 
 		src[0] = 1;
 		dest[0] = 2;
+		risa_gl::ext::sse2::primitive::converter convert;
 
-		unaligned_wideword_type result = source_getter(&src, &dest);
+		aligned_wideword_type src_ = convert.to_aligned_wideword_type(src);
+		aligned_wideword_type dest_ = convert.to_aligned_wideword_type(dest);
+
+		aligned_wideword_type result_ = getter(&src_, &dest_);
+		unaligned_wideword_type result =
+			convert.to_unaligned_wideword_type(result_);
 
 		CPPUNIT_ASSERT(result[0] == src[0]);
 	}
 
 	void destination_getter_test()
 	{
-		source_getter getter;
+		destination_getter getter;
 		unaligned_wideword_type src;
 		unaligned_wideword_type dest;
 
 		src[0] = 1;
 		dest[0] = 2;
+		risa_gl::ext::sse2::primitive::converter convert;
 
-		unaligned_wideword_type result source_getter(&src, &dest);
+		aligned_wideword_type src_ = convert.to_aligned_wideword_type(src);
+		aligned_wideword_type dest_ = convert.to_aligned_wideword_type(dest);
+
+		aligned_wideword_type result_ = getter(&src_, &dest_);
+		unaligned_wideword_type result =
+			convert.to_unaligned_wideword_type(result_);
 
 		CPPUNIT_ASSERT(result[0] == dest[0]);
 	}
 
 	void plus_function_test()
 	{
-		source_getter getter;
+		plus_function func;
 		unaligned_wideword_type src;
 		unaligned_wideword_type dest;
 
@@ -79,14 +91,13 @@ public:
 		dest[0] = 2;
 		dest[1] = 0;
 		
-		converter convert;
+		risa_gl::ext::sse2::primitive::converter convert;
 		aligned_wideword_type wide_src =
 			convert.to_aligned_wideword_type(src);
 		aligned_wideword_type wide_dest =
 			convert.to_aligned_wideword_type(dest);
 		
-		aligned_wideword_type wide_result =
-			unaligned_wideword_type result source_getter(&wide_src, &wide_dest);
+		aligned_wideword_type wide_result =	func(wide_src, wide_dest);
 		unaligned_wideword_type result =
 			convert.to_unaligned_wideword_type(wide_result);
 

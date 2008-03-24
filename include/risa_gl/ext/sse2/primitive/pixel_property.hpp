@@ -126,13 +126,12 @@ namespace risa_gl
 				{
 				public:
 					template <typename src_itor_t,
-							  typename dest_itor_t,
-							  typename result_value_t>
-					const result_value_t& operator()(
+							  typename dest_itor_t>
+					aligned_wideword_type operator()(
 						src_itor_t src,
 						dest_itor_t dest) const
 					{
-						return *selector()(src, dest);
+						return *(selector()(src, dest));
 					}
 				};
 
