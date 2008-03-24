@@ -1,12 +1,15 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <risa_gl/ext/sse2/functional.hpp>
-#include <risa_gl/ext/blend.hpp>
+#include <risa_gl/ext/sse2/primitive/functional.hpp>
+#include <risa_gl/ext/sse2/primitive/blend.hpp>
 #include <risa_gl/ext/sse2/risa_sse2_types.hpp>
+#include <risa_gl/pixel.hpp>
+#include <risa_gl/pixel_store.hpp>
 #include <risa_gl/allocator.hpp>
 
 #include <iostream>
 
 using namespace risa_gl::ext::sse2;
+using namespace risa_gl::ext::sse2::primitive;
 
 class functional_test : public CppUnit::TestFixture
 {
@@ -16,10 +19,37 @@ class functional_test : public CppUnit::TestFixture
 	CPPUNIT_TEST(fill_values_test);
 	CPPUNIT_TEST(vertical_not_test);
  	CPPUNIT_TEST(multiply_high_test);
+	CPPUNIT_TEST(load_store_test);
 	CPPUNIT_TEST_SUITE_END();
 
 	typedef risa_gl::aligned_allocator<unaligned_wideword_type, 16> alloc_type;
 public:
+	void load_store_test()
+	{
+		using risa_gl::pixel;
+		using risa_gl::pixel_store;
+
+		typedef pixel_store<pixel> pixel_store_t;
+		pixel_store_t ps(640, 480);
+		for (pixel_store_t::iterator itor = ps.begin();
+			 itor != ps.end(); ++itor)
+			*itor = pixel(255, 0, 0, 1);
+
+		CPPUNIT_ASSERT(ps(0, 0) == pixel(255, 0, 0, 1));
+
+		converter convert;
+		aligned_wideword_type pixs =
+			convert.to_aligned_wideword_type_from_alignment(
+				reinterpret_cast<unaligned_wideword_type&>(ps(0, 0)));
+
+		
+		convert.to_unaligned_wideword_type_on_alignment(
+			reinterpret_cast<unaligned_wideword_type*>(&ps(0, 0)),
+			pixs);
+
+		CPPUNIT_ASSERT(ps(0, 0) == pixel(255, 0, 0, 1));
+	}
+
 	void multiply_high_test()
 	{
 		converter convert;

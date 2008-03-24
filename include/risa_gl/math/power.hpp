@@ -22,7 +22,7 @@ namespace risa_gl
 		{
 			typedef ValueType real_type;
 		public:
-			static real_type value(const real_type base)
+			static real_type value(const real_type)
 			{
 				return static_cast<real_type>(1);
 			}

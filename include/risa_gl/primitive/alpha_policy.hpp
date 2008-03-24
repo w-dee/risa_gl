@@ -25,7 +25,7 @@ namespace risa_gl
 					  typename src_itor_t,
 					  typename dest_itor_t>
 			risa_gl::uint32 operator()(bit_t bits,
-									   result_itor_t result,
+									   result_itor_t,
 									   src_itor_t,
 									   dest_itor_t) const
 			{
@@ -62,7 +62,7 @@ namespace risa_gl
 					  typename src_itor_t,
 					  typename dest_itor_t>
 			risa_gl::uint32 operator()(bit_t bits,
-									   result_itor_t result,
+									   result_itor_t,
 									   src_itor_t src,
 									   dest_itor_t dest) const
 			{

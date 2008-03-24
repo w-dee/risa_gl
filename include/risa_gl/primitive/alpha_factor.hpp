@@ -15,8 +15,8 @@ namespace risa_gl
 		public:
 			template <typename src_itor_t,
 					  typename dest_itor_t>
-			risa_gl::uint32 operator()(src_itor_t src,
-									   dest_itor_t dest) const
+			risa_gl::uint32 operator()(src_itor_t,
+									   dest_itor_t) const
 			{
 				return 256;
 			}
@@ -30,8 +30,8 @@ namespace risa_gl
 		public:
 			template <typename src_itor_t,
 					  typename dest_itor_t>
-			risa_gl::uint32 operator()(src_itor_t src,
-									   dest_itor_t dest) const
+			risa_gl::uint32 operator()(src_itor_t,
+									   dest_itor_t) const
 			{
 				return 0;
 			}
