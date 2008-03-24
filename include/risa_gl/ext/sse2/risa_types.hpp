@@ -1,5 +1,5 @@
-#ifndef RISA_EXT_SSE2_TYPES_HPP_
-#define RISA_EXT_SSE2_TYPES_HPP_
+#ifndef RISA_EXT_SSE2_RISA_TYPES_HPP_
+#define RISA_EXT_SSE2_RISA_TYPES_HPP_
 
 #include <emmintrin.h>
 #include <risa_gl/static_array.hpp>
@@ -28,4 +28,4 @@ namespace risa_gl
 		}
 	}
 }
-#endif /* RISA_EXT_SSE2_TYPES_HPP_ */
+#endif /* RISA_EXT_SSE2_RISA_TYPES_HPP_ */

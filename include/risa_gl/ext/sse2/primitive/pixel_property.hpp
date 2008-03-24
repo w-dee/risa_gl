@@ -1,6 +1,5 @@
 #ifndef RISA_EXT_SSE2_PRIMITIVE_PIXEL_PROPERTY_HPP_
 #define RISA_EXT_SSE2_PRIMITIVE_PIXEL_PROPERTY_HPP_
-#include <risa_gl/primitive/selector.hpp>
 
 namespace risa_gl
 {
@@ -18,7 +17,7 @@ namespace risa_gl
 				{
 				public:
 					template <typename result_itor_t>
-					void operator()(result_itor_t, word_type) const
+					void operator()(result_itor_t, aligned_wideword_type) const
 					{
 					}
 				};
@@ -30,19 +29,19 @@ namespace risa_gl
 				{
 				private:
 					dynamic_constant_setter();
-					const word_type value;
+					const aligned_wideword_type value;
 
 				public:
 					dynamic_constant_setter(const dynamic_constant_setter& src):
 						value(src.value)
 					{}
 
-					dynamic_constant_setter(const word_type value_):
+					dynamic_constant_setter(const aligned_wideword_type value_):
 						value(value_)
 					{}
 
 					template <typename result_itor_t>
-					void operator()(result_itor_t result, word_type)
+					void operator()(result_itor_t result, aligned_wideword_type)
 					{
 						*result = value;
 					}
@@ -55,7 +54,7 @@ namespace risa_gl
 				public:
 					template <typename result_itor_t>
 					void operator()(result_itor_t result,
-									word_type value) const
+									aligned_wideword_type value) const
 					{
 						// @todo movdqaやmovdにならんようなら命令呼び出
 						// すラッパ用意する
@@ -69,11 +68,15 @@ namespace risa_gl
 				class zero_getter
 				{
 				private:
-					const word_type value;
+					const aligned_wideword_type value;
 
+					static aligned_wideword_type zero()
+					{
+						return _mm_setzero_si128();
+					}
 				public:
 					zero_getter():
-						value(converter().zero())
+						value(zero())
 					{}
 			
 					zero_getter(const zero_getter& src):
@@ -82,7 +85,8 @@ namespace risa_gl
 
 					template <typename src_itor_t,
 							  typename dest_itor_t>
-					word_type operator()(src_itor_t, dest_itor_t) const
+					aligned_wideword_type operator()(
+						src_itor_t, dest_itor_t) const
 					{
 						return value;
 					}
@@ -95,20 +99,20 @@ namespace risa_gl
 				{
 				private:
 					dynamic_constant_getter();
-					const word_type value;
+					const aligned_wideword_type value;
 				public:
 					dynamic_constant_getter(const dynamic_constant_getter& src):
 						value(src.value)
 					{}
 
-					dynamic_constant_getter(const word_type value_):
+					dynamic_constant_getter(const aligned_wideword_type value_):
 						value(value_)
 					{}
 
 					template <typename src_itor_t,
 							  typename dest_itor_t>
-					word_type operator()(src_itor_t,
-										 dest_itor_t) const
+					aligned_wideword_type operator()(src_itor_t,
+													 dest_itor_t) const
 					{
 						return value;
 					}
@@ -122,9 +126,11 @@ namespace risa_gl
 				{
 				public:
 					template <typename src_itor_t,
-							  typename dest_itor_t>
-					const word_type& operator()(src_itor_t src,
-												dest_itor_t dest) const
+							  typename dest_itor_t,
+							  typename result_value_t>
+					const result_value_t& operator()(
+						src_itor_t src,
+						dest_itor_t dest) const
 					{
 						return *selector()(src, dest);
 					}
@@ -138,13 +144,13 @@ namespace risa_gl
 				class invert_getter
 				{
 				private:
-					virtical_not oper;
+					vertical_not oper;
 
 				public:
 					template <typename src_itor_t,
 							  typename dest_itor_t>
-					word_type operator()(src_itor_t src,
-										 dest_itor_t dest) const
+					aligned_wideword_type operator()(src_itor_t src,
+													 dest_itor_t dest) const
 					{
 						return oper(*selector()(src, dest));
 					}
@@ -171,8 +177,8 @@ namespace risa_gl
 
 					template <typename src_itor_t,
 							  typename dest_itor_t>
-					word_type operator()(src_itor_t src,
-										 dest_itor_t dest) const
+					aligned_wideword_type operator()(src_itor_t src,
+													 dest_itor_t dest) const
 					{
 						return function(stub(src, dest));
 					}

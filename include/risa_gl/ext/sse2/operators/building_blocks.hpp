@@ -1,9 +1,10 @@
 #ifndef RISA_EXT_SSE2_OPERATORS_BUILDING_BLOCKS_HPP_
 #define RISA_EXT_SSE2_OPERATORS_BUILDING_BLOCKS_HPP_
 
-#include <risa_gl/ext/risa_sse2_types.hpp>
-#include <risa_gl/ext/primitive/functional.hpp>
-#include <risa_gl/ext/primitive/alpha_factor.hpp>
+#include <risa_gl/ext/sse2/risa_types.hpp>
+#include <risa_gl/ext/sse2/primitive/functional.hpp>
+#include <risa_gl/ext/sse2/primitive/alpha_factor.hpp>
+#include <risa_gl/ext/sse2/primitive/pixel_property.hpp>
 
 namespace risa_gl
 {
@@ -13,14 +14,13 @@ namespace risa_gl
 		{
 			namespace operators
 			{
-				namespace ext_inst = risa_gl::ext;
+				namespace primitive = risa_gl::ext::sse2::primitive;
 
 				struct source_selector
 				{
 					template <typename src_itor_t,
-							  typename dest_itor_t,
-							  typename result_itor_t>
-					result_itor_t operator()(src_itor_t src, dest_itor_t) const
+							  typename dest_itor_t>
+					src_itor_t operator()(src_itor_t src, dest_itor_t) const
 					{
 						return src;
 					}
@@ -29,27 +29,49 @@ namespace risa_gl
 				struct destination_selector
 				{
 					template <typename src_itor_t,
-							  typename dest_itor_t,
-							  typename result_itor_t>
-					result_itor_t operator()(src_itor_t, dest_itor_t dest) const
+							  typename dest_itor_t>
+					dest_itor_t operator()(src_itor_t, dest_itor_t dest) const
 					{
 						return dest;
 					}
 				};
 
-				typedef ext_inst::bits_getter<source_selector>
+				typedef primitive::bits_getter<source_selector>
 				source_getter;
 
-				typedef ext_inst::bits_getter<destination_selector> 
+				typedef primitive::bits_getter<destination_selector> 
 				destination_getter;
 
-				typedef vertical_add plus_function;
+				typedef primitive::vertical_add plus_function;
 
-				typedef alpha_getter<source_selector, alpha_bits_get_method> 
-				source_alpha_getter;
+				template <typename pixel_type>
+				struct source_alpha_getter :
+					primitive::alpha_getter<
+					source_selector,
+					primitive::alpha_bits_get_method<pixel_type> > 
+				{};
 
-				invert_source_alpha_getter;
-				not_calculate_policy;
+				template <typename pixel_type>
+				struct invert_source_alpha_getter :
+					primitive::invert_alpha_getter<
+					source_selector,
+					primitive::alpha_bits_get_method<pixel_type> > 
+				{};
+
+				template <typename pixel_type>
+				struct destination_alpha_getter :
+					primitive::alpha_getter<
+					destination_selector,
+					primitive::alpha_bits_get_method<pixel_type> > 
+				{};
+
+				template <typename pixel_type>
+				struct invert_destination_alpha_getter :
+					primitive::invert_alpha_getter<
+					destination_selector,
+					primitive::alpha_bits_get_method<pixel_type> > 
+				{};
+
 			}
 		}
 	}

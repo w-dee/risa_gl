@@ -2,7 +2,7 @@
 #define RISA_EXT_SSE2_PRIMITIVE_FUNCTIONAL_HPP_
 
 #include <risa_gl/risa_types.hpp>
-#include <risa_gl/ext/sse2/risa_sse2_types.hpp>
+#include <risa_gl/ext/sse2/risa_types.hpp>
 
 namespace risa_gl
 {
@@ -54,15 +54,6 @@ namespace risa_gl
 						return _mm_load_si128(
 							reinterpret_cast<const aligned_wideword_type*>(
 								&src));
-					}
-				};
-
-				struct zero_getter
-				{
-					template <typename lhs_type, typename rhs_type>
-					aligned_wideword_type operator()(lhs_type, rhs_type) const
-					{
-						return _mm_setzero_si128();
 					}
 				};
 
@@ -212,6 +203,16 @@ namespace risa_gl
 						const aligned_wideword_type& mem2) const
 					{
 						return _mm_or_si128(mem1, mem2);
+					}
+				};
+
+				struct vertical_and
+				{
+					aligned_wideword_type operator()(
+						const aligned_wideword_type& mem1,
+						const aligned_wideword_type& mem2) const
+					{
+						return _mm_and_si128(mem1, mem2);
 					}
 				};
 
