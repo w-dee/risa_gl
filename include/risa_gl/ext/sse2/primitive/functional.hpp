@@ -235,6 +235,27 @@ namespace risa_gl
 						return _mm_cmpeq_epi8(mem1, mem2);
 					}
 				};
+
+				struct odd_and_even_mixer
+				{
+					aligned_wideword_type operator()(
+						const aligned_wideword_type& odd_,
+						const aligned_wideword_type& even_) const
+					{
+						return _mm_or_si128(odd_,
+											_mm_slli_si128(even_, 1));
+					}
+				};
+
+				template <int shift_bits>
+				struct word_base_divisor
+				{
+					aligned_wideword_type operator()(
+						const aligned_wideword_type& value) const
+					{
+						return _mm_srli_epi16(value, shift_bits);
+					}
+				};
 			}
 		}
 	}

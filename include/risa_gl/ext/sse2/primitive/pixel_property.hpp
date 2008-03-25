@@ -56,9 +56,9 @@ namespace risa_gl
 					void operator()(result_itor_t result,
 									aligned_wideword_type value) const
 					{
-						// @todo movdqaやmovdにならんようなら命令呼び出
-						// すラッパ用意する
-						*result = value;
+						_mm_store_si128(
+							reinterpret_cast<aligned_wideword_type*>(&*result),
+							value);
 					}
 				};
 
@@ -131,7 +131,9 @@ namespace risa_gl
 						src_itor_t src,
 						dest_itor_t dest) const
 					{
-						return *(selector()(src, dest));
+						return _mm_load_si128(
+							reinterpret_cast<aligned_wideword_type*>(
+								&*selector()(src, dest)));
 					}
 				};
 

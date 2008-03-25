@@ -51,9 +51,12 @@ namespace risa_gl
 					}
 				};
 
-				template <typename selector_type, typename pixel_type>
+				template <typename selector_type, typename bit_get_method>
 				class alpha_getter
 				{
+				public:
+					typedef typename bit_get_method::pixel_type pixel_type;
+
 				private:
 					selector_type selector;
 					const int alpha_offset;
@@ -62,8 +65,8 @@ namespace risa_gl
 					{
 						risa_gl::endian_traits<pixel_type> endian;
 						return 
-							endian.to_big_to_current_offset(
-								pixel_type::alpha_position);
+							endian.big_to_current_offset(
+								bit_get_method::pixel_type::alpha_position);
 					}
 				public:
 					alpha_getter():
@@ -76,14 +79,20 @@ namespace risa_gl
 					aligned_wideword_type operator()(src_itor_t src,
 													 dest_itor_t dest) const
 					{
-						return _mm_srli_epi32(*selector(src, dest),
-											  alpha_offset * 8);
+						aligned_wideword_type value =
+							_mm_load_si128(
+								reinterpret_cast<aligned_wideword_type*>(
+									&*selector(src, dest)));
+						return _mm_srli_epi32(value, alpha_offset * 8);
 					}
 				};
 
-				template <typename selector_type, typename pixel_type>
+				template <typename selector_type, typename bit_get_method>
 				class invert_alpha_getter
 				{
+				public:
+					typedef typename bit_get_method::pixel_type pixel_type;
+
 				private:
 					selector_type selector;
 					const vertical_not oper;
@@ -93,7 +102,7 @@ namespace risa_gl
 					{
 						risa_gl::endian_traits<pixel_type> endian;
 						return 
-							endian.to_big_to_current_offset(
+							endian.big_to_current_offset(
 								pixel_type::alpha_position);
 					}
 				public:
@@ -109,14 +118,19 @@ namespace risa_gl
 													 dest_itor_t dest) const
 					{
 						return oper(
-							_mm_srli_epi32(*selector(src, dest),
-										   alpha_offset * 8));
+							_mm_srli_epi32(
+								*reinterpret_cast<aligned_wideword_type*>(
+									&*selector(src, dest)),
+								alpha_offset * 8));
 					}
 				};
 
-				template <typename pixel_type>
+				template <typename pixel_t>
 				struct alpha_bits_get_method
 				{
+				public:
+					typedef pixel_t pixel_type;
+
 				private:
 					primitive::vertical_and oper;
 					aligned_wideword_type alpha_mask;
