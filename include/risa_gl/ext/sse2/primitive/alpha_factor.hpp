@@ -51,27 +51,18 @@ namespace risa_gl
 					}
 				};
 
-				template <typename selector_type, typename bit_get_method>
+				template <typename selector_type,
+						  typename bit_get_method_type>
 				class alpha_getter
 				{
-				public:
-					typedef typename bit_get_method::pixel_type pixel_type;
-
 				private:
 					selector_type selector;
-					const int alpha_offset;
+					bit_get_method_type bit_get_method;
 
-					static int init_alpha_offset()
-					{
-						risa_gl::endian_traits<pixel_type> endian;
-						return 
-							endian.big_to_current_offset(
-								bit_get_method::pixel_type::alpha_position);
-					}
 				public:
 					alpha_getter():
 						selector(),
-						alpha_offset(init_alpha_offset())
+						bit_get_method()
 					{}
 
 					template <typename src_itor_t,
@@ -83,7 +74,7 @@ namespace risa_gl
 							_mm_load_si128(
 								reinterpret_cast<aligned_wideword_type*>(
 									&*selector(src, dest)));
-						return _mm_srli_epi32(value, alpha_offset * 8);
+						return bit_get_method(value);
 					}
 				};
 
@@ -92,24 +83,16 @@ namespace risa_gl
 				{
 				public:
 					typedef typename bit_get_method::pixel_type pixel_type;
+					typedef
+					alpha_getter<selector_type, bit_get_method>
+					alpha_getter_type;
 
 				private:
-					selector_type selector;
-					const vertical_not oper;
-					const int alpha_offset;
+					alpha_getter_type getter;
 
-					static int init_alpha_offset()
-					{
-						risa_gl::endian_traits<pixel_type> endian;
-						return 
-							endian.big_to_current_offset(
-								pixel_type::alpha_position);
-					}
 				public:
 					invert_alpha_getter():
-						selector(),
-						oper(),
-						alpha_offset(init_alpha_offset())
+						getter()
 					{}
 
 					template <typename src_itor_t,
@@ -117,11 +100,8 @@ namespace risa_gl
 					aligned_wideword_type operator()(src_itor_t src,
 													 dest_itor_t dest) const
 					{
-						return oper(
-							_mm_srli_epi32(
-								*reinterpret_cast<aligned_wideword_type*>(
-									&*selector(src, dest)),
-								alpha_offset * 8));
+						return _mm_sub_epi8(_mm_setzero_si128(),
+											getter(src, dest));
 					}
 				};
 
@@ -132,7 +112,6 @@ namespace risa_gl
 					typedef pixel_t pixel_type;
 
 				private:
-					primitive::vertical_and oper;
 					aligned_wideword_type alpha_mask;
 
 					static aligned_wideword_type get_mask() 
@@ -144,15 +123,13 @@ namespace risa_gl
 
 				public:
 					alpha_bits_get_method():
-						oper(),
 						alpha_mask(get_mask())
 					{}
 
-					template <typename src_type,
-							  typename result_type>
-					result_type operator()(src_type value) const
+					aligned_wideword_type operator()(
+						aligned_wideword_type value) const
 					{
-						return oper(value, alpha_mask);
+						return _mm_and_si128(value, alpha_mask);
 					}
 				};
 			}

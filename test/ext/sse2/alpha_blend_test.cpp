@@ -62,9 +62,9 @@ public:
 
 		for (int i = 0; i < 4; ++i)
 		{
-			CPPUNIT_ASSERT(result(i,0).get_red() == 64);
-			CPPUNIT_ASSERT(result(i,0).get_green() == 64); 
-			CPPUNIT_ASSERT(result(i,0).get_blue() == 64);
+			CPPUNIT_ASSERT(range<int>(result(i,0).get_red(), 64, 1));
+			CPPUNIT_ASSERT(range<int>(result(i,0).get_green(), 64, 1)); 
+			CPPUNIT_ASSERT(range<int>(result(i,0).get_blue(), 64, 1));
 		}
 
 		std::generate(dest.begin(), dest.end(),
@@ -81,7 +81,6 @@ public:
 			 adapter_type::to_alignment(result.begin()));
 		for (int i = 0; i < 4; ++i)
 		{
-			std::cout << i << ":" << result(i,0) << std::endl;
 			CPPUNIT_ASSERT(result(i,0).get_red() == 191);
 			CPPUNIT_ASSERT(result(i,0).get_green() == 191); 
 			CPPUNIT_ASSERT(result(i,0).get_blue() == 191);
