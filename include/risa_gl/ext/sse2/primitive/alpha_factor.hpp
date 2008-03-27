@@ -129,7 +129,14 @@ namespace risa_gl
 					aligned_wideword_type operator()(
 						aligned_wideword_type value) const
 					{
-						return _mm_and_si128(value, alpha_mask);
+						aligned_wideword_type alpha_bit = 
+							_mm_srli_si128(
+								_mm_and_si128(value, alpha_mask),
+								pixel_type::alpha_position);
+						
+						return
+							_mm_or_si128(alpha_bit,
+										 _mm_slli_si128(alpha_bit, 2));
 					}
 				};
 			}

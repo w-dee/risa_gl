@@ -19,7 +19,7 @@ class functional_test : public CppUnit::TestFixture
 	CPPUNIT_TEST(vertical_add_saturation_test);
 	CPPUNIT_TEST(fill_values_test);
 	CPPUNIT_TEST(vertical_not_test);
- 	CPPUNIT_TEST(multiply_high_test);
+ 	CPPUNIT_TEST(multiply_test);
 	CPPUNIT_TEST(load_store_test);
 	CPPUNIT_TEST_SUITE_END();
 
@@ -51,7 +51,7 @@ public:
 		CPPUNIT_ASSERT(ps(0, 0) == pixel(255, 0, 0, 1));
 	}
 
-	void multiply_high_test()
+	void multiply_test()
 	{
 		converter convert;
 
@@ -71,9 +71,7 @@ public:
 			convert.to_aligned_wideword_type(value);
 
 		aligned_wideword_type odd_mask_ = odd_mask()(src_values);
-		aligned_wideword_type even_mask_ =
-			logical_right_32bit_packed_shift<8>()(
-				even_mask()(src_values));
+		aligned_wideword_type even_mask_ = even_mask()(src_values);
 
 		vertical_multiply func;
 		

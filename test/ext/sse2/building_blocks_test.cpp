@@ -111,17 +111,17 @@ public:
 	void source_alpha_getter_test()
 	{
 		unaligned_wideword_type src = {{
-				1, 2, 3, 122,
-				1, 2, 3, 124,
-				1, 2, 3, 126,
-				1, 2, 3, 128
-			}};
+			1, 2, 3, 122,
+			1, 2, 3, 124,
+			1, 2, 3, 126,
+			1, 2, 3, 128
+		}};
 		unaligned_wideword_type dest = {{
-				246, 4, 5, 6,
-				251, 4, 5, 6,
-				253, 4, 5, 6,
-				255, 4, 5, 6
-			}};
+			4, 5, 6, 246,
+			4, 5, 6, 251,
+			4, 5, 6, 253,
+			4, 5, 6, 255
+		}};
 
 		converter convert;
 		source_alpha_getter<risa_gl::pixel> getter;
@@ -130,38 +130,38 @@ public:
 		unaligned_wideword_type result = 
 			convert.to_unaligned_wideword_type(result_);
 
-		CPPUNIT_ASSERT(result[ 0] == 0);
+		CPPUNIT_ASSERT(result[ 0] == 122);
 		CPPUNIT_ASSERT(result[ 1] == 0);
-		CPPUNIT_ASSERT(result[ 2] == 0);
-		CPPUNIT_ASSERT(result[ 3] == 122);
-		CPPUNIT_ASSERT(result[ 4] == 0);
+		CPPUNIT_ASSERT(result[ 2] == 122);
+		CPPUNIT_ASSERT(result[ 3] == 0);
+		CPPUNIT_ASSERT(result[ 4] == 124);
 		CPPUNIT_ASSERT(result[ 5] == 0);
-		CPPUNIT_ASSERT(result[ 6] == 0);
-		CPPUNIT_ASSERT(result[ 7] == 124);
-		CPPUNIT_ASSERT(result[ 8] == 0);
+		CPPUNIT_ASSERT(result[ 6] == 124);
+		CPPUNIT_ASSERT(result[ 7] == 0);
+		CPPUNIT_ASSERT(result[ 8] == 126);
 		CPPUNIT_ASSERT(result[ 9] == 0);
-		CPPUNIT_ASSERT(result[10] == 0);
-		CPPUNIT_ASSERT(result[11] == 126);
-		CPPUNIT_ASSERT(result[12] == 0);
+		CPPUNIT_ASSERT(result[10] == 126);
+		CPPUNIT_ASSERT(result[11] == 0);
+		CPPUNIT_ASSERT(result[12] == 128);
 		CPPUNIT_ASSERT(result[13] == 0);
-		CPPUNIT_ASSERT(result[14] == 0);
-		CPPUNIT_ASSERT(result[15] == 128);
+		CPPUNIT_ASSERT(result[14] == 128);
+		CPPUNIT_ASSERT(result[15] == 0);
 	}
 
 	void invert_source_alpha_getter_test()
 	{
 		unaligned_wideword_type src = {{
-				1, 2, 3, 122,
-				1, 2, 3, 124,
-				1, 2, 3, 126,
-				1, 2, 3, 128
-			}};
+			1, 2, 3, 122,
+			1, 2, 3, 124,
+			1, 2, 3, 126,
+			1, 2, 3, 128
+		}};
 		unaligned_wideword_type dest = {{
-				246, 4, 5, 6,
-				251, 4, 5, 6,
-				253, 4, 5, 6,
-				255, 4, 5, 6
-			}};
+			4, 5, 6, 246,
+			4, 5, 6, 251,
+			4, 5, 6, 253,
+			4, 5, 6, 255
+		}};
 
 		converter convert;
 		invert_source_alpha_getter<risa_gl::pixel> getter;
@@ -170,36 +170,102 @@ public:
 		unaligned_wideword_type result = 
 			convert.to_unaligned_wideword_type(result_);
 
-// 		for (int offset = 0; offset < 16; ++offset)
-// 			std::cout << offset << ": " << static_cast<short>(result[offset]) << std::endl;
-
-
-		CPPUNIT_ASSERT(result[ 0] == 0);
+		CPPUNIT_ASSERT(result[ 0] == 256 - 122);
 		CPPUNIT_ASSERT(result[ 1] == 0);
-		CPPUNIT_ASSERT(result[ 2] == 0);
-		CPPUNIT_ASSERT(result[ 3] == 256 - 122);
-		CPPUNIT_ASSERT(result[ 4] == 0);
+		CPPUNIT_ASSERT(result[ 2] == 256 - 122);
+		CPPUNIT_ASSERT(result[ 3] == 0);
+		CPPUNIT_ASSERT(result[ 4] == 256 - 124);
 		CPPUNIT_ASSERT(result[ 5] == 0);
-		CPPUNIT_ASSERT(result[ 6] == 0);
-		CPPUNIT_ASSERT(result[ 7] == 256 - 124);
-		CPPUNIT_ASSERT(result[ 8] == 0);
+		CPPUNIT_ASSERT(result[ 6] == 256 - 124);
+		CPPUNIT_ASSERT(result[ 7] == 0);
+		CPPUNIT_ASSERT(result[ 8] == 256 - 126);
 		CPPUNIT_ASSERT(result[ 9] == 0);
-		CPPUNIT_ASSERT(result[10] == 0);
-		CPPUNIT_ASSERT(result[11] == 256 - 126);
-		CPPUNIT_ASSERT(result[12] == 0);
+		CPPUNIT_ASSERT(result[10] == 256 - 126);
+		CPPUNIT_ASSERT(result[11] == 0);
+		CPPUNIT_ASSERT(result[12] == 256 - 128);
 		CPPUNIT_ASSERT(result[13] == 0);
-		CPPUNIT_ASSERT(result[14] == 0);
-		CPPUNIT_ASSERT(result[15] == 256 - 128);
+		CPPUNIT_ASSERT(result[14] == 256 - 128);
+		CPPUNIT_ASSERT(result[15] == 0);
 	}
 
 	void destination_alpha_getter_test()
 	{
-		CPPUNIT_FAIL("test not implemented yet.");
+		unaligned_wideword_type src = {{
+			1, 2, 3, 122,
+			1, 2, 3, 124,
+			1, 2, 3, 126,
+			1, 2, 3, 128
+		}};
+		unaligned_wideword_type dest = {{
+			4, 5, 6, 246,
+			4, 5, 6, 251,
+			4, 5, 6, 253,
+			4, 5, 6, 255
+		}};
+
+		converter convert;
+		destination_alpha_getter<risa_gl::pixel> getter;
+		aligned_wideword_type result_ = getter(&src, &dest);
+
+		unaligned_wideword_type result = 
+			convert.to_unaligned_wideword_type(result_);
+
+		CPPUNIT_ASSERT(result[ 0] == 246);
+		CPPUNIT_ASSERT(result[ 1] == 0);
+		CPPUNIT_ASSERT(result[ 2] == 246);
+		CPPUNIT_ASSERT(result[ 3] == 0);
+		CPPUNIT_ASSERT(result[ 4] == 251);
+		CPPUNIT_ASSERT(result[ 5] == 0);
+		CPPUNIT_ASSERT(result[ 6] == 251);
+		CPPUNIT_ASSERT(result[ 7] == 0);
+		CPPUNIT_ASSERT(result[ 8] == 253);
+		CPPUNIT_ASSERT(result[ 9] == 0);
+		CPPUNIT_ASSERT(result[10] == 253);
+		CPPUNIT_ASSERT(result[11] == 0);
+		CPPUNIT_ASSERT(result[12] == 255);
+		CPPUNIT_ASSERT(result[13] == 0);
+		CPPUNIT_ASSERT(result[14] == 255);
+		CPPUNIT_ASSERT(result[15] == 0);
 	}
 
 	void invert_destination_alpha_getter_test()
 	{
-		CPPUNIT_FAIL("test not implemented yet.");
+		unaligned_wideword_type src = {{
+			1, 2, 3, 122,
+			1, 2, 3, 124,
+			1, 2, 3, 126,
+			1, 2, 3, 128
+		}};
+		unaligned_wideword_type dest = {{
+			4, 5, 6, 246,
+			4, 5, 6, 251,
+			4, 5, 6, 253,
+			4, 5, 6, 255
+		}};
+
+		converter convert;
+		invert_destination_alpha_getter<risa_gl::pixel> getter;
+		aligned_wideword_type result_ = getter(&src, &dest);
+
+		unaligned_wideword_type result = 
+			convert.to_unaligned_wideword_type(result_);
+
+		CPPUNIT_ASSERT(result[ 0] == 256 - 246);
+		CPPUNIT_ASSERT(result[ 1] == 0);
+		CPPUNIT_ASSERT(result[ 2] == 256 - 246);
+		CPPUNIT_ASSERT(result[ 3] == 0);
+		CPPUNIT_ASSERT(result[ 4] == 256 - 251);
+		CPPUNIT_ASSERT(result[ 5] == 0);
+		CPPUNIT_ASSERT(result[ 6] == 256 - 251);
+		CPPUNIT_ASSERT(result[ 7] == 0);
+		CPPUNIT_ASSERT(result[ 8] == 256 - 253);
+		CPPUNIT_ASSERT(result[ 9] == 0);
+		CPPUNIT_ASSERT(result[10] == 256 - 253);
+		CPPUNIT_ASSERT(result[11] == 0);
+		CPPUNIT_ASSERT(result[12] == 256 - 255);
+		CPPUNIT_ASSERT(result[13] == 0);
+		CPPUNIT_ASSERT(result[14] == 256 - 255);
+		CPPUNIT_ASSERT(result[15] == 0);
 	}
 
 };

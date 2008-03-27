@@ -1,6 +1,7 @@
 #ifndef RISA_EXT_SSE2_PRIMITIVE_BLEND_HPP_
 #define RISA_EXT_SSE2_PRIMITIVE_BLEND_HPP_
 #include <risa_gl/iterator.hpp>
+#include <risa_gl/endian_reverser.hpp>
 #include <risa_gl/ext/sse2/risa_types.hpp>
 
 namespace risa_gl
@@ -13,24 +14,32 @@ namespace risa_gl
 			{
 				struct odd_mask
 				{
+					const aligned_wideword_type mask;
+
+					odd_mask():
+						mask(_mm_set1_epi16(0x00ff))
+					{}
+
 					aligned_wideword_type operator()(
 						const aligned_wideword_type& source) const
 					{
 						// source & 0x00ff00ff00ff00ff00ff00ff00ff00ff
-						const aligned_wideword_type mask =
-							_mm_set1_epi16(0x00ff);
 						return _mm_and_si128(source, mask);
 					}
 				};
 
 				struct even_mask
 				{
+					const aligned_wideword_type mask;
+
+					even_mask():
+						mask(_mm_set1_epi16(0xff00))
+					{}
+
 					aligned_wideword_type operator()(
 						const aligned_wideword_type& source) const
 					{
 						// source & 0xff00ff00ff00ff00ff00ff00ff00ff00
-						const aligned_wideword_type mask =
-							_mm_set1_epi16(0xff00);
 						return _mm_srli_si128(_mm_and_si128(source, mask), 1);
 					}
 				};
