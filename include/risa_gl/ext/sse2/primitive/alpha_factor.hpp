@@ -89,10 +89,17 @@ namespace risa_gl
 
 				private:
 					alpha_getter_type getter;
+					aligned_wideword_type base_alpha;
+
+					static aligned_wideword_type init_base_alpha()
+					{
+						return _mm_set1_epi16(255);
+					}
 
 				public:
 					invert_alpha_getter():
-						getter()
+						getter(),
+						base_alpha(init_base_alpha())
 					{}
 
 					template <typename src_itor_t,
@@ -100,7 +107,7 @@ namespace risa_gl
 					aligned_wideword_type operator()(src_itor_t src,
 													 dest_itor_t dest) const
 					{
-						return _mm_sub_epi8(_mm_setzero_si128(),
+						return _mm_sub_epi8(base_alpha,
 											getter(src, dest));
 					}
 				};

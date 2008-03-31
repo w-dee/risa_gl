@@ -170,21 +170,21 @@ public:
 		unaligned_wideword_type result = 
 			convert.to_unaligned_wideword_type(result_);
 
-		CPPUNIT_ASSERT(result[ 0] == 256 - 122);
+		CPPUNIT_ASSERT(result[ 0] == 256 - 123);
 		CPPUNIT_ASSERT(result[ 1] == 0);
-		CPPUNIT_ASSERT(result[ 2] == 256 - 122);
+		CPPUNIT_ASSERT(result[ 2] == 256 - 123);
 		CPPUNIT_ASSERT(result[ 3] == 0);
-		CPPUNIT_ASSERT(result[ 4] == 256 - 124);
+		CPPUNIT_ASSERT(result[ 4] == 256 - 125);
 		CPPUNIT_ASSERT(result[ 5] == 0);
-		CPPUNIT_ASSERT(result[ 6] == 256 - 124);
+		CPPUNIT_ASSERT(result[ 6] == 256 - 125);
 		CPPUNIT_ASSERT(result[ 7] == 0);
-		CPPUNIT_ASSERT(result[ 8] == 256 - 126);
+		CPPUNIT_ASSERT(result[ 8] == 256 - 127);
 		CPPUNIT_ASSERT(result[ 9] == 0);
-		CPPUNIT_ASSERT(result[10] == 256 - 126);
+		CPPUNIT_ASSERT(result[10] == 256 - 127);
 		CPPUNIT_ASSERT(result[11] == 0);
-		CPPUNIT_ASSERT(result[12] == 256 - 128);
+		CPPUNIT_ASSERT(result[12] == 256 - 129);
 		CPPUNIT_ASSERT(result[13] == 0);
-		CPPUNIT_ASSERT(result[14] == 256 - 128);
+		CPPUNIT_ASSERT(result[14] == 256 - 129);
 		CPPUNIT_ASSERT(result[15] == 0);
 	}
 
@@ -250,21 +250,21 @@ public:
 		unaligned_wideword_type result = 
 			convert.to_unaligned_wideword_type(result_);
 
-		CPPUNIT_ASSERT(result[ 0] == 256 - 246);
+		CPPUNIT_ASSERT(result[ 0] == 256 - 247);
 		CPPUNIT_ASSERT(result[ 1] == 0);
-		CPPUNIT_ASSERT(result[ 2] == 256 - 246);
+		CPPUNIT_ASSERT(result[ 2] == 256 - 247);
 		CPPUNIT_ASSERT(result[ 3] == 0);
-		CPPUNIT_ASSERT(result[ 4] == 256 - 251);
+		CPPUNIT_ASSERT(result[ 4] == 256 - 252);
 		CPPUNIT_ASSERT(result[ 5] == 0);
-		CPPUNIT_ASSERT(result[ 6] == 256 - 251);
+		CPPUNIT_ASSERT(result[ 6] == 256 - 252);
 		CPPUNIT_ASSERT(result[ 7] == 0);
-		CPPUNIT_ASSERT(result[ 8] == 256 - 253);
+		CPPUNIT_ASSERT(result[ 8] == 256 - 254);
 		CPPUNIT_ASSERT(result[ 9] == 0);
-		CPPUNIT_ASSERT(result[10] == 256 - 253);
+		CPPUNIT_ASSERT(result[10] == 256 - 254);
 		CPPUNIT_ASSERT(result[11] == 0);
-		CPPUNIT_ASSERT(result[12] == 256 - 255);
+		CPPUNIT_ASSERT(result[12] == 256 - 256);
 		CPPUNIT_ASSERT(result[13] == 0);
-		CPPUNIT_ASSERT(result[14] == 256 - 255);
+		CPPUNIT_ASSERT(result[14] == 256 - 256);
 		CPPUNIT_ASSERT(result[15] == 0);
 	}
 

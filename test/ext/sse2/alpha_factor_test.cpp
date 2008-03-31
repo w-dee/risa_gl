@@ -113,24 +113,24 @@ public:
 			unaligned_wideword_type result = 
 				convert.to_unaligned_wideword_type(result_);
 
-			CPPUNIT_ASSERT(result[0] == 1);
-			CPPUNIT_ASSERT(result[1] == 0);
-			CPPUNIT_ASSERT(result[2] == 1);
-			CPPUNIT_ASSERT(result[3] == 0);
+			CPPUNIT_ASSERT(result[ 0] == 0);
+			CPPUNIT_ASSERT(result[ 1] == 0);
+			CPPUNIT_ASSERT(result[ 2] == 0);
+			CPPUNIT_ASSERT(result[ 3] == 0);
 
-			CPPUNIT_ASSERT(result[4] == 2);
-			CPPUNIT_ASSERT(result[5] == 0);
-			CPPUNIT_ASSERT(result[6] == 2);
-			CPPUNIT_ASSERT(result[7] == 0);
+			CPPUNIT_ASSERT(result[ 4] == 1);
+			CPPUNIT_ASSERT(result[ 5] == 0);
+			CPPUNIT_ASSERT(result[ 6] == 1);
+			CPPUNIT_ASSERT(result[ 7] == 0);
 
-			CPPUNIT_ASSERT(result[8] == 3);
-			CPPUNIT_ASSERT(result[9] == 0);
-			CPPUNIT_ASSERT(result[10] == 3);
+			CPPUNIT_ASSERT(result[ 8] == 2);
+			CPPUNIT_ASSERT(result[ 9] == 0);
+			CPPUNIT_ASSERT(result[10] == 2);
 			CPPUNIT_ASSERT(result[11] == 0);
 
-			CPPUNIT_ASSERT(result[12] == 4);
+			CPPUNIT_ASSERT(result[12] == 3);
 			CPPUNIT_ASSERT(result[13] == 0);
-			CPPUNIT_ASSERT(result[14] == 4);
+			CPPUNIT_ASSERT(result[14] == 3);
 			CPPUNIT_ASSERT(result[15] == 0);
 		}
 	}

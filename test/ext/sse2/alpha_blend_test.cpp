@@ -81,9 +81,9 @@ public:
 			 adapter_type::to_alignment(result.begin()));
 		for (int i = 0; i < 4; ++i)
 		{
-			CPPUNIT_ASSERT(result(i,0).get_red() == 191);
-			CPPUNIT_ASSERT(result(i,0).get_green() == 191); 
-			CPPUNIT_ASSERT(result(i,0).get_blue() == 191);
+			CPPUNIT_ASSERT(range<int>(result(i,0).get_red(), 191, 1));
+			CPPUNIT_ASSERT(range<int>(result(i,0).get_green(), 191, 1)); 
+			CPPUNIT_ASSERT(range<int>(result(i,0).get_blue(), 191, 1));
 		}
 	}
 };
