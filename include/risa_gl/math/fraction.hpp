@@ -1,5 +1,5 @@
-#ifndef RISA_MATH_RATIONAL_HPP_
-#define RISA_MATH_RATIONAL_HPP_
+#ifndef RISA_MATH_FRACTION_HPP_
+#define RISA_MATH_FRACTION_HPP_
 
 #include <risa_gl/math/lcm.hpp>
 #include <risa_gl/math/gcd.hpp>
@@ -10,14 +10,14 @@ namespace risa_gl
 	namespace math
 	{
 		template <typename value_type>
-		class rational
+		class fraction
 		{
 		private:
 			value_type numerator;
 			value_type denominator;
 
 		public:
-			rational(const value_type& num_,
+			fraction(const value_type& num_,
 					 const value_type& deno_):
 				numerator(num_),
 				denominator(deno_)
@@ -26,13 +26,13 @@ namespace risa_gl
 					throw std::runtime_error("zero divide exception.");
 			}
 
-			rational(const rational& src):
+			fraction(const fraction& src):
 				numerator(src.numerator),
 				denominator(src.denominator)
 			{}
 
 
-			rational& operator=(const rational& src)
+			fraction& operator=(const fraction& src)
 			{
 				if (this != &src)
 				{
@@ -43,7 +43,7 @@ namespace risa_gl
 				return *this;
 			}
 
-			~rational()
+			~fraction()
 			{}
 
 			value_type get_numerator() const
@@ -56,21 +56,21 @@ namespace risa_gl
 				return denominator;
 			}
 
-			rational get_reduce() const
+			fraction get_reduce() const
 			{
 				const value_type gcd_value =
 					gcd(numerator, denominator);
 
-				return rational(numerator / gcd_value,
+				return fraction(numerator / gcd_value,
 								denominator / gcd_value);
 			}
 
-			rational& reduce()
+			fraction& reduce()
 			{
 				return *this = this->get_reduce();
 			}
 
-			rational get_invert() const
+			fraction get_invert() const
 			{
 				if (numerator == 0)
 					throw std::runtime_error("zero divide exception.");
@@ -78,11 +78,11 @@ namespace risa_gl
 				value_type sign_factor =
 					numerator < 0 ? -1 : 1;
 
-				return rational(denominator * sign_factor,
+				return fraction(denominator * sign_factor,
 								numerator * sign_factor);
 			}
 
-			rational& invert()
+			fraction& invert()
 			{
 				return *this = this->get_invert();
 			}
@@ -92,7 +92,7 @@ namespace risa_gl
 				return static_cast<value_type>(numerator / denominator);
 			}
 
-			rational& operator+=(const rational& src)
+			fraction& operator+=(const fraction& src)
 			{
 				const value_type lcm_value =
 					lcm(this->denominator, src.denominator);
@@ -104,15 +104,15 @@ namespace risa_gl
 				return *this;
 			}
 
-			rational operator+(const rational& src) const
+			fraction operator+(const fraction& src) const
 			{
-				rational result(*this);
+				fraction result(*this);
 				result += src;
 
 				return result;
 			}
 
-			rational& operator-=(const rational& src)
+			fraction& operator-=(const fraction& src)
 			{
 				const value_type lcm_value =
 					lcm(this->denominator, src.denominator);
@@ -124,15 +124,15 @@ namespace risa_gl
 				return *this;
 			}
 
-			rational operator-(const rational& src) const
+			fraction operator-(const fraction& src) const
 			{
-				rational result(*this);
+				fraction result(*this);
 				result -= src;
 
 				return result;
 			}
 
-			rational& operator*=(const rational& src)
+			fraction& operator*=(const fraction& src)
 			{
 				numerator *= src.numerator;
 				denominator *= src.denominator;
@@ -140,28 +140,28 @@ namespace risa_gl
 				return *this;
 			}
 
-			rational operator*(const rational& src) const
+			fraction operator*(const fraction& src) const
 			{
-				rational result(*this);
+				fraction result(*this);
 				result *= src;
 
 				return result;
 			}
 
-			rational& operator/=(const rational& src)
+			fraction& operator/=(const fraction& src)
 			{
 				return (*this) *= src.get_invert();
 			}
 
-			rational operator/(const rational& src) const
+			fraction operator/(const fraction& src) const
 			{
-				rational result(*this);
+				fraction result(*this);
 				result /= src;
 
 				return result;
 			}
 
-			bool operator==(const rational& src) const
+			bool operator==(const fraction& src) const
 			{
 				const value_type lcm_value =
 					lcm(denominator, src.denominator);
@@ -171,12 +171,12 @@ namespace risa_gl
 					(src.numerator * lcm_value / src.denominator);
 			}
 
-			bool operator!=(const rational& src) const
+			bool operator!=(const fraction& src) const
 			{
 				return !((*this) == src);
 			}
 
-			bool operator<(const rational& src) const
+			bool operator<(const fraction& src) const
 			{
 				const value_type lcm_value =
 					lcm(denominator, src.denominator);
@@ -186,18 +186,18 @@ namespace risa_gl
 					(src.numerator * lcm_value / src.denominator);
 			}
 
-			bool operator<=(const rational& src) const
+			bool operator<=(const fraction& src) const
 			{
 				return
 					((*this) < src) || ((*this) == src);
 			}
 
-			bool operator>(const rational& src) const
+			bool operator>(const fraction& src) const
 			{
 				return !((*this) <= src);
 			}
 
-			bool operator>=(const rational& src) const
+			bool operator>=(const fraction& src) const
 			{
 				return !((*this) < src);
 			}
@@ -205,4 +205,4 @@ namespace risa_gl
 	}
 }
 
-#endif /* RISA_MATH_RATIONAL_HPP_ */
+#endif /* RISA_MATH_FRACTION_HPP_ */
