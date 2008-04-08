@@ -41,6 +41,16 @@ namespace risa_gl
 				return vector2(x - rhs.x, y - rhs.y);
 			}
 
+			vector2 operator/(const float factor) const
+			{
+				return vector2(x / factor, y / factor);
+			}
+
+			bool operator==(const vector2& rhs) const
+			{
+				return x == rhs.x && y == rhs.y;
+			}
+
 			friend std::ostream& operator<<(std::ostream& out,
 											const vector2& self)
 			{
@@ -77,6 +87,16 @@ namespace risa_gl
 			vector3 operator-(const vector3& rhs) const
 			{
 				return vector3(x - rhs.x, y - rhs.y, z - rhs.z);
+			}
+
+			vector3 operator/(const float factor) const
+			{
+				return vector3(x / factor, y / factor, z / factor);
+			}
+
+			bool operator==(const vector3& rhs) const
+			{
+				return x == rhs.x && y == rhs.y && z == rhs.z;
 			}
 
 			friend std::ostream& operator<<(std::ostream& out,
@@ -128,6 +148,22 @@ namespace risa_gl
 					y/w - rhs.y/rhs.w,
 					z/w - rhs.z/rhs.w,
 					1.f);
+			}
+
+			vector4 operator/(const float factor) const
+			{
+				return vector4(x / factor,
+							   y / factor,
+							   z / factor,
+							   w);
+			}
+
+			bool operator==(const vector4& rhs) const
+			{
+				return
+					x/w == rhs.x/rhs.w &&
+					y/w == rhs.y/rhs.w &&
+					z/w == rhs.z/rhs.w;
 			}
 
 			friend std::ostream& operator<<(std::ostream& out,

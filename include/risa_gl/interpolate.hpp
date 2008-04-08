@@ -2,6 +2,7 @@
 #define RISA_INTERPOLATE_HPP_
 
 #include <risa_gl/math/vector.hpp>
+#include <risa_gl/math/region.hpp>
 #include <risa_gl/risa_types.hpp>
 #include <risa_gl/allocator.hpp>
 #include <vector>
@@ -11,6 +12,55 @@ namespace risa_gl
 {
 	using math::dividable_vector;
 	using math::vector2;
+
+	template <typename pixel_store_type>
+	class nearest_referencer
+	{
+	public:
+		typedef typename pixel_store_type::pixel_type proxy_type;
+
+	private:
+		const pixel_store_type& pixel_store;
+		const float grain_size;
+		const vector2 head;
+		const vector2 tail;
+		const vector2 grain;
+
+	public:
+		nearest_referencer(const pixel_store_type& pixel_store_,
+						   const float grain_size_,
+						   const vector2& head_,
+						   const vector2& tail_):
+			pixel_store(pixel_store_),
+			grain_size(grain_size_),
+			head(head_),
+			tail(tail_),
+			grain((tail_ - head_) / grain_size)
+		{}
+
+		~nearest_referencer()
+		{}
+
+		risa_gl::math::coordinate<int> interpolate(const float value) const
+		{
+			vector2 temp = head + grain * value * grain_size;
+			return risa_gl::math::coordinate<int>(
+				static_cast<int>(temp.x),
+				static_cast<int>(temp.y));
+		}
+
+		const proxy_type*
+		get_proxy(const risa_gl::math::coordinate<int>& geom) const
+		{
+			return &pixel_store(geom.get_x(), geom.get_y());
+		}
+
+		const proxy_type&
+		create_proxy(const risa_gl::math::coordinate<int>& geom) const
+		{
+			return *this->get_proxy(geom);
+		}
+	};
 
 	template <typename PixelStoreType>
 	class nearest

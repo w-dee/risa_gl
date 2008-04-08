@@ -3,6 +3,7 @@
 
 #include <risa_gl/risa_types.hpp>
 #include <risa_gl/exception.hpp>
+#include <risa_gl/math/vector.hpp>
 #include <iterator>
 #include <cassert>
 
@@ -230,91 +231,85 @@ namespace risa_gl
 		}
 	};
 
-	template <typename BaseType, typename InterpolateType>
-	class transform_iterator
+	template <typename PixelStoreType,
+			  template <typename> class InterpolateType>
+	class linear_iterator
 	{
 	public:
-		typedef BaseType value_type;
-		typedef BaseType* pointer;
-		typedef const BaseType* const_pointer;
-		typedef BaseType& reference;
-		typedef const BaseType& const_reference;
+		typedef PixelStoreType pixel_store_type;
+		typedef typename pixel_store_type::pixel_type pixel_type;
+		typedef InterpolateType<pixel_store_type> interpolate_type;
+		typedef typename interpolate_type::proxy_type value_type;
+
 		typedef std::bidirectional_iterator_tag iterator_category;
 		typedef ptrdiff_t difference_type;
 
-		typedef InterpolateType interpolate_type;
-
 	private:
-		pointer current;
+		typedef risa_gl::math::vector2 vector_type;
+		const interpolate_type& interpolator;
+		
+		const int grain_size;
+		int current;
 
 	public:
-		transform_iterator():
-			current()
+		linear_iterator(const pixel_store_type& store,
+						const vector_type& head,
+						const vector_type& tail,
+						const int grain_size_):
+			interpolator(store, grain_size_, head, tail),
+			grain_size(grain_size_),
+			current(0)
 		{}
 
-		transform_iterator(const_pointer point):
-			current(point)
-		{}
-		
-		transform_iterator(const transform_iterator& src):
-			current(src.curent)
+		linear_iterator(const linear_iterator& src):
+			interpolator(src.interpolator),
+			grain_size(src.grain_size),
+			current(src.current)
 		{}
 
-		~transform_iterator()
+		~linear_iterator()
 		{}
 
-		transform_iterator& operator=(const transform_iterator& src)
-		{
-			if (this != &src)
-				current = src.current;
-
-			return *this;
-		}
-
-		transform_iterator& operator++()
+		linear_iterator& operator++()
 		{
 			++current;
 			return *this;
 		}
 
-		transform_iterator operator++(int)
+		linear_iterator operator++(int)
 		{
-			transform_iterator result(*this);
+			linear_iterator result(*this);
 			++(*this);
 			return result;
 		}
 
-		transform_iterator& operator--()
+		linear_iterator& operator--()
 		{
 			--current;
 			return *this;
 		}
 
-		transform_iterator operator--(int)
+		linear_iterator operator--(int)
 		{
-			transform_iterator result(*this);
+			linear_iterator result(*this);
 			--(*this);
 			return result;
 		}
 
-		reference operator*()
+		const value_type& operator*() const
 		{
-			return *current;
+			return
+				interpolator.create_proxy(
+					interpolator.interpolate(
+						static_cast<float>(current)/grain_size));
 		}
 
-		const_reference operator*() const
+		const value_type* operator->() const
 		{
-			return *current;
-		}
-
-		pointer operator->()
-		{
-			return current;
-		}
-
-		const pointer operator->() const
-		{
-			return current;
+			return 
+				interpolator.get_proxy(
+					interpolator.interpolate(
+						static_cast<float>(current)/grain_size));
 		}
 	};
 }
