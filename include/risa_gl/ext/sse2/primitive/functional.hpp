@@ -24,7 +24,7 @@ namespace risa_gl
 						unaligned_wideword_type result;
 						_mm_storeu_si128(
 							reinterpret_cast<aligned_wideword_type*>(
-								&result[0]), src);
+								result.get()), src);
 						return result;
 					}
 

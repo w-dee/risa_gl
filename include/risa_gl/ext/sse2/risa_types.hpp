@@ -2,7 +2,7 @@
 #define RISA_EXT_SSE2_RISA_TYPES_HPP_
 
 #include <emmintrin.h>
-#include <risa_gl/static_array.hpp>
+#include <risa_gl/memory_chunk.hpp>
 
 namespace risa_gl
 {
@@ -11,7 +11,7 @@ namespace risa_gl
 		namespace sse2
 		{
 			typedef __m128i aligned_wideword_type;
-			typedef risa_gl::static_array<unsigned char, 16>
+			typedef risa_gl::memory_chunk<16>
 			unaligned_wideword_type;
 
 			template <typename T>

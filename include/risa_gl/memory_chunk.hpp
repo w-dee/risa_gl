@@ -5,18 +5,9 @@
 
 namespace risa_gl {
 	template <size_t chunk_size>
-	class memory_chunk
+	struct memory_chunk
 	{
-	private:
 		byte chunk_data[chunk_size];
-
-	public:
-		memory_chunk():
-			chunk_data()
-		{}
-
-		~memory_chunk()
-		{}
 
 		byte* get()
 		{
@@ -26,6 +17,11 @@ namespace risa_gl {
 		byte* const get() const
 		{
 			return reinterpret_cast<byte* const>(this);
+		}
+
+		byte& operator[](int offset)
+		{
+			return chunk_data[offset];
 		}
 
 		int operator[](int offset) const
