@@ -240,7 +240,7 @@ public:
 		transformer.rotate(vector3(1.f, 1.f, 0.f), 3.1415926535f / 2.f);
 		coord = transformer * coord;
 
-		const float pos = std::sqrt(2)/2.f;
+		const float pos = std::sqrt(2.f)/2.f;
 		CPPUNIT_ASSERT(range(coord.x,  pos, 0.001f));
 		CPPUNIT_ASSERT(range(coord.y, -pos, 0.001f));
 		CPPUNIT_ASSERT(range(coord.z,  0.f, 0.001f));

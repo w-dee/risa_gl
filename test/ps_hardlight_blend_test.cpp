@@ -2,6 +2,7 @@
 #include <risa_gl/operators/ps_hardlight_blend.hpp>
 #include <risa_gl/pixel.hpp>
 #include <risa_gl/pixel_store.hpp>
+#include <algorithm>
 
 #include <iostream>
 
