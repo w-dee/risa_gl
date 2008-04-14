@@ -48,14 +48,14 @@ namespace risa_gl
 		}
 
 		const proxy_type*
-		get_proxy(const vector2& geom) const
+		get_proxy(const vector2& geom)
 		{
 			return &pixel_store(static_cast<int>(geom.x),
 								static_cast<int>(geom.y));
 		}
 
 		const proxy_type&
-		create_proxy(const vector2& geom) const
+		create_proxy(const vector2& geom)
 		{
 			return *this->get_proxy(geom);
 		}
@@ -142,7 +142,7 @@ namespace risa_gl
 	};
 
 	template <typename pixel_store_type>
-	class biliner_referencer
+	class bilinear_referencer
 	{
 	public:
 		typedef typename pixel_store_type::pixel_type proxy_type;
@@ -155,11 +155,20 @@ namespace risa_gl
 		const vector2 grain;
 		proxy_type temporary_pixel;
 
+		int blend_channel(const int& left_value,
+						  float factor,
+						  const int& right_value,
+						  float opposite) const
+		{
+			return static_cast<int>(left_value * factor +
+									right_value * opposite);
+		}
+
 	public:
-		biliner_referencer(const pixel_store_type& pixel_store_,
-						   const float grain_size_,
-						   const vector2& head_,
-						   const vector2& tail_):
+		bilinear_referencer(const pixel_store_type& pixel_store_,
+							const float grain_size_,
+							const vector2& head_,
+							const vector2& tail_):
 			pixel_store(pixel_store_),
 			grain_size(grain_size_),
 			head(head_),
@@ -168,24 +177,21 @@ namespace risa_gl
 			temporary_pixel()
 		{}
 
-		~biliner_referencer()
+		~bilinear_referencer()
 		{}
 
 		vector2 interpolate(const float value) const
 		{
-			vector2 temp = head + grain * value * grain_size;
-			return coordinate<int>(
-				static_cast<int>(temp.x),
-				static_cast<int>(temp.y));
+			return head + grain * value * grain_size;
 		}
 
 		const proxy_type*
-		get_proxy(const vector2& geom) const
+		get_proxy(const vector2& geom)
 		{
-			const float x_factor = geom.x - static_cast<int>(geom.x);
-			const float x_opposite = 1.f - x_factor;
-			const float y_factor = geom.y - static_cast<int>(geom.y);
-			const float y_opposite = 1.f - y_factor;
+			const float x_opposite = geom.x - static_cast<int>(geom.x);
+			const float x_factor = 1.f - x_opposite;
+			const float y_opposite = geom.y - static_cast<int>(geom.y);
+			const float y_factor = 1.f - y_opposite;
 
 			const coordinate<int> base(static_cast<int>(geom.x),
 									   static_cast<int>(geom.y));
@@ -195,23 +201,51 @@ namespace risa_gl
 			const proxy_type& left_up =
 				pixel_store(base.get_x(), base.get_y());
 			const proxy_type& right_up =
-				pixel_store(other.get_x(), base.get_y());
+				pixel_store(x_factor > 0.99f ? base.get_x() : other.get_x(),
+							base.get_y());
 			const proxy_type& left_down =
-				pixel_store(base.get_x(), other.get_y());
+				pixel_store(base.get_x(),
+							y_factor > 0.99f ? base.get_x() : other.get_y());
 			const proxy_type& right_down =
-				pixel_store(other.get_x(), other.get_y());
+				pixel_store(x_factor > 0.99f ? base.get_x() : other.get_x(),
+							y_factor > 0.99f ? base.get_y() : other.get_y());
 
 			temporary_pixel =
-				(left_up * x_factor / 2 + right_up * x_opposite / 2)
-				* y_factor+
-				(left_down * x_factor / 2 + right_down * x_opposite / 2)
-				* y_opposite;
+				proxy_type(
+					blend_channel(
+						blend_channel(left_up.get_red(), x_factor,
+									  right_up.get_red(), x_opposite),
+						y_factor,
+						blend_channel(left_down.get_red(), x_factor,
+									  right_down.get_red(), x_opposite),
+						y_opposite),
+					blend_channel(
+						blend_channel(left_up.get_green(), x_factor,
+									  right_up.get_green(), x_opposite),
+						y_factor,
+						blend_channel(left_down.get_green(), x_factor,
+									  right_down.get_green(), x_opposite),
+						y_opposite),
+					blend_channel(
+						blend_channel(left_up.get_blue(), x_factor,
+									  right_up.get_blue(), x_opposite),
+						y_factor,
+						blend_channel(left_down.get_blue(), x_factor,
+									  right_down.get_blue(), x_opposite),
+						y_opposite),
+					blend_channel(
+						blend_channel(left_up.get_alpha(), x_factor,
+									  right_up.get_alpha(), x_opposite),
+						y_factor,
+						blend_channel(left_down.get_alpha(), x_factor,
+									  right_down.get_alpha(), x_opposite),
+						y_opposite));
 
 			return &temporary_pixel;
 		}
-
+		
 		const proxy_type&
-		create_proxy(const vector2& geom) const
+		create_proxy(const vector2& geom)
 		{
 			return *this->get_proxy(geom);
 		}
