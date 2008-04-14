@@ -25,9 +25,41 @@ class interpolate_test : public CppUnit::TestFixture
 	CPPUNIT_TEST(nearest_test);
 	CPPUNIT_TEST(bilinear_test);
 	CPPUNIT_TEST(nearest_referencer_test);
+	CPPUNIT_TEST(bilinear_referencer_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void bilinear_referencer_test()
+	{
+		pixel_store_type pixels(256, 256);
+		for (int x = 0; x < 256; ++x)
+			for (int y = 0; y < 256; ++y)
+				pixels(x, y) =
+					pixel_store_type::pixel_type(x, y, 0, 256);
+
+		risa_gl::nearest_referencer<pixel_store_type>
+			interpolator(pixels, 128,
+						 vector2(0, 0),
+						 vector2(256, 0));
+
+		CPPUNIT_ASSERT(interpolator.interpolate(0) ==
+					   vector2(0, 0));
+		CPPUNIT_ASSERT(interpolator.interpolate(.5f) ==
+					   vector2(128, 0));
+		CPPUNIT_ASSERT(interpolator.interpolate(1) ==
+					   vector2(256, 0));
+
+		CPPUNIT_ASSERT(*interpolator.get_proxy(
+						   vector2(0, 0)) ==
+					   pixel_store_type::pixel_type(0, 0, 0, 256));
+		CPPUNIT_ASSERT(*interpolator.get_proxy(
+						   vector2(128, 0)) ==
+					   pixel_store_type::pixel_type(128, 0, 0, 256));
+// 		CPPUNIT_ASSERT(*interpolator.get_proxy(
+// 						   coordinate<int>(256, 0)) ==
+// 					   pixel_store_type::pixel_type(256, 0, 0, 256));
+	}
+
 	void nearest_referencer_test()
 	{
 		pixel_store_type pixels(256, 256);
@@ -38,27 +70,25 @@ public:
 
 		risa_gl::nearest_referencer<pixel_store_type>
 			interpolator(pixels, 128,
-						 risa_gl::math::vector2(0, 0),
-						 risa_gl::math::vector2(256, 0));
+						 vector2(0, 0),
+						 vector2(256, 0));
 
 		CPPUNIT_ASSERT(interpolator.interpolate(0) ==
-					   risa_gl::math::coordinate<int>(0, 0));
+					   vector2(0, 0));
 		CPPUNIT_ASSERT(interpolator.interpolate(.5f) ==
-					   risa_gl::math::coordinate<int>(128, 0));
+					   vector2(128, 0));
 		CPPUNIT_ASSERT(interpolator.interpolate(1) ==
-					   risa_gl::math::coordinate<int>(256, 0));
+					   vector2(256, 0));
 
 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-						   risa_gl::math::coordinate<int>(0, 0)) ==
+						   vector2(0, 0)) ==
 					   pixel_store_type::pixel_type(0, 0, 0, 256));
 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-						   risa_gl::math::coordinate<int>(128, 0)) ==
+						   vector2(128, 0)) ==
 					   pixel_store_type::pixel_type(128, 0, 0, 256));
 // 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-// 						   risa_gl::math::coordinate<int>(256, 0)) ==
+// 						   coordinate<int>(256, 0)) ==
 // 					   pixel_store_type::pixel_type(256, 0, 0, 256));
-
-		
 	}
 
 	void bilinear_test()

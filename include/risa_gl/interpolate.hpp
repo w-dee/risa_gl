@@ -12,6 +12,7 @@ namespace risa_gl
 {
 	using math::dividable_vector;
 	using math::vector2;
+	using math::coordinate;
 
 	template <typename pixel_store_type>
 	class nearest_referencer
@@ -41,22 +42,20 @@ namespace risa_gl
 		~nearest_referencer()
 		{}
 
-		risa_gl::math::coordinate<int> interpolate(const float value) const
+		vector2 interpolate(const float value) const
 		{
-			vector2 temp = head + grain * value * grain_size;
-			return risa_gl::math::coordinate<int>(
-				static_cast<int>(temp.x),
-				static_cast<int>(temp.y));
+			return head + grain * value * grain_size;
 		}
 
 		const proxy_type*
-		get_proxy(const risa_gl::math::coordinate<int>& geom) const
+		get_proxy(const vector2& geom) const
 		{
-			return &pixel_store(geom.get_x(), geom.get_y());
+			return &pixel_store(static_cast<int>(geom.x),
+								static_cast<int>(geom.y));
 		}
 
 		const proxy_type&
-		create_proxy(const risa_gl::math::coordinate<int>& geom) const
+		create_proxy(const vector2& geom) const
 		{
 			return *this->get_proxy(geom);
 		}
@@ -139,6 +138,82 @@ namespace risa_gl
 				result[divides-1] = default_color;
 
 			return result;
+		}
+	};
+
+	template <typename pixel_store_type>
+	class biliner_referencer
+	{
+	public:
+		typedef typename pixel_store_type::pixel_type proxy_type;
+
+	private:
+		const pixel_store_type& pixel_store;
+		const float grain_size;
+		const vector2 head;
+		const vector2 tail;
+		const vector2 grain;
+		proxy_type temporary_pixel;
+
+	public:
+		biliner_referencer(const pixel_store_type& pixel_store_,
+						   const float grain_size_,
+						   const vector2& head_,
+						   const vector2& tail_):
+			pixel_store(pixel_store_),
+			grain_size(grain_size_),
+			head(head_),
+			tail(tail_),
+			grain((tail_ - head_) / grain_size),
+			temporary_pixel()
+		{}
+
+		~biliner_referencer()
+		{}
+
+		vector2 interpolate(const float value) const
+		{
+			vector2 temp = head + grain * value * grain_size;
+			return coordinate<int>(
+				static_cast<int>(temp.x),
+				static_cast<int>(temp.y));
+		}
+
+		const proxy_type*
+		get_proxy(const vector2& geom) const
+		{
+			const float x_factor = geom.x - static_cast<int>(geom.x);
+			const float x_opposite = 1.f - x_factor;
+			const float y_factor = geom.y - static_cast<int>(geom.y);
+			const float y_opposite = 1.f - y_factor;
+
+			const coordinate<int> base(static_cast<int>(geom.x),
+									   static_cast<int>(geom.y));
+			const coordinate<int> other(base.get_x() + 1,
+										base.get_y() + 1);
+
+			const proxy_type& left_up =
+				pixel_store(base.get_x(), base.get_y());
+			const proxy_type& right_up =
+				pixel_store(other.get_x(), base.get_y());
+			const proxy_type& left_down =
+				pixel_store(base.get_x(), other.get_y());
+			const proxy_type& right_down =
+				pixel_store(other.get_x(), other.get_y());
+
+			temporary_pixel =
+				(left_up * x_factor / 2 + right_up * x_opposite / 2)
+				* y_factor+
+				(left_down * x_factor / 2 + right_down * x_opposite / 2)
+				* y_opposite;
+
+			return &temporary_pixel;
+		}
+
+		const proxy_type&
+		create_proxy(const vector2& geom) const
+		{
+			return *this->get_proxy(geom);
 		}
 	};
 
