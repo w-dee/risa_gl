@@ -4,6 +4,8 @@
 #include <risa_gl/math/lcm.hpp>
 #include <risa_gl/math/gcd.hpp>
 #include <stdexcept>
+#include <ostream>
+#include <cassert>
 
 namespace risa_gl
 {
@@ -18,18 +20,22 @@ namespace risa_gl
 
 		public:
 			fraction(const value_type& num_,
-					 const value_type& deno_):
+					 const value_type& deno_ = 1):
 				numerator(num_),
 				denominator(deno_)
 			{
 				if (denominator == 0)
 					throw std::runtime_error("zero divide exception.");
+
+				assert(denominator != 0);
 			}
 
 			fraction(const fraction& src):
 				numerator(src.numerator),
 				denominator(src.denominator)
-			{}
+			{
+				assert(denominator != 0);
+			}
 
 
 			fraction& operator=(const fraction& src)
@@ -40,6 +46,7 @@ namespace risa_gl
 					denominator = src.denominator;
 				}
 
+				assert(denominator != 0);
 				return *this;
 			}
 
@@ -61,6 +68,8 @@ namespace risa_gl
 				const value_type gcd_value =
 					gcd(numerator, denominator);
 
+				assert((denominator / gcd_value) != 0);
+
 				return fraction(numerator / gcd_value,
 								denominator / gcd_value);
 			}
@@ -78,6 +87,8 @@ namespace risa_gl
 				value_type sign_factor =
 					numerator < 0 ? -1 : 1;
 
+				assert((denominator * sign_factor) != 0);
+
 				return fraction(denominator * sign_factor,
 								numerator * sign_factor);
 			}
@@ -89,7 +100,19 @@ namespace risa_gl
 
 			value_type get_value() const
 			{
+				assert(denominator != 0);
 				return static_cast<value_type>(numerator / denominator);
+			}
+
+			double get_real_value() const
+			{
+				assert(denominator != 0);
+				return static_cast<double>(numerator) / denominator;
+			}
+
+			bool is_zero() const
+			{
+				return (numerator == 0);
 			}
 
 			fraction& operator+=(const fraction& src)
@@ -100,6 +123,8 @@ namespace risa_gl
 				numerator = numerator * lcm_value / this->denominator +
 					src.numerator * lcm_value / src.denominator;
 				denominator = lcm_value;
+
+				assert(denominator != 0);
 
 				return *this;
 			}
@@ -121,6 +146,8 @@ namespace risa_gl
 					src.numerator * lcm_value / src.denominator;
 				denominator = lcm_value;
 
+				assert(denominator != 0);
+
 				return *this;
 			}
 
@@ -134,8 +161,14 @@ namespace risa_gl
 
 			fraction& operator*=(const fraction& src)
 			{
-				numerator *= src.numerator;
-				denominator *= src.denominator;
+				const fraction mult = src.get_reduce();
+				this->reduce();
+
+				numerator *= mult.numerator;
+				denominator *= mult.denominator;
+
+				this->reduce();
+				assert(denominator != 0);
 
 				return *this;
 			}
@@ -200,6 +233,12 @@ namespace risa_gl
 			bool operator>=(const fraction& src) const
 			{
 				return !((*this) < src);
+			}
+
+			friend std::ostream&
+			operator<<(std::ostream& out, const fraction& self)
+			{
+				return out << self.numerator << "/" << self.denominator;
 			}
 		};
 	}

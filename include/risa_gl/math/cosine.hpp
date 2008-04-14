@@ -16,7 +16,7 @@ namespace risa_gl
 			static real_type value(const real_type& v)
 			{
 				const int n = max_depth - depth + 1;
-				return (power<real_type, n>::value(-1.0) *
+				return (power<real_type, n>::value(-1) *
 						power<real_type, n*2>::value(v)) /
 					static_cast<real_type>(factorial<n*2>::value) +
 					taylor_expansion_cosine_term
