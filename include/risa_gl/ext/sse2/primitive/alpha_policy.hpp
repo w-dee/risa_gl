@@ -2,6 +2,7 @@
 #define RISA_EXT_SSE2_PRIMITIVE_ALPHA_POLICY_HPP_
 
 #include <risa_gl/ext/sse2/risa_types.hpp>
+#include <risa_gl/ext/sse2/primitive/functional.hpp>
 #include <risa_gl/endian_traits.hpp>
 
 namespace risa_gl
@@ -35,7 +36,7 @@ namespace risa_gl
 				 * アルファ値計算ポリシー
 				 * @param calculator
 				 */
-				template <typename calculator_type>
+				template <typename calculator_type, typename pixel_type>
 				class alpha_calculate_policy
 				{
 				private:
@@ -61,19 +62,27 @@ namespace risa_gl
 							  typename result_itor_t,
 							  typename src_itor_t,
 							  typename dest_itor_t>
-					risa_gl::uint32 operator()(bit_t bits,
-											   result_itor_t,
-											   src_itor_t src,
-											   dest_itor_t dest) const
+					bit_t operator()(bit_t bits,
+									 result_itor_t,
+									 src_itor_t src,
+									 dest_itor_t dest) const
 					{
 						const int alpha_mask_position =
 							init_alpha_position<
-							type_traits<result_itor_t>::
-							value_type::alpha_position>();
+							pixel_type::alpha_position>();
+						const risa_gl::dword mask =
+							~(0xff << alpha_mask_position);
+						fill_getter filler;
+						logical_left_32bit_packed_shift left_shifter;
+						vertical_and and_oper;
+						vertical_or or_oper;
 
-						return ((calculator(src, dest)-1) <<
-								alpha_mask_position) |
-							(bits & ~(0xff << alpha_mask_position));
+						return
+						or_oper(
+							and_oper(bits,
+									 filler(mask)),
+							left_shifter(calculator(src, dest),
+												  alpha_mask_position));
 					}
 				};
 			}

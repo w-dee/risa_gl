@@ -53,6 +53,90 @@ namespace risa_gl
 					}
 				};
 				// }}}
+
+				/**
+				 * アルファブレンディング
+				 * source alphaが保存される
+				 * 
+				 * r.color = src.color * src.a + dest.color * (1-src.a)
+				 * r.a = src.a
+				 */
+				// {{{ alpha_blend_save_source_alpha_operator
+				template <typename pixel_type>
+				class alpha_blend_save_source_alpha_operator
+				{
+				private:
+					typedef primitive::binomial_blend<
+					source_getter,
+					destination_getter,
+					primitive::bit_setter,
+					primitive::vertical_multiply,
+					plus_function,
+					source_alpha_getter<pixel_type>,
+					invert_source_alpha_getter<pixel_type>,
+					primitive::odd_and_even_mixer,
+					primitive::alpha_calculate_policy<
+						source_alpha_getter<pixel_type>,
+						pixel_type>,
+					primitive::word_base_divisor<8> >
+					alpha_blend_save_source_alpha_operator_type;
+
+					alpha_blend_save_source_alpha_operator_type blender;
+				public:
+
+					template <typename src_itor_t,
+							  typename dest_itor_t,
+							  typename result_itor_t>
+					void operator()(src_itor_t src,
+									dest_itor_t dest,
+									result_itor_t result) const
+					{
+						blender(src, dest, result);
+					}
+				};
+				// }}}
+
+				/**
+				 * アルファブレンディング
+				 * destination alphaが保存される
+				 * 
+				 * r.color = src.color * src.a + dest.color * (1-src.a)
+				 * r.a = dest.a
+				 */
+				// {{{ alpha_blend_save_destination_alpha_operator
+				template <typename pixel_type>
+				class alpha_blend_save_destination_alpha_operator
+				{
+				private:
+					typedef primitive::binomial_blend<
+					source_getter,
+					destination_getter,
+					primitive::bit_setter,
+					primitive::vertical_multiply,
+					plus_function,
+					source_alpha_getter<pixel_type>,
+					invert_source_alpha_getter<pixel_type>,
+					primitive::odd_and_even_mixer,
+					primitive::alpha_calculate_policy<
+						destination_alpha_getter<pixel_type>,
+						pixel_type>,
+					primitive::word_base_divisor<8> >
+					alpha_blend_save_destination_alpha_operator_type;
+
+					alpha_blend_save_destination_alpha_operator_type blender;
+				public:
+
+					template <typename src_itor_t,
+							  typename dest_itor_t,
+							  typename result_itor_t>
+					void operator()(src_itor_t src,
+									dest_itor_t dest,
+									result_itor_t result) const
+					{
+						blender(src, dest, result);
+					}
+				};
+				// }}}
 			}
 		}
 	}

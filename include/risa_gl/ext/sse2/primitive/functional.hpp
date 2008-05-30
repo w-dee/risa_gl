@@ -57,18 +57,24 @@ namespace risa_gl
 					}
 				};
 
-				template <typename selector_type, typename alpha_getter_type>
 				struct fill_getter
 				{
-					selector_type selector;
-					alpha_getter_type alpha_getter;
-
-					template <typename lhs_type, typename rhs_type>
-					aligned_wideword_type operator()(
-						lhs_type lhs, rhs_type rhs) const
+					aligned_wideword_type
+					operator()(const risa_gl::byte& value) const
 					{
-						risa_gl::word value = alpha_getter(selector(lhs, rhs));
+						return _mm_set1_epi8(value);
+					}
+
+					aligned_wideword_type
+					operator()(const risa_gl::word& value) const
+					{
 						return _mm_set1_epi16(value);
+					}
+
+					aligned_wideword_type
+					operator()(const risa_gl::dword& value) const
+					{
+						return _mm_set1_epi32(value);
 					}
 				};
 
