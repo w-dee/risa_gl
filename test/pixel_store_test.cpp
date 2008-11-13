@@ -1,6 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <risa_gl/pixel_store.hpp>
 #include <risa_gl/pixel.hpp>
+#include <cstdlib>
 
 
 static size_t another_allocator_note;
@@ -42,7 +43,7 @@ public:
 		typedef pixel_store<pixel, allocator_t>
 			another_allocate_pixel_store_t;
 
-		void* pointer_save = malloc(10 * 10 * sizeof(pixel));
+		void* pointer_save = std::malloc(10 * 10 * sizeof(pixel));
 		another_allocator_note = reinterpret_cast<size_t>(pointer_save);
 		{
 			another_allocate_pixel_store_t pixel(10, 10);

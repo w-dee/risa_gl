@@ -80,8 +80,10 @@ namespace method
 										 typename environ_t::basic_input_type,
 										 extractor::alpha_factor>::template currying,
 									 selector_t,
-									 functor::inverse<functor::identity,
-													  functor::bit_nagate_functor> >
+									 functor::inverse<
+										 extractor::channel_element_factor<
+											 typename environ_t::bit_pattern_type>,
+										 functor::bit_nagate_functor> >
 		{};
 	};
 

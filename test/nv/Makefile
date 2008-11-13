@@ -8,7 +8,7 @@ EXT = .exe
 DEPENDS = $(OBJS:.o=.d)
 INCLUDES = ../../include
 OPTIMIZE = -O0
-CXXFLAGS += -I$(INCLUDES) -mthreads $(OPTIMIZE) -g -Wall -Wunused -fno-default-inline
+CXXFLAGS += -I$(INCLUDES) $(OPTIMIZE) -g -Wall -Wunused -fno-default-inline
 ifeq ($(CXX),g++-dw2)
 LIBCPPUNIT = -lcppunit-dw2
 else

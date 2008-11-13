@@ -12,9 +12,27 @@ private:
 	CPPUNIT_TEST(even_test);
 	CPPUNIT_TEST(first_test);
 	CPPUNIT_TEST(second_test);
+	CPPUNIT_TEST(lower_test);
+	CPPUNIT_TEST(higher_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void lower_test()
+	{
+		scatter::lower<unsigned long long> lower_masker;
+		unsigned long long result = lower_masker(0xffffffffffffffffULL);
+
+		CPPUNIT_ASSERT_EQUAL(0xffffffffULL, result);
+	}
+
+	void higher_test()
+	{
+		scatter::higher<unsigned long long> higher_masker;
+		unsigned long long result = higher_masker(0xdeadbeafffffffffULL);
+
+		CPPUNIT_ASSERT_EQUAL(0xdeadbeafULL, result);
+	}
+
 	void utility_test()
 	{
 		CPPUNIT_ASSERT_EQUAL(0xff00ffU,

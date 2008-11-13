@@ -30,7 +30,7 @@ namespace functor
 		template <typename input_type>
 		input_type operator()(input_type src) const
 		{
-			return nagate_operator(base_functor(src));
+			return base_functor(nagate_operator(src));
 		}
 	};
 

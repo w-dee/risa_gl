@@ -100,6 +100,11 @@ namespace extractor
 		public factor<pixel_value_t, pixel_type_t::alpha_position>
 	{};
 
+	template <typename pixel_value_t>
+	struct channel_element_factor :
+		public factor<pixel_value_t, 0>
+	{};
+
 
 	/**
 	 * コンパイル時定数の取り出し
