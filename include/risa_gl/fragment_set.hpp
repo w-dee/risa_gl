@@ -1,4 +1,4 @@
-#ifndef RISA_RECTANGLE_SET_HPP_
+#ifndef RISA_FRAGMENT_SET_HPP_
 #define RISA_FRAGMENT_SET_HPP_
 
 #include <vector>

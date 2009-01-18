@@ -1,7 +1,7 @@
 #ifndef RISA_PIXEL_HPP_
 #define RISA_PIXEL_HPP_
 
-#include <risa_gl/static_assert.hpp>
+#include <risa_gl/compile_time_assert.hpp>
 #include <risa_gl/risa_types.hpp>
 
 #include <ostream>

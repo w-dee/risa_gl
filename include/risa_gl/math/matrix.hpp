@@ -74,6 +74,16 @@ namespace risa_gl
 				return matrix(*this).negate();
 			}
 
+			value_type& operator[](const int column) 
+			{
+				return (*this)(0, column);
+			}
+
+			const value_type& operator[](const int column) const
+			{
+				return (*this)(0, column);
+			}
+
 			value_type& operator()(const int row, const int column = 0)
 			{
 				return elements[row * max_columns + column];
