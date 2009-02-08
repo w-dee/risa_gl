@@ -28,6 +28,42 @@ namespace extractor
 		}
 	};
 
+	template <template <typename> class composite_fx,
+			  template <typename> class composite_gx>
+	struct composite
+	{
+		template <typename pixel_value_t>
+		struct type
+		{
+			typedef
+			 typename composite_fx<pixel_value_t>::result_type result_type;
+
+			template <typename input_type>
+			result_type
+			operator()(input_type src) const
+			{
+				composite_fx<input_type> fx;
+				composite_gx<input_type> gx;
+				return fx(gx(src));
+			}
+		};
+	};
+
+	/**
+	 * 参照外しをおこなう抽出子
+	 */
+	template <typename pixel_value_t>
+	struct dereference
+	{
+		typedef pixel_value_t result_type;
+		
+		template <typename input_type>
+		result_type operator()(input_type src) const
+		{
+			return *reinterpret_cast<pixel_value_t*>(src);
+		}
+	};
+
 	/**
 	 * 引数のビットを再解釈して値として捕らえる抽出子
 	 */

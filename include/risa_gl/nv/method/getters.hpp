@@ -18,7 +18,7 @@ namespace method
 		template <typename environ_t> 
 		struct type :
 			public impl::base_getter<environ_t,
-									 extractor::reinterpretor,
+									 extractor::dereference,
 									 selector_t,
 									 functor::identity>
 		{};
@@ -78,11 +78,13 @@ namespace method
 			public impl::base_getter<environ_t,
 									 templ_func::bind_2nd<
 										 typename environ_t::basic_input_type,
-										 extractor::alpha_factor>::template currying,
+										 extractor::alpha_factor>::
+									 template currying,
 									 selector_t,
 									 functor::inverse<
 										 extractor::channel_element_factor<
-											 typename environ_t::bit_pattern_type>,
+											 typename environ_t::
+											 bit_pattern_type>,
 										 functor::bit_nagate_functor> >
 		{};
 	};

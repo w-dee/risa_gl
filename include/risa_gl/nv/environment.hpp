@@ -11,14 +11,14 @@ namespace environments
 		typedef risa_gl::pixel basic_input_type;
 	};
 
-	struct dword
+	struct qword
 	{
 		typedef unsigned long long bit_pattern_type;
 		typedef risa_gl::pixel basic_input_type;
 	};
 
 #	ifdef x64
-	typedef dword x64;
+	typedef qword x64;
 #	endif /* x64 */
 
 #	ifdef SSE2

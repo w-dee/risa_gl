@@ -7,6 +7,7 @@
 
 
 typedef environments::cplusplus environment_type;
+typedef environments::qword qword_environment_type;
 
 class getters_test : public CppUnit::TestFixture
 {
@@ -28,8 +29,7 @@ public:
 		method::source_color_getter<environment_type> src_getter;
 
 		environment_type::bit_pattern_type result =
-			src_getter(src_pix, dest_pix);
-
+			src_getter(&src_pix, &dest_pix);
 		
 		CPPUNIT_ASSERT_EQUAL(0x03030201U, result);
 	}
@@ -43,23 +43,35 @@ public:
 
 		environment_type::bit_pattern_type result =
 			src_getter(src_pix, dest_pix);
-
 		
 		CPPUNIT_ASSERT_EQUAL(03U, result);
 	}
 
 	void inverse_source_alpha_getter_test()
 	{
-		risa_gl::pixel src_pix (1, 2, 3, 4);
-		risa_gl::pixel dest_pix (5, 6, 7, 8);
+		risa_gl::pixel src_pix[] = { risa_gl::pixel(1, 2, 3, 4),
+									 risa_gl::pixel(2, 3, 4, 5),
+									 risa_gl::pixel(3, 4, 5, 6),
+									 risa_gl::pixel(4, 5, 6, 7) };
+
+		risa_gl::pixel dest_pix[] = { risa_gl::pixel(5, 6, 7, 8),
+									  risa_gl::pixel(6, 7, 8, 9),
+									  risa_gl::pixel(7, 8, 9,10),
+									  risa_gl::pixel(8, 9,10,11)};
 
 		method::inverse_source_alpha_getter<environment_type> getter;
 
 		environment_type::bit_pattern_type result =
 			getter(src_pix, dest_pix);
-
-		
 		CPPUNIT_ASSERT_EQUAL(252U, result);
+
+		method::inverse_source_alpha_getter<qword_environment_type> qgetter;
+
+		qword_environment_type::bit_pattern_type result2 =
+			qgetter(src_pix, dest_pix);
+		CPPUNIT_ASSERT_EQUAL(252ULL, result2);
+
+
 	}
 
 	void destination_color_getter_test()
@@ -70,7 +82,7 @@ public:
 		method::destination_color_getter<environment_type> dest_getter;
 
 		environment_type::bit_pattern_type result =
-			dest_getter(src_pix, dest_pix);
+			dest_getter(&src_pix, &dest_pix);
 
 		
 		CPPUNIT_ASSERT_EQUAL(0x07070605U, result);
