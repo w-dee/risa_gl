@@ -20,27 +20,31 @@ public:
 		typedef line<fraction_type> line_type;
 		typedef line_type::point_type point_t;
 
-		line_type line0(point_t(0, 0, 0), point_t(1, 2, 3));
+		line_type line0(point_t(fraction_type(0), fraction_type(0), fraction_type(0)),
+						point_t(fraction_type(1), fraction_type(2), fraction_type(3)));
 		CPPUNIT_ASSERT_EQUAL(line0.get_dxdy(),
 							  fraction_type(1, 2));
 		CPPUNIT_ASSERT_EQUAL(line0.get_dzdy(),
 							 fraction_type(3, 2));
 
-		line_type line1(point_t(-1, -2, -3), point_t(0, 0, 0));
+		line_type line1(point_t(fraction_type(-1), fraction_type(-2), fraction_type(-3)),
+						point_t(fraction_type(0), fraction_type(0), fraction_type(0)));
 		CPPUNIT_ASSERT_EQUAL(line1.get_dxdy(),
 							  fraction_type(1, 2));
 		CPPUNIT_ASSERT_EQUAL(line1.get_dzdy(),
 							 fraction_type(3, 2));
 
 
-		line_type line2(point_t(-1, -2, -3), point_t(1, 2, 3));
+		line_type line2(point_t(fraction_type(-1), fraction_type(-2), fraction_type(-3)),
+						point_t(fraction_type(1), fraction_type(2), fraction_type(3)));
 		CPPUNIT_ASSERT_EQUAL(line2.get_dxdy(),
 							  fraction_type(2, 4));
 		CPPUNIT_ASSERT_EQUAL(line2.get_dzdy(),
 							 fraction_type(6, 4));
 
 
-		line_type line3(point_t(0, 0, 0), point_t(-1, -2, -3));
+		line_type line3(point_t(fraction_type(0), fraction_type(0), fraction_type(0)),
+						point_t(fraction_type(-1), fraction_type(-2), fraction_type(-3)));
 		CPPUNIT_ASSERT_EQUAL(line3.get_dxdy(),
 							  fraction_type(1, 2));
 		CPPUNIT_ASSERT_EQUAL(line3.get_dzdy(),

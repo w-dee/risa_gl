@@ -23,7 +23,7 @@ public:
 		using risa_gl::math::power;
 
 		bool result = 
-			power<fraction<int>, 2>::value(-2) == fraction<int>(4, 1);
+			power<fraction<int>, 2>::value(fraction<int>(-2)) == fraction<int>(4, 1);
 		CPPUNIT_ASSERT(result);
 	}
 

@@ -17,10 +17,16 @@ namespace risa_gl
 			value_type z;
 
 		public:
-			point(const value_type& x_,
-				  const value_type& y_,
-				  const value_type& z_):
+			explicit point(const value_type& x_,
+						   const value_type& y_,
+						   const value_type& z_):
 				x(x_), y(y_), z(z_)
+			{}
+
+			point(const point& source):
+				x(source.x),
+				y(source.y),
+				z(source.z)
 			{}
 
 			value_type get_x()
@@ -75,6 +81,70 @@ namespace risa_gl
 				const value_type z_diff = z - rhs.z;
 				
 				return x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
+			}
+
+			point& operator+=(const point& rhs)
+			{
+				this->x += rhs.x;
+				this->y += rhs.y;
+				this->z += rhs.z;
+
+				return *this;
+			}
+
+			point operator+(const point& rhs) const
+			{
+				point result(*this);
+
+				return result += rhs;
+			}
+
+			point& operator-=(const point& rhs)
+			{
+				this->x -= rhs.x;
+				this->y -= rhs.y;
+				this->z -= rhs.z;
+
+				return *this;
+			}
+
+			point operator-(const point& rhs) const
+			{
+				point result(*this);
+
+				return result -= rhs;
+			}
+
+			point& operator*=(const value_type& rhs)
+			{
+				this->x *= rhs;
+				this->y *= rhs;
+				this->z *= rhs;
+
+				return *this;
+			}
+
+			point operator*(const value_type& rhs) const
+			{
+				point result(*this);
+
+				return result *= rhs;
+			}
+
+			point& operator/=(const value_type& rhs)
+			{
+				this->x /= rhs;
+				this->y /= rhs;
+				this->z /= rhs;
+
+				return *this;
+			}
+
+			point operator/(const value_type& rhs) const
+			{
+				point result(*this);
+
+				return result /= rhs;
 			}
 		};
 	}

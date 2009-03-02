@@ -19,8 +19,13 @@ namespace risa_gl
 			value_type denominator;
 
 		public:
+			fraction(const value_type& num_):
+				numerator(num_),
+				denominator(value_type(1))
+			{}
+
 			fraction(const value_type& num_,
-					 const value_type& deno_ = 1):
+					 const value_type& deno_):
 				numerator(num_),
 				denominator(deno_)
 			{
@@ -36,7 +41,6 @@ namespace risa_gl
 			{
 				assert(denominator != 0);
 			}
-
 
 			fraction& operator=(const fraction& src)
 			{
