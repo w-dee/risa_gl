@@ -179,10 +179,10 @@ namespace risa_gl
 
 			fixed_point_real operator*=(const fixed_point_real& src)
 			{
-				this.value = static_cast<internal_type>(
+				this->value = static_cast<internal_type>(
 					(static_cast<multiply_result_type>(value) * 
-					 static_cast<multiply_result_type>(value)) >>
-					(integer_position * 2));
+					 static_cast<multiply_result_type>(src.value)) >>
+					(integer_position));
 
 				return *this;
 			}
@@ -194,7 +194,7 @@ namespace risa_gl
 
 			fixed_point_real operator/=(const fixed_point_real& src)
 			{
-				this.value = static_cast<internal_type>(
+				this->value = static_cast<internal_type>(
 					(static_cast<multiply_result_type>(value) <<
 					 integer_position) / src.value);
 
