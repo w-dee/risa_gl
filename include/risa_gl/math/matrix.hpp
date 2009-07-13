@@ -149,6 +149,9 @@ namespace risa_gl
 
 			bool operator==(const matrix& src) const
 			{
+				if (elements.size() != src.elements.size())
+					return false;
+
 				typename elements_type::const_iterator lhs_itor =
 					elements.begin();
 				typename elements_type::const_iterator rhs_itor =

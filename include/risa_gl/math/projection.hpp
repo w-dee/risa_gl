@@ -69,6 +69,16 @@ namespace risa_gl
 				return projection_matrix;
 			}
 
+			vector_type normalize(const vector_type& geom) const
+			{
+				vector_source_type result = {{
+						geom[0] / geom[3],
+						geom[1] / geom[3],
+						geom[2] / geom[3],
+						geom[3] }};
+				return result;
+			}
+
 		};
 
 		template <typename projection_type>
