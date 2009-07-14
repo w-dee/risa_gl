@@ -30,8 +30,8 @@ namespace risa_gl
 								  const value_type& near,
 								  const value_type& far)
 			{
-				const value_type wide_distance = right - left;
-				const value_type wide_center = right + left;
+				const value_type wide_distance = left - right;
+				const value_type wide_center = left + right;
 
 				const value_type height_distance = top - bottom;
 				const value_type height_center = top + bottom;
