@@ -12,45 +12,24 @@ namespace risa_gl
 		{
 		public:
 			typedef value_t value_type;
-			typedef risa_gl::math::point<value_type> point_type;
 
 		private:
-			point_type head;
-			point_type tail;
+			value_type head;
+			value_type tail;
 
 		public:
-			line(const point_type& head_, const point_type& tail_):
+			line(const value_type& head_, const value_type& tail_):
 				head(head_), tail(tail_)
 			{}
 
-			value_type get_length() const
+			const value_type& get_head() const
 			{
-				return tail.get_distance(head);
+				return head;
 			}
 
-			value_type get_x_length() const
+			const value_type& get_tail() const
 			{
-				return tail.get_x() - head.get_x();
-			}
-
-			value_type get_y_length() const
-			{
-				return tail.get_y() - head.get_y();
-			}
-
-			value_type get_z_length() const
-			{
-				return tail.get_z() - head.get_z();
-			}
-
-			value_type get_dxdy() const
-			{
-				return get_x_length() / get_y_length();
-			}
-
-			value_type get_dzdy() const
-			{
-				return get_z_length() / get_y_length();
+				return tail;
 			}
 		};
 	}
