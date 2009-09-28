@@ -15,10 +15,10 @@ public:
 	void coord_interpolate_test()
 	{
 		using risa_gl::render::xyzw_st_coord;
-		using risa_gl::render::xyzw_st_coord_interpolator;
+		using risa_gl::render::st_coord_interpolator;
 
 		typedef xyzw_st_coord<float> point_t;
-		xyzw_st_coord_interpolator<float>
+		st_coord_interpolator<float>
 			coord_interpolator(point_t(0.f, 0.f, 1.f, 1.f, 0.f, 0.f),
 							   point_t(10.f, 20.f, 30.f, 1.f, 1.f, .5f),
 							   10);

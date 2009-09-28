@@ -23,51 +23,73 @@ namespace risa_gl
 		};
 
 		template <typename value_t>
-		class xyzw_st_coord_interpolator
+		class st_coord_interpolator
 		{
 		public:
 			typedef value_t value_type;
 
 		private:
-			const xyzw_st_coord<value_type>& head;
-			const xyzw_st_coord<value_type>& tail;
+			const value_type& head_s;
+			const value_type& head_t;
+			const value_type& head_z;
+			const value_type& tail_s;
+			const value_type& tail_t;
+			const value_type& tail_z;
 
 			const value_type& division;
 			const value_type inv_division;
 
-			const value_type s0z0; // S[0] / Z[0]
-			const value_type s1z1; // S[1] / Z[1]
-			const value_type distance_s0z0_s1z1; // S[1] / Z[1] - S[0] / Z[0]
-			const value_type t0z0; // T[0] / Z[0]
-			const value_type t1z1; // T[1] / Z[1]
-			const value_type distance_t0z0_t1z1; // T[1] / Z[1] - T[0] / Z[0]
-			const value_type inv_z0; // 1 / Z[0]
-			const value_type inv_z1; // 1 / Z[1]
-			const value_type distance_inv_z0_inv_z1; // 1/Z[1] - 1/Z[0]
+			value_type s0z0; // S[0] / Z[0]
+			value_type s1z1; // S[1] / Z[1]
+			value_type distance_s0z0_s1z1; // S[1] / Z[1] - S[0] / Z[0]
+			
+			value_type t0z0; // T[0] / Z[0]
+			value_type t1z1; // T[1] / Z[1]
+			value_type distance_t0z0_t1z1; // T[1] / Z[1] - T[0] / Z[0]
+			
+			value_type inv_z0; // 1 / Z[0]
+			value_type inv_z1; // 1 / Z[1]
+			value_type distance_inv_z0_inv_z1; // 1/Z[1] - 1/Z[0]
 			
 		public:
-			xyzw_st_coord_interpolator(const xyzw_st_coord<value_type>& head_,
-									   const xyzw_st_coord<value_type>& tail_,
-									   const value_type& division_):
-				head(head_), tail(tail_),
+			st_coord_interpolator(const xyzw_st_coord<value_type>& head,
+								  const xyzw_st_coord<value_type>& tail,
+								  const value_type& division_):
+				head_s(head.get_s()),
+				head_t(head.get_t()),
+				head_z(head.get_z()),
+
+				tail_s(tail.get_s()),
+				tail_t(tail.get_t()),
+				tail_z(tail.get_z()),
 
 				division(division_),
 				inv_division(1 / division_),
 
-				s0z0(head_.get_s() / head_.get_z()),
-				s1z1(tail_.get_s() / tail_.get_z()),
-				distance_s0z0_s1z1(tail_.get_s() / tail_.get_z() -
-								   head_.get_s() / head_.get_z()),
+				s0z0(),
+				s1z1(),
+				distance_s0z0_s1z1(),
 
-				t0z0(head_.get_t() / head_.get_z()),
-				t1z1(tail_.get_t() / tail_.get_z()),
-				distance_t0z0_t1z1(tail_.get_t() / tail_.get_z() -
-								   head_.get_t() / head_.get_z()),
+				t0z0(),
+				t1z1(),
+				distance_t0z0_t1z1(),
 
-				inv_z0(1 / head_.get_z()),
-				inv_z1(1 / tail_.get_z()),
-				distance_inv_z0_inv_z1(1 / tail_.get_z() - 1 / head_.get_z())
-			{}
+				inv_z0(),
+				inv_z1(),
+				distance_inv_z0_inv_z1()
+			{
+				inv_z0 = 1 / head_z;
+				inv_z1 = 1 / tail_z;
+				distance_inv_z0_inv_z1 = inv_z1 - inv_z0;
+
+				s0z0 = head_s * inv_z0;
+				s1z1 = tail_s * inv_z1;
+				distance_s0z0_s1z1 = s1z1 - s0z0;
+
+				t0z0 = head_t * inv_z0;
+				t1z1 = tail_t * inv_z1;
+				distance_t0z0_t1z1 = t1z1 - t0z0;
+			}
 
 			value_type get_division() const
 			{
