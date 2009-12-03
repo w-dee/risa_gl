@@ -23,15 +23,15 @@ namespace risa_gl
 	private:
 		const pixel_store_type& pixel_store;
 		const float grain_size;
-		const vector2 head;
-		const vector2 tail;
-		const vector2 grain;
+		const vector2<float> head;
+		const vector2<float> tail;
+		const vector2<float> grain;
 
 	public:
 		nearest_referencer(const pixel_store_type& pixel_store_,
 						   const float grain_size_,
-						   const vector2& head_,
-						   const vector2& tail_):
+						   const vector2<float>& head_,
+						   const vector2<float>& tail_):
 			pixel_store(pixel_store_),
 			grain_size(grain_size_),
 			head(head_),
@@ -42,20 +42,20 @@ namespace risa_gl
 		~nearest_referencer()
 		{}
 
-		vector2 interpolate(const float value) const
+		vector2<float> interpolate(const float value) const
 		{
 			return head + grain * value * grain_size;
 		}
 
 		const proxy_type*
-		get_proxy(const vector2& geom)
+		get_proxy(const vector2<float>& geom)
 		{
 			return &pixel_store(static_cast<int>(geom.x),
 								static_cast<int>(geom.y));
 		}
 
 		const proxy_type&
-		create_proxy(const vector2& geom)
+		create_proxy(const vector2<float>& geom)
 		{
 			return *this->get_proxy(geom);
 		}
@@ -67,9 +67,9 @@ namespace risa_gl
 	public:
 		typedef PixelStoreType pixel_store_type;
 		typedef typename pixel_store_type::pixel_type pixel_type;
-		typedef vector2 value_type;
-		typedef const vector2 const_value_type;
-		typedef dividable_vector<vector2> interpolate_type;
+		typedef vector2<float> value_type;
+		typedef const vector2<float> const_value_type;
+		typedef dividable_vector<value_type> interpolate_type;
 		typedef std::vector<pixel_type,
 							aligned_allocator<
 								pixel_type,
@@ -82,10 +82,10 @@ namespace risa_gl
 		const int divides;
 		const pixel_type default_color;
 
-		vector2 get_nearest(const float value) const
+		vector2<float> get_nearest(const float value) const
 		{
 			value_type coord = coordinates.blend(value);
-			return vector2(
+			return vector2<float>(
 				static_cast<float>(static_cast<int>(coord.x + 0.5)),
 				static_cast<float>(static_cast<int>(coord.y + 0.5)));
 		}
@@ -119,7 +119,7 @@ namespace risa_gl
 			for (int offset = 0; offset != (divides - 1);
 				 ++offset, value += jitter)
 			{
-				const vector2 axis = get_nearest(value);
+				const vector2<float> axis = get_nearest(value);
 				if (pixels.is_inside(static_cast<const int>(axis.x),
 									 static_cast<const int>(axis.y)))
 					result[offset] = pixels(static_cast<const int>(axis.x),
@@ -150,9 +150,9 @@ namespace risa_gl
 	private:
 		const pixel_store_type& pixel_store;
 		const float grain_size;
-		const vector2 head;
-		const vector2 tail;
-		const vector2 grain;
+		const vector2<float> head;
+		const vector2<float> tail;
+		const vector2<float> grain;
 		proxy_type temporary_pixel;
 
 		int blend_channel(const int& left_value,
@@ -167,8 +167,8 @@ namespace risa_gl
 	public:
 		bilinear_referencer(const pixel_store_type& pixel_store_,
 							const float grain_size_,
-							const vector2& head_,
-							const vector2& tail_):
+							const vector2<float>& head_,
+							const vector2<float>& tail_):
 			pixel_store(pixel_store_),
 			grain_size(grain_size_),
 			head(head_),
@@ -180,13 +180,13 @@ namespace risa_gl
 		~bilinear_referencer()
 		{}
 
-		vector2 interpolate(const float value) const
+		vector2<float> interpolate(const float value) const
 		{
 			return head + grain * value * grain_size;
 		}
 
 		const proxy_type*
-		get_proxy(const vector2& geom)
+		get_proxy(const vector2<float>& geom)
 		{
 			const float x_opposite = geom.x - static_cast<int>(geom.x);
 			const float x_factor = 1.f - x_opposite;
@@ -245,7 +245,7 @@ namespace risa_gl
 		}
 		
 		const proxy_type&
-		create_proxy(const vector2& geom)
+		create_proxy(const vector2<float>& geom)
 		{
 			return *this->get_proxy(geom);
 		}
@@ -257,9 +257,9 @@ namespace risa_gl
 	public:
 		typedef PixelStoreType pixel_store_type;
 		typedef typename PixelStoreType::pixel_type pixel_type;
-		typedef vector2 value_type;
-		typedef const vector2 const_value_type;
-		typedef dividable_vector<vector2> interpolate_type;
+		typedef vector2<float> value_type;
+		typedef const vector2<float> const_value_type;
+		typedef dividable_vector<value_type> interpolate_type;
 		typedef std::vector<pixel_type,
 							aligned_allocator<
 								pixel_type,

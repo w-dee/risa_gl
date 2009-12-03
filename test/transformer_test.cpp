@@ -41,7 +41,7 @@ public:
 
 		rectangle_region<float> region(0, 0, 64, 64);
 		scaler_t trans(region,
-					   vector2(32, 32),
+					   vector2<float>(32, 32),
 					   2.f, 2.f);
 
 		scaler_t::projected_type projected = trans.get_projected_region();
@@ -76,7 +76,7 @@ public:
 
 		typedef rotator<float> rotator_t;
 		rotator_t trans(region_t(0, 0, 64, 64),
-						vector2(32, 32),
+						vector2<float>(32, 32),
 						pi / 2.f);
 
 		rotator_t::projected_type projected = trans.get_projected_region();
@@ -101,7 +101,7 @@ public:
 
 		typedef translator<float> translator_t;
 		translator_t trans(region_t(0, 0, 64, 64),
-						   risa_gl::math::vector2(-32, -32));
+						   risa_gl::math::vector2<float>(-32, -32));
 
 		translator_t::projected_type projected = trans.get_projected_region();
 		rectangle_region<float> projected_region = projected.get_region();
@@ -137,7 +137,7 @@ public:
 
 		rect_t =
 			linear_transformer::transform(rect_t,
-										  vector2(0.f, 0.f),
+										  vector2<float>(0.f, 0.f),
 										  pi / 4);
 
 		CPPUNIT_ASSERT(range(rect_t.get_left_down().get_x(),
@@ -166,7 +166,7 @@ public:
 		using risa_gl::linear_transformer;
 		using risa_gl::math::vector3;
 		
-		vector3 coord(1, 2, 3);
+		vector3<float> coord(1, 2, 3);
 
 		linear_transformer transformer;
 
@@ -195,7 +195,7 @@ public:
 		using risa_gl::linear_transformer;
 		using risa_gl::math::vector3;
 		
-		vector3 coord(1, 0, 0);
+		vector3<float> coord(1, 0, 0);
 
 		linear_transformer transformer;
 
@@ -205,7 +205,7 @@ public:
 		CPPUNIT_ASSERT(coord.z == 0.f);
 
 		transformer.translate(-1.f, -1.f, 0.f);
-		transformer.rotate(vector3(0.f, 0.f, 1.f), 3.1415926535f / 2.f);
+		transformer.rotate(vector3<float>(0.f, 0.f, 1.f), 3.1415926535f / 2.f);
 		transformer.translate(1.f, 1.f, 0.f);
 
 		coord = transformer * coord;
@@ -219,7 +219,7 @@ public:
 		using risa_gl::linear_transformer;
 		using risa_gl::math::vector3;
 		
-		vector3 coord(1, 0, 0);
+		vector3<float> coord(1, 0, 0);
 
 		linear_transformer transformer;
 
@@ -228,16 +228,16 @@ public:
 		CPPUNIT_ASSERT(coord.y == 0.f);
 		CPPUNIT_ASSERT(coord.z == 0.f);
 
-		transformer.rotate(vector3(0.f, 0.f, 1.f), 3.1415926535f / 2.f);
+		transformer.rotate(vector3<float>(0.f, 0.f, 1.f), 3.1415926535f / 2.f);
 		coord = transformer * coord;
 		CPPUNIT_ASSERT(range(coord.x, 0.f, 0.001f));
 		CPPUNIT_ASSERT(range(coord.y, 1.f, 0.001f));
 		CPPUNIT_ASSERT(range(coord.z, 0.f, 0.001f));
 
-		coord = vector3(0, 0, 1);
+		coord = vector3<float>(0, 0, 1);
 
 		transformer = linear_transformer();
-		transformer.rotate(vector3(1.f, 1.f, 0.f), 3.1415926535f / 2.f);
+		transformer.rotate(vector3<float>(1.f, 1.f, 0.f), 3.1415926535f / 2.f);
 		coord = transformer * coord;
 
 		const float pos = std::sqrt(2.f)/2.f;
@@ -251,7 +251,7 @@ public:
 		using risa_gl::linear_transformer;
 		using risa_gl::math::vector3;
 		
-		vector3 coord(1, 2, 3);
+		vector3<float> coord(1, 2, 3);
 
 		linear_transformer transformer;
 
@@ -336,9 +336,9 @@ public:
 		using risa_gl::math::vector2;
 
 		linear_transformer transformer;
-		vector2 v(2.f, 3.f);
+		vector2<float> v(2.f, 3.f);
 
-		vector2 v_t = (transformer * v);
+		vector2<float> v_t = (transformer * v);
 		CPPUNIT_ASSERT(v_t.x == v.x);
 		CPPUNIT_ASSERT(v_t.y == v.y);
 
@@ -360,9 +360,9 @@ public:
 		using risa_gl::math::vector3;
 
 		linear_transformer transformer;
-		vector3 v(2.f, 3.f, 4.f);
+		vector3<float> v(2.f, 3.f, 4.f);
 
-		vector3 v_t = (transformer * v);
+		vector3<float> v_t = (transformer * v);
 		CPPUNIT_ASSERT(v_t.x == v.x);
 		CPPUNIT_ASSERT(v_t.y == v.y);
 		CPPUNIT_ASSERT(v_t.z == v.z);
@@ -386,9 +386,9 @@ public:
 		using risa_gl::math::vector4;
 
 		linear_transformer transformer;
-		vector4 v(2.f, 3.f, 4.f, 1.f);
+		vector4<float> v(2.f, 3.f, 4.f, 1.f);
 
-		vector4 v_t = (transformer * v);
+		vector4<float> v_t = (transformer * v);
 		CPPUNIT_ASSERT(v_t.x == v.x);
 		CPPUNIT_ASSERT(v_t.y == v.y);
 		CPPUNIT_ASSERT(v_t.z == v.z);

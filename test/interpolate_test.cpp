@@ -42,21 +42,21 @@ public:
 
 		risa_gl::bilinear_referencer<pixel_store_type>
 			interpolator(pixels, 64,
-						 vector2(0, 0),
-						 vector2(64, 0));
+						 vector2<float>(0, 0),
+						 vector2<float>(64, 0));
 
-		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2(0, 0)) ==
+		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2<float>(0, 0)) ==
 					   pixel_store_type::pixel_type(0, 0, 0, 256));
-		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2(.5, 0)) ==
+		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2<float>(.5, 0)) ==
 					   pixel_store_type::pixel_type(2, 0, 0, 256));
-		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2(1, 0)) ==
+		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2<float>(1, 0)) ==
 					   pixel_store_type::pixel_type(4, 0, 0, 256));
 
-		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2(62, 0)) ==
+		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2<float>(62, 0)) ==
 					   pixel_store_type::pixel_type(62*4, 0, 0, 256));
-		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2(62.5f, 0)) ==
+		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2<float>(62.5f, 0)) ==
 					   pixel_store_type::pixel_type(250, 0, 0, 256));
-		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2(63, 0)) ==
+		CPPUNIT_ASSERT(*interpolator.get_proxy(vector2<float>(63, 0)) ==
 					   pixel_store_type::pixel_type(63*4, 0, 0, 256));
 	}
 
@@ -72,45 +72,45 @@ public:
 
 		risa_gl::bilinear_referencer<pixel_store_type>
 			interpolator(pixels, 128,
-						 vector2(0, 0),
-						 vector2(256, 0));
+						 vector2<float>(0, 0),
+						 vector2<float>(256, 0));
 
 		CPPUNIT_ASSERT(interpolator.interpolate(0) ==
-					   vector2(0, 0));
+					   vector2<float>(0, 0));
 		CPPUNIT_ASSERT(interpolator.interpolate(1.f/256.f) ==
-					   vector2(1, 0));
+					   vector2<float>(1, 0));
 
 		CPPUNIT_ASSERT(interpolator.interpolate(127.f/256.f) ==
-					   vector2(127, 0));
+					   vector2<float>(127, 0));
 		CPPUNIT_ASSERT(interpolator.interpolate(128.f/256.f) ==
-					   vector2(128, 0));
+					   vector2<float>(128, 0));
 		CPPUNIT_ASSERT(interpolator.interpolate(129.f/256.f) ==
-					   vector2(129, 0));
+					   vector2<float>(129, 0));
 
 		CPPUNIT_ASSERT(interpolator.interpolate(255.f/256.f) ==
-					   vector2(255, 0));
+					   vector2<float>(255, 0));
 		CPPUNIT_ASSERT(interpolator.interpolate(1) ==
-					   vector2(256, 0));
+					   vector2<float>(256, 0));
 
 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-						   vector2(0, 0)) ==
+					   vector2<float>(0, 0)) ==
 					   pixel_store_type::pixel_type(0, 0, 0, 256));
 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-						   vector2(.5, 0)) ==
+					   vector2<float>(.5, 0)) ==
 					   pixel_store_type::pixel_type(0, 0, 0, 256));
 
 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-						   vector2(127, 0)) ==
+					   vector2<float>(127, 0)) ==
 					   pixel_store_type::pixel_type(126, 0, 0, 256));
 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-						   vector2(128, 0)) ==
+					   vector2<float>(128, 0)) ==
 					   pixel_store_type::pixel_type(128, 0, 0, 256));
 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-						   vector2(129, 0)) ==
+					   vector2<float>(129, 0)) ==
 					   pixel_store_type::pixel_type(128, 0, 0, 256));
 
 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-						   vector2(255, 0)) ==
+					   vector2<float>(255, 0)) ==
 					   pixel_store_type::pixel_type(254, 0, 0, 256));
 // 		CPPUNIT_ASSERT(*interpolator.get_proxy(
 // 						   vector2(256, 0)) ==
@@ -127,21 +127,21 @@ public:
 
 		risa_gl::nearest_referencer<pixel_store_type>
 			interpolator(pixels, 128,
-						 vector2(0, 0),
-						 vector2(256, 0));
+						 vector2<float>(0, 0),
+						 vector2<float>(256, 0));
 
 		CPPUNIT_ASSERT(interpolator.interpolate(0) ==
-					   vector2(0, 0));
+					   vector2<float>(0, 0));
 		CPPUNIT_ASSERT(interpolator.interpolate(.5f) ==
-					   vector2(128, 0));
+					   vector2<float>(128, 0));
 		CPPUNIT_ASSERT(interpolator.interpolate(1) ==
-					   vector2(256, 0));
+					   vector2<float>(256, 0));
 
 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-						   vector2(0, 0)) ==
+					   vector2<float>(0, 0)) ==
 					   pixel_store_type::pixel_type(0, 0, 0, 256));
 		CPPUNIT_ASSERT(*interpolator.get_proxy(
-						   vector2(128, 0)) ==
+					   vector2<float>(128, 0)) ==
 					   pixel_store_type::pixel_type(128, 0, 0, 256));
 // 		CPPUNIT_ASSERT(*interpolator.get_proxy(
 // 						   coordinate<int>(256, 0)) ==
@@ -157,8 +157,8 @@ public:
 					pixel_store_type::pixel_type(x * 4, y * 4, 0, 256);
 
 		bilinear<pixel_store_type> bilinear_filter(pixels,
-												 vector2(0.f, 0.f),
-												 vector2(63.f, 63.f),
+												 vector2<float>(0.f, 0.f),
+												 vector2<float>(63.f, 63.f),
 												 128);
 
 		bilinear<pixel_store_type>::pixel_vector_type fragments =
@@ -182,8 +182,8 @@ public:
 				pixels(x, y) = pixel_store_type::pixel_type(x, y, 0, 256);
 
 		nearest<pixel_store_type> nearest_filter(pixels,
-												 vector2(0.f, 0.f),
-												 vector2(255.f, 0.f),
+												 vector2<float>(0.f, 0.f),
+												 vector2<float>(255.f, 0.f),
 												 128);
 
 		nearest<pixel_store_type>::pixel_vector_type fragments =

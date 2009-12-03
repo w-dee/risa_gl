@@ -245,7 +245,7 @@ namespace risa_gl
 		typedef ptrdiff_t difference_type;
 
 	private:
-		typedef risa_gl::math::vector2 vector_type;
+		typedef risa_gl::math::vector2<float> vector_type;
 		const interpolate_type& interpolator;
 		
 		const int grain_size;

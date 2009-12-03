@@ -48,7 +48,7 @@ namespace risa_gl
 		}
 
 		matrix_vector 
-		vector2_to_matrix_vector(const math::vector2& coord) const
+		vector2_to_matrix_vector(const math::vector2<float>& coord) const
 		{
 			matrix_vector result;
 
@@ -60,14 +60,14 @@ namespace risa_gl
 			return result;
 		}
 
-		vector2
+		vector2<float>
 		matrix_vector_to_vector2(const matrix_vector& coord) const
 		{
-			return vector2(coord(0,0), coord(0,1));
+			return vector2<float>(coord(0,0), coord(0,1));
 		}
 			
 		matrix_vector 
-		vector3_to_matrix_vector(const math::vector3& coord) const
+		vector3_to_matrix_vector(const math::vector3<float>& coord) const
 		{
 			matrix_vector result;
 
@@ -79,14 +79,14 @@ namespace risa_gl
 			return result;
 		}
 
-		vector3
+		vector3<float>
 		matrix_vector_to_vector3(const matrix_vector& coord) const
 		{
-			return vector3(coord(0,0), coord(0,1), coord(0,2));
+			return vector3<float>(coord(0,0), coord(0,1), coord(0,2));
 		}
 
 		matrix_vector 
-		vector4_to_matrix_vector(const math::vector4& coord) const
+		vector4_to_matrix_vector(const math::vector4<float>& coord) const
 		{
 			matrix_vector result;
 
@@ -98,10 +98,10 @@ namespace risa_gl
 			return result;
 		}
 
-		vector4
+		vector4<float>
 		matrix_vector_to_vector4(const matrix_vector& coord) const
 		{
-			return vector4(coord(0,0), coord(0,1), coord(0,2), coord(0,3));
+			return vector4<float>(coord(0,0), coord(0,1), coord(0,2), coord(0,3));
 		}
 
 	public:
@@ -142,9 +142,9 @@ namespace risa_gl
 			this->matrix = this->matrix * matrix_t(shifter);
 		}
 
-		void rotate(const vector3& axis, float angle)
+		void rotate(const vector3<float>& axis, float angle)
 		{
-			const vector3 normed_axis = axis.get_norm();
+			const vector3<float> normed_axis = axis.get_norm();
 			const float cos_ = std::cos(angle);
 			const float sin_ = std::sin(angle);
 			const float x = normed_axis.x;
@@ -166,19 +166,19 @@ namespace risa_gl
 			this->matrix = this->matrix * matrix_t(rotator);
 		}
 
-		math::vector2 operator*(const math::vector2& coord) const
+		math::vector2<float> operator*(const math::vector2<float>& coord) const
 		{
 			return matrix_vector_to_vector2(
 				vector2_to_matrix_vector(coord) * this->matrix);
 		}
 
-		math::vector3 operator*(const math::vector3& coord) const
+		math::vector3<float> operator*(const math::vector3<float>& coord) const
 		{
 			return matrix_vector_to_vector3(
 				vector3_to_matrix_vector(coord) * this->matrix);
 		}
 
-		math::vector4 operator*(const math::vector4& coord) const
+		math::vector4<float> operator*(const math::vector4<float>& coord) const
 		{
 			return matrix_vector_to_vector4(
 				vector4_to_matrix_vector(coord) * this->matrix);
@@ -210,12 +210,12 @@ namespace risa_gl
 		template <typename BaseType>
 		static const math::rectangle_region<BaseType>
 		transform(const math::rectangle_region<BaseType>& region,
-				  const math::vector2& center,
+				  const math::vector2<float>& center,
 				  const float angle)
 		{
 			linear_transformer transformer;
 			transformer.translate(-center.x, -center.y, 0.f);
-			transformer.rotate(math::vector3(0.f, 0.f, 1.f), angle);
+			transformer.rotate(math::vector3<float>(0.f, 0.f, 1.f), angle);
 			transformer.translate(center.x, center.y, 0.f);
 
 			return transformer * region;
@@ -285,10 +285,10 @@ namespace risa_gl
 		coord_type x_variation;
 		coord_type y_variation;
 		
-		const math::vector4
+		const math::vector4<float>
 		coord_to_vector4(const typename region_type::coord_type& coord) const
 		{
-			return math::vector4(coord.get_x(), coord.get_y(), 0, 1);
+			return math::vector4<float>(coord.get_x(), coord.get_y(), 0, 1);
 		}
 
 	public:
@@ -344,12 +344,13 @@ namespace risa_gl
 		typedef typename super_type::projected_type projected_type;
 
 		rotator(const region_type& region,
-				const math::vector2& center,
+				const math::vector2<float>& center,
 				const float angle):
 			super_type(region)
 		{
 			super_type::transformer.translate(-center.x, -center.y, 0);
-			super_type::transformer.rotate(math::vector3(0.f, 0.f, 1.f), angle);
+			super_type::transformer.rotate(math::vector3<float>(0.f, 0.f, 1.f),
+										   angle);
 			super_type::transformer.translate(center.x, center.y, 0);
 		}
 
@@ -374,7 +375,7 @@ namespace risa_gl
 		typedef typename super_type::projected_type projected_type;
 
 		scaler(const region_type& region,
-			   const math::vector2& center,
+			   const math::vector2<float>& center,
 			   const float x_scale,
 			   const float y_scale,
 			   const int x_stepping = 1,
@@ -407,7 +408,7 @@ namespace risa_gl
 		typedef typename super_type::projected_type projected_type;
 
 		translator(const region_type& region,
-				   const math::vector2& translations):
+				   const math::vector2<float>& translations):
 			super_type(region)
 		{
 			super_type::transformer.translate(translations.x,

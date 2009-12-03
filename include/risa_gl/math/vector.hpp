@@ -9,9 +9,12 @@ namespace risa_gl
 {
 	namespace math
 	{
+		template <typename value_t>
 		struct vector2
 		{
-			vector2(const float x_, const float y_):
+			typedef value_t value_type;
+
+			vector2(const value_type x_, const value_type y_):
 				x(x_), y(y_)
 			{}
 
@@ -23,15 +26,15 @@ namespace risa_gl
 				x(), y()
 			{}
 
-			float x;
-			float y;
+			value_type x;
+			value_type y;
 
 			vector2 operator+(const vector2& rhs) const
 			{
 				return vector2(x + rhs.x, y + rhs.y);
 			}
 
-			vector2 operator*(const float factor) const
+			vector2 operator*(const value_type factor) const
 			{
 				return vector2(x * factor, y * factor);
 			}
@@ -41,7 +44,7 @@ namespace risa_gl
 				return vector2(x - rhs.x, y - rhs.y);
 			}
 
-			vector2 operator/(const float factor) const
+			vector2 operator/(const value_type factor) const
 			{
 				return vector2(x / factor, y / factor);
 			}
@@ -61,42 +64,57 @@ namespace risa_gl
 
 			vector2 get_norm() const
 			{
-				float length = std::sqrt(x * x + y * y);
+				value_type length = std::sqrt(x * x + y * y);
 				return vector2(x/length, y/length);
 			}
 		};
 
-		struct vector3 : public vector2
+		template <typename value_t>
+		struct vector3 : public vector2<value_t>
 		{
-			vector3(const float x_, const float y_, const float z_):
-				vector2(x_, y_), z(z_)
+			typedef value_t value_type;
+			typedef vector2<value_type> super_type;
+			
+			vector3(const value_type x_,
+					const value_type y_,
+					const value_type z_):
+				vector2<value_t>(x_, y_), z(z_)
 			{}
 
-			float z;
+			value_type z;
 
 			vector3 operator+(const vector3& rhs) const
 			{
-				return vector3(x + rhs.x, y + rhs.y, z + rhs.z);
+				return vector3(super_type::x + rhs.x,
+							   super_type::y + rhs.y,
+							   z + rhs.z);
 			}
 
-			vector3 operator*(const float factor) const
+			vector3 operator*(const value_type factor) const
 			{
-				return vector3(x * factor, y * factor, z * factor);
+				return vector3(super_type::x * factor,
+							   super_type::y * factor,
+							   z * factor);
 			}
 
 			vector3 operator-(const vector3& rhs) const
 			{
-				return vector3(x - rhs.x, y - rhs.y, z - rhs.z);
+				return vector3(super_type::x - rhs.x,
+							   super_type::y - rhs.y,
+							   z - rhs.z);
 			}
 
-			vector3 operator/(const float factor) const
+			vector3 operator/(const value_type factor) const
 			{
-				return vector3(x / factor, y / factor, z / factor);
+				return vector3(super_type::x / factor,
+							   super_type::y / factor,
+							   z / factor);
 			}
 
 			bool operator==(const vector3& rhs) const
 			{
-				return x == rhs.x && y == rhs.y && z == rhs.z;
+				return super_type::x == rhs.x && 
+					super_type::y == rhs.y && z == rhs.z;
 			}
 
 			friend std::ostream& operator<<(std::ostream& out,
@@ -110,60 +128,67 @@ namespace risa_gl
 
 			vector3 get_norm() const
 			{
-				float length = std::sqrt(x * x + y * y + z * z);
-				return vector3(x/length, y/length, z/length);
+				value_type length =
+					std::sqrt(super_type::x * super_type::x +
+							  super_type::y * super_type::y +
+							  z * z);
+				return vector3(super_type::x/length,
+							   super_type::y/length,
+							   z/length);
 			}
 		};
 
-		struct vector4 : public vector3
+		template <typename value_t>
+		struct vector4 : public vector3<value_t>
 		{
-			vector4(const float x_, const float y_,
-					const float z_, const float w_):
-				vector3(x_, y_, z_), w(w_)
+			typedef value_t value_type;
+			typedef vector3<value_type> super_type;
+
+			vector4(const value_type x_, const value_type y_,
+					const value_type z_, const value_type w_):
+				vector3<value_t>(x_, y_, z_), w(w_)
 			{}
 
-			float w;
+			value_type w;
 
 			vector4 operator+(const vector4& rhs) const
 			{
-				return vector4(
-					x/w + rhs.x/rhs.w,
-					y/w + rhs.y/rhs.w,
-					z/w + rhs.z/rhs.w,
-					1.f);
+				return vector4(super_type::x/w + rhs.x/rhs.w,
+							   super_type::y/w + rhs.y/rhs.w,
+							   super_type::z/w + rhs.z/rhs.w,
+							   value_type(1));
 			}
 
-			vector4 operator*(const float factor) const
+			vector4 operator*(const value_type factor) const
 			{
-				return vector4(x * factor,
-							   y * factor,
-							   z * factor,
+				return vector4(super_type::x * factor,
+							   super_type::y * factor,
+							   super_type::z * factor,
 							   w);
 			}
 
 			vector4 operator-(const vector4& rhs) const
 			{
-				return vector4(
-					x/w - rhs.x/rhs.w,
-					y/w - rhs.y/rhs.w,
-					z/w - rhs.z/rhs.w,
-					1.f);
+				return vector4(super_type::x/w - rhs.x/rhs.w,
+							   super_type::y/w - rhs.y/rhs.w,
+							   super_type::z/w - rhs.z/rhs.w,
+							   value_type(1));
 			}
 
-			vector4 operator/(const float factor) const
+			vector4 operator/(const value_type factor) const
 			{
-				return vector4(x / factor,
-							   y / factor,
-							   z / factor,
+				return vector4(super_type::x / factor,
+							   super_type::y / factor,
+							   super_type::z / factor,
 							   w);
 			}
 
 			bool operator==(const vector4& rhs) const
 			{
 				return
-					x/w == rhs.x/rhs.w &&
-					y/w == rhs.y/rhs.w &&
-					z/w == rhs.z/rhs.w;
+					super_type::x/w == rhs.x/rhs.w &&
+					super_type::y/w == rhs.y/rhs.w &&
+					super_type::z/w == rhs.z/rhs.w;
 			}
 
 			friend std::ostream& operator<<(std::ostream& out,
@@ -178,8 +203,13 @@ namespace risa_gl
 
 			vector4 get_norm() const
 			{
-				float length = std::sqrt(x * x + y * y + z * z);
-				return vector4(x/length, y/length, z/length, w);
+				value_type length =
+					std::sqrt(super_type::x * super_type::x +
+							  super_type::y * super_type::y +
+							  super_type::z * super_type::z);
+				return vector4(super_type::x/length,
+							   super_type::y/length,
+							   super_type::z/length, w);
 			}
 		};
 
