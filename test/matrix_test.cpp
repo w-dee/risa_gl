@@ -1,5 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <risa_gl/math/matrix.hpp>
+#include <risa_gl/math/matrix_type.hpp>
+#include <risa_gl/math/vector.hpp>
 #include <iostream>
 #include <cmath>
 
@@ -15,9 +17,24 @@ class matrix_test : public CppUnit::TestFixture
 	CPPUNIT_TEST(multiply_test);
 	CPPUNIT_TEST(min_multiply_test);
 	CPPUNIT_TEST(asymetric_multiply_test);
+	CPPUNIT_TEST(multiply_matrix_type_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void multiply_matrix_type_test()
+	{
+		using risa_gl::math::matrix4x4;
+		using risa_gl::math::matrix1x4;
+		using risa_gl::math::vector3;
+
+		typedef matrix4x4<float> matrix_4x4_type;
+		typedef matrix1x4<float> matrix_1x4_type;
+		typedef vector3<float> vector3_type;
+
+
+		
+	}
+
 	void add_test()
 	{
 		typedef matrix<float, 4, 4> matrix_t;
