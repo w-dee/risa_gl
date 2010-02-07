@@ -59,23 +59,17 @@ namespace risa_gl
 		};
 		
 		template <typename value_type>
-		matrix1x4<value_type>::type
-		operator*(const matrix1x4<value_type>::type& lhs,
-				  const matrix4x4<value_type>::type& rhs)
+		vector3<value_type>
+		operator*(const vector3<value_type>& lhs,
+				  const matrix<value_type, 4, 4>& rhs)
 		{
-			return lhs * rhs;
-		}
+			typename matrix<value_type, 1, 4>::elements_type elem =
+				{{ lhs.x, lhs.y, lhs.z, 1 }};
 
-		template <typename value_type>
-		vector3<value_type>::type
-		operator*(const vector3<value_type>::type& lhs,
-				  const matrix4x4<value_type>::type& rhs)
-		{
-			matrix1x4::elements_type elem = { lhs.x, lhs.y, lhs.z, 1 };
-			matrix1x4 result = matrix1x4::value_type(elem) * rhs;
+			matrix<value_type, 1, 4> result = elem;
+			result = result * rhs;
 
-			return vector3<value_type>(result[0], result[1],
-									   result[2], result[3]);
+			return vector3<value_type>(result[0], result[1], result[2]);
 		}
 	}
 }

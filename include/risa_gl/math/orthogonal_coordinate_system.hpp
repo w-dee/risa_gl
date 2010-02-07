@@ -61,11 +61,11 @@ namespace risa_gl
 
 			matrix_type get_transformer() const
 			{
-				typename matrix_type::source_type result_source = {
-					x_axis.x, x_axis.y, x_axis.z, 0,
-					y_axis.x, y_axis.y, y_axis.z, 0,
-					z_axis.x, z_axis.y, z_axis.z, 0,
-					0, 0, 0, 1 };
+				typename matrix_type::elements_type result_source = {{
+					 x_axis.x, x_axis.y, x_axis.z, 0,
+					 y_axis.x, y_axis.y, y_axis.z, 0,
+					 z_axis.x, z_axis.y, z_axis.z, 0,
+					 0, 0, 0, 1 }};
 
 				return result_source;
 			}

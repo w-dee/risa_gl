@@ -32,6 +32,23 @@ namespace risa_gl
 			{
 				return make_orthogonal_basis(coord_system_type(x, y, z));
 			}
+
+			static matrix_type
+			make_orthogonal_basis(const value_type& x_x,
+								  const value_type& x_y,
+								  const value_type& x_z,
+								  const value_type& y_x,
+								  const value_type& y_y,
+								  const value_type& y_z,
+								  const value_type& z_x,
+								  const value_type& z_y,
+								  const value_type& z_z)
+			{
+				return make_orthogonal_basis(vector_type(x_x, x_y, x_z),
+											 vector_type(y_x, y_y, y_z),
+											 vector_type(z_x, z_y, z_z));
+			}
+
 		};
 	}
 }
