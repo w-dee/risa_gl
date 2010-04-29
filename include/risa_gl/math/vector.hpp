@@ -39,6 +39,11 @@ namespace risa_gl
 				return vector2(x * factor, y * factor);
 			}
 
+			vector2 operator-() const
+			{
+				return vector2(-x, -y);
+			}
+
 			vector2 operator-(const vector2& rhs) const
 			{
 				return vector2(x - rhs.x, y - rhs.y);
@@ -97,6 +102,13 @@ namespace risa_gl
 							   z * factor);
 			}
 
+			vector3 operator-() const
+			{
+				return vector3(-super_type::x,
+							   -super_type::y,
+							   -z);
+			}
+
 			vector3 operator-(const vector3& rhs) const
 			{
 				return vector3(super_type::x - rhs.x,
@@ -138,6 +150,10 @@ namespace risa_gl
 			}
 		};
 
+		/**
+		 * todo 名前がvector4なのに中身が同次座標系のvector4になってる
+		 * ので要修正
+		 */
 		template <typename value_t>
 		struct vector4 : public vector3<value_t>
 		{
@@ -164,6 +180,14 @@ namespace risa_gl
 				return vector4(super_type::x * factor,
 							   super_type::y * factor,
 							   super_type::z * factor,
+							   w);
+			}
+
+			vector4 operator-() const
+			{
+				return vector4(-super_type::x,
+							   -super_type::y,
+							   -super_type::z,
 							   w);
 			}
 
