@@ -127,6 +127,7 @@ private:
 				if (0 <= value.get_x() &&
 					width > value.get_x())
 				{
+					static unsigned char previous_color = 255;
 					const int x_ = static_cast<int>(value.get_x());
 					const int y_ = static_cast<int>(value.get_y());
 					const int s_ = static_cast<int>(value.get_s() * 64);
@@ -136,7 +137,24 @@ private:
 					const bool is_odd_s = mod_s & 1;
 					const bool is_odd_t = mod_t & 1;
 					odd_t_mark = is_odd_t;
-					const unsigned char color = (is_odd_s ^ is_odd_t) * 255;
+					const unsigned char color = !(is_odd_s ^ is_odd_t) * 255;
+
+					if (previous_color != color)
+					{
+						static int counter = 0;
+						++counter;
+						previous_color = color;
+						if (color == 0 &&
+							x_ % 8 != 0)
+						{
+							std::cout << counter << ", " <<
+							x_ << ", " << y_ << ", " <<
+							s_ << ", " << t_ <<
+							mod_s << ", " <<
+							mod_t << ", " <<
+							static_cast<int>(color) << std::endl;
+						}
+					}
 
 					image->SetRGB(x_, y_, color, color, color);
 				}

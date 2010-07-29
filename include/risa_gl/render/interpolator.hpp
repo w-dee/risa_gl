@@ -2,6 +2,7 @@
 #define RISA_RENDER_INTERPOLATOR_HPP_
 
 #include <cassert>
+#include <limits>
 #include <risa_gl/render/xyzw_st_coord.hpp>
 
 namespace risa_gl
@@ -55,6 +56,9 @@ namespace risa_gl
 			value_type inv_z0; // 1 / Z[0]
 			value_type inv_z1; // 1 / Z[1]
 			value_type distance_inv_z0_inv_z1; // 1/Z[1] - 1/Z[0]
+
+			value_type distance_x;
+			value_type distance_y;
 			
 		public:
 			st_coord_interpolator(const xyzw_st_coord<value_type>& head,
@@ -87,7 +91,10 @@ namespace risa_gl
 
 				inv_z0(),
 				inv_z1(),
-				distance_inv_z0_inv_z1()
+				distance_inv_z0_inv_z1(),
+
+				distance_x(tail.get_x() - head.get_x()),
+				distance_y(tail.get_y() - head.get_y())
 			{
 				inv_z0 = 1 / head_z;
 				inv_z1 = 1 / tail_z;
@@ -128,14 +135,28 @@ namespace risa_gl
 			xyzw_st_coord<value_type>
 			interpolate_value(const value_type& step) const
 			{
+				if (inv_division > std::numeric_limits<value_type>::max())
+				{
+					return xyzw_st_coord<value_type>(
+						 head_x, head_y, head_z, 1, s0z0, t0z0);
+				}
+
 				interpolated_values<value_type> stz = interpolate(step);
 
-				return xyzw_st_coord<value_type>(head_x + step * delta_x,
-												 head_y + step * delta_y,
-												 stz.z,
-												 1,
-												 stz.s,
-												 stz.t);
+				return xyzw_st_coord<value_type>(
+					head_x + distance_x * step / division,
+					head_y + distance_y * step / division,
+					stz.z,
+					1,
+					stz.s,
+					stz.t);
+// 				return xyzw_st_coord<value_type>(head_x + step * delta_x,
+// 												 head_y + step * delta_y,
+// 												 stz.z,
+// 												 1,
+// 												 stz.s,
+// 												 stz.t);
+
 			}
 		};
 	}

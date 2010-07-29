@@ -94,10 +94,10 @@ namespace risa_gl
 			}
 
 			const std::pair<coord_type, coord_type>
-			operator[](int y_offset)
+			operator[](value_type y_offset)
 			{
 				if (y_offset > major_distance)
-					throw std::out_of_range("offset out of range.");
+					throw std::out_of_range("offset is out of range.");
 
 				line_type& major_side = *major_line;
 				line_type& minor_side =
