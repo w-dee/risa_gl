@@ -43,6 +43,18 @@ namespace risa_gl
 				s(src.s), t(src.t)
 			{}
 
+			xyzw_st_coord& operator=(const xyzw_st_coord& rhs)
+			{
+				this->x = rhs.x;
+				this->y = rhs.y;
+				this->z = rhs.z;
+				this->w = rhs.w;
+				this->s = rhs.s;
+				this->t = rhs.t;
+
+				return *this;
+			}
+
 
 			const value_type& get_x() const
 			{
@@ -107,7 +119,7 @@ namespace risa_gl
 				const value_type rhs_w = rhs.w;
 
 				(*this) *= rhs_w;
-				
+
 				x += rhs.x * lhs_w;
 				y += rhs.y * lhs_w;
 				z += rhs.z * lhs_w;
@@ -129,7 +141,7 @@ namespace risa_gl
 				const value_type rhs_w = rhs.w;
 
 				(*this) *= rhs_w;
-				
+
 				x -= rhs.x * lhs_w;
 				y -= rhs.y * lhs_w;
 				z -= rhs.z * lhs_w;
@@ -140,7 +152,7 @@ namespace risa_gl
 				return *this;
 			}
 
-			xyzw_st_coord& operator-(const xyzw_st_coord& rhs) const
+			xyzw_st_coord operator-(const xyzw_st_coord& rhs) const
 			{
 				return xyzw_st_coord(*this) -= rhs;
 			}
@@ -155,7 +167,7 @@ namespace risa_gl
 				return *this;
 			}
 
-			xyzw_st_coord& operator*(const value_type& rhs) const
+			xyzw_st_coord operator*(const value_type& rhs) const
 			{
 				return xyzw_st_coord(*this) *= rhs;
 			}
@@ -170,7 +182,7 @@ namespace risa_gl
 				return *this;
 			}
 
-			xyzw_st_coord& operator/(const value_type& rhs) const
+			xyzw_st_coord operator/(const value_type& rhs) const
 			{
 				return xyzw_st_coord(*this) /= rhs;
 			}

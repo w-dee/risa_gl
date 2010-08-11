@@ -6,6 +6,7 @@
 #include <risa_gl/math/matrix.hpp>
 #include <risa_gl/render/projector.hpp>
 #include <risa_gl/render/viewport.hpp>
+#include <risa_gl/render/raster.hpp>
 
 #include <iostream>
 #include <typeinfo>
@@ -18,6 +19,7 @@ using risa_gl::render::viewport;
 using risa_gl::render::triangle_setup;
 using risa_gl::render::xyzw_st_coord;
 using risa_gl::render::st_coord_interpolator;
+using risa_gl::render::raster;
 
 coordinate<float>
 xyzw_st_to_coord(const xyzw_st_coord<float>& point)
@@ -112,18 +114,13 @@ private:
 
 			const xyzw_st_coord<float>& head = head_and_tail.first;
 			const xyzw_st_coord<float>& tail = head_and_tail.second;
+			raster<float> raster(head, tail);
 
-			const int distance =
-				std::max(head.get_x(), tail.get_x()) -
-				std::min(head.get_x(), tail.get_x());
-			assert(distance >= 0);
-
-			st_coord_interpolator<float> interp(head, tail, distance);
-			for (int x_offset = 0; x_offset < distance; ++x_offset)
+			for (int x_offset = 0; x_offset < raster.get_distance(); ++x_offset)
 			{
 				bool odd_t_mark = false;
-				xyzw_st_coord<float> value =
-					interp.interpolate_value(x_offset);
+				xyzw_st_coord<float> value = raster[x_offset];
+
 				if (0 <= value.get_x() &&
 					width > value.get_x())
 				{
@@ -163,7 +160,7 @@ private:
 	}
 
 public:
-	MyWindow(wxFrame* parent, const wxSize& size = wxSize(400, 400)):
+	MyWindow(wxFrame* parent, const wxSize& size = wxSize(640, 480)):
 		wxWindow(parent, wxID_ANY, wxDefaultPosition, size,
 				 wxRAISED_BORDER),
 		points(),
@@ -237,7 +234,7 @@ public:
 				-1,
 				title,
 				pos,
-				size,
+				wxSize(644, 536),
 				wxDEFAULT_FRAME_STYLE ^ wxRESIZE_BORDER),
 		window(NULL)
 	{

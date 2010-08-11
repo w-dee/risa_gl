@@ -21,14 +21,10 @@ public:
 		triangle_setup<float> setup(p0, p1, p2);
 		const int y_size = setup.size();
 
-		std::cout << "y_size: " << y_size << std::endl;
-
 		typedef std::pair<xyzw_st_coord<float>,xyzw_st_coord<float> > pair_t;
 		for (int offset = 0; offset <= y_size; ++offset)
 		{
 			pair_t head_and_tail = setup[offset];
-			std::cout << "head: " << head_and_tail.first << std::endl;
-			std::cout << "tail: " << head_and_tail.second << std::endl;
 		}
 	}
 };

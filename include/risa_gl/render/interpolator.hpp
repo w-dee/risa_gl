@@ -35,31 +35,31 @@ namespace risa_gl
 			value_type delta_x;
 			value_type delta_y;
 
-			const value_type& head_s;
-			const value_type& head_t;
-			const value_type& head_z;
-			const value_type& tail_s;
-			const value_type& tail_t;
-			const value_type& tail_z;
+			const value_type head_s;
+			const value_type head_t;
+			const value_type head_z;
+			const value_type tail_s;
+			const value_type tail_t;
+			const value_type tail_z;
 
-			const value_type& division;
+			const value_type division;
 			const value_type inv_division;
 
 			value_type s0z0; // S[0] / Z[0]
 			value_type s1z1; // S[1] / Z[1]
 			value_type distance_s0z0_s1z1; // S[1] / Z[1] - S[0] / Z[0]
-			
+
 			value_type t0z0; // T[0] / Z[0]
 			value_type t1z1; // T[1] / Z[1]
 			value_type distance_t0z0_t1z1; // T[1] / Z[1] - T[0] / Z[0]
-			
+
 			value_type inv_z0; // 1 / Z[0]
 			value_type inv_z1; // 1 / Z[1]
 			value_type distance_inv_z0_inv_z1; // 1/Z[1] - 1/Z[0]
 
 			value_type distance_x;
 			value_type distance_y;
-			
+
 		public:
 			st_coord_interpolator(const xyzw_st_coord<value_type>& head,
 								  const xyzw_st_coord<value_type>& tail,
@@ -113,7 +113,7 @@ namespace risa_gl
 			{
 				return division;
 			}
-				
+
 
 			interpolated_values<value_type>
 			interpolate(const value_type& step) const
@@ -150,13 +150,6 @@ namespace risa_gl
 					1,
 					stz.s,
 					stz.t);
-// 				return xyzw_st_coord<value_type>(head_x + step * delta_x,
-// 												 head_y + step * delta_y,
-// 												 stz.z,
-// 												 1,
-// 												 stz.s,
-// 												 stz.t);
-
 			}
 		};
 	}
