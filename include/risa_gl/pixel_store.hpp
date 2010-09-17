@@ -108,9 +108,11 @@ namespace risa_gl
 		{
 			assert (line < static_cast<size_t>(height));
 
-			iterator head = this->begin() + width * static_cast<const int>(line);
+			const size_t pitch = fragment_length / pixel_size;
+
+			iterator head = this->begin() + pitch * static_cast<const int>(line);
 			iterator tail =
-				this->begin() + (width * (static_cast<const int>(line) + 1));
+				this->begin() + (pitch * (static_cast<const int>(line) + 1));
 			return fragment_type(head, tail);
 		}
 
@@ -119,8 +121,10 @@ namespace risa_gl
 			assert (line < static_cast<size_t>(height));
 			assert (left <= right);
 
-			iterator head = this->begin() + width * line + left;
-			iterator tail = this->begin() + width * line + right;
+			const size_t pitch = fragment_length / pixel_size;
+
+			iterator head = this->begin() + pitch * line + left;
+			iterator tail = this->begin() + pitch * line + right;
 			return fragment_type(head, tail);
 		}			
 
@@ -128,8 +132,10 @@ namespace risa_gl
 		{
 			assert (line < static_cast<size_t>(height));
 
-			const_iterator head = this->begin() + width * line;
-			const_iterator tail = this->begin() + (width * (line + 1));
+			const size_t pitch = fragment_length / pixel_size;
+
+			const_iterator head = this->begin() + pitch * line;
+			const_iterator tail = this->begin() + (pitch * (line + 1));
 			return const_fragment_type(head, tail);
 		}
 
@@ -139,8 +145,10 @@ namespace risa_gl
 			assert (line < static_cast<size_t>(height));
 			assert (left <= right);
 
-			const_iterator head = this->begin() + width * line + left;
-			const_iterator tail = this->begin() + width * line + right;
+			const size_t pitch = fragment_length / pixel_size;
+
+			const_iterator head = this->begin() + pitch * line + left;
+			const_iterator tail = this->begin() + pitch * line + right;
 			return const_fragment_type(head, tail);
 		}
 
