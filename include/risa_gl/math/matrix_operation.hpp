@@ -3,12 +3,43 @@
 
 #include <risa_gl/math/matrix.hpp>
 #include <risa_gl/math/matrix_type.hpp>
+#include <risa_gl/math/vector.hpp>
 #include <cmath>
 
 namespace risa_gl
 {
 	namespace math
 	{
+		template <typename value_t>
+		class translator
+		{
+		public:
+			typedef value_t value_type;
+			typedef risa_gl::math::matrix<value_type, 4, 4> matrix_type;
+			typedef risa_gl::math::matrix<value_type, 4, 1> vector_type;
+			typedef typename matrix_type::elements_type matrix_source_type;
+
+		public:
+			translator()
+			{}
+
+			matrix_type
+			operator()(value_type x_shift,
+					   value_type y_shift,
+					   value_type z_shift) const
+			{
+				matrix_source_type shifter = {{
+						1, 0, 0, 0,
+						0, 1, 0, 0,
+						0, 0, 1, 0,
+						x_shift, y_shift, z_shift, 1
+					}};
+
+				return matrix_type(shifter);
+			}
+		};
+
+
 		template <typename value_t>
 		class rotator
 		{
@@ -57,10 +88,10 @@ namespace risa_gl
 				return matrix_type(source);
 			}
 		};
-		
+
 		template <typename value_type>
-		vector3<value_type>
-		operator*(const vector3<value_type>& lhs,
+		matrix<value_type, 4, 1>
+		operator*(const matrix<value_type, 4, 1>& lhs,
 				  const matrix<value_type, 4, 4>& rhs)
 		{
 			typename matrix<value_type, 1, 4>::elements_type elem =
@@ -69,7 +100,36 @@ namespace risa_gl
 			matrix<value_type, 1, 4> result = elem;
 			result = result * rhs;
 
+			return matrix<value_type, 4, 1>(result[0], result[1], result[2]);
+		}
+
+		template <typename value_type>
+		vector3<value_type>
+		operator*(const vector3<value_type>& lhs,
+				  const matrix<value_type, 4, 4>& rhs)
+		{
+			typename matrix<value_type, 4, 1>::elements_type elem =
+				{{ lhs.x, lhs.y, lhs.z, 1 }};
+
+			matrix<value_type, 1, 4> result = elem;
+			result = result * rhs;
+
 			return vector3<value_type>(result[0], result[1], result[2]);
+		}
+
+		template <typename value_type>
+		vector4<value_type>
+		operator*(const vector4<value_type>& lhs,
+				  const matrix<value_type, 4, 4>& rhs)
+		{
+			typename matrix<value_type, 4, 1>::elements_type elem =
+				{{ lhs.x, lhs.y, lhs.z, lhs.w }};
+
+			matrix<value_type, 1, 4> result = elem;
+			result = result * rhs;
+
+			return vector4<value_type>(result[0], result[1],
+									   result[2], result[3]);
 		}
 	}
 }
