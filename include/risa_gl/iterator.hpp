@@ -6,6 +6,7 @@
 #include <risa_gl/math/vector.hpp>
 #include <iterator>
 #include <cassert>
+#include <cstddef>
 
 namespace risa_gl
 {

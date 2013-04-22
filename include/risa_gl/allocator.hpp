@@ -5,6 +5,7 @@
 #include <risa_gl/allocate_implements.hpp>
 #include <memory>
 #include <cassert>
+#include <cstddef>
 
 namespace risa_gl {
 	/**

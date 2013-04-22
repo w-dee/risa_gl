@@ -74,15 +74,22 @@ namespace risa_gl
 			 }
 		 };
 
-		template <int min, int max, int projection_min, int projection_max>
+		template <risa_gl::uint32 min, risa_gl::uint32 max,
+				  risa_gl::uint32 projection_min, risa_gl::uint32 projection_max>
 		class scale_factor
 		{
+		private:
+			const risa_gl::uint32 range;
+			const risa_gl::uint32 projection_range;
+
 		public:
+			scale_factor():
+				range(max - min),
+				projection_range(projection_max - projection_min)
+			{}
+
 			risa_gl::uint32 operator()(risa_gl::uint32 value) const
 			{
-				const int range = max - min;
-				const int projection_range = projection_max - projection_min;
-
 				return (value - min) *
 					projection_range / range + projection_min;
 			}
@@ -144,7 +151,7 @@ namespace risa_gl
 				  typename selector, typename method_selector>
 		class scaled_invert_alpha_selector
 		{
-			typedef alpha_factor<selector, method_selector> stub_type;
+			typedef invert_alpha_factor<selector, method_selector> stub_type;
 			typedef scale_factor<min, max, projection_min, projection_max>
 			scaler;
 		public:
@@ -168,7 +175,7 @@ namespace risa_gl
 			{
 				return 1;
 			}
-		};			
+		};
 			
 		/**
 		 * 実行時にセットされた定数を返すalpha factor
@@ -199,30 +206,20 @@ namespace risa_gl
 		// }}}
 	
 		/**
-		 * 実行時にセットされた定数の逆数を返すalpha factor
+		 * 実行時にセットされた定数の補数を返すalpha factor
 		 */
 		// {{{ invert_constant_alpha_factor
-		class invert_constant_alpha_factor
+		class invert_constant_alpha_factor :
+			public constant_alpha_factor
 		{
-		private:
-			const int value;
-
 		public:
 			invert_constant_alpha_factor():
-				value(1)
+				constant_alpha_factor(1)
 			{}
 
 			invert_constant_alpha_factor(const int value_):
-				value(257 - value_)
+			constant_alpha_factor(257 - value_)
 			{}
-
-			template <typename src_itor_t,
-					  typename dest_itor_t>
-			risa_gl::uint32 operator()(src_itor_t,
-									   dest_itor_t) const
-			{
-				return value;
-			}
 		};
 		// }}}
 	}

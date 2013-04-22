@@ -20,20 +20,6 @@ namespace risa_gl
 		};
 
 		/**
-		 * コンパイル時定数setter
-		 */
-		template <risa_gl::uint32 value>
-		class constant_setter
-		{
-		public:
-			template <typename result_itor_t>
-			void operator()(result_itor_t result, risa_gl::uint32) const
-			{
-				result->set_bit_representation(value);
-			}
-		};
-
-		/**
 		 * 実行時定数setter
 		 */
 		class dynamic_constant_setter
@@ -82,21 +68,6 @@ namespace risa_gl
 			risa_gl::uint32 operator()(src_itor_t, dest_itor_t) const
 			{
 				return 0;
-			}
-		};
-
-		/**
-		 * コンパイル定数値を取得するgetter
-		 */
-		template <risa_gl::uint32 pixel_bits>
-		class constant_getter
-		{
-		public:
-			template <typename src_itor_t,
-					  typename dest_itor_t>
-			risa_gl::uint32 operator()(src_itor_t, dest_itor_t) const
-			{
-				return pixel_bits;
 			}
 		};
 

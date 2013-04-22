@@ -51,6 +51,231 @@ namespace risa_gl
 					}
 				};
 
+				/**
+				 * 選択型アルファファクタ
+				 * @param selector srcかdestを指定するselector
+				 * @param method_selector アルファ値を取り出すmethod_selector
+				 */
+				template <typename selector,
+						  typename method_selector>
+				class alpha_factor
+				{
+				public:
+					template <typename src_itor_t,
+							  typename dest_itor_t>
+					aligned_wideword_type
+					operator()(src_itor_t src,
+							   dest_itor_t dest) const
+					{
+						return method_selector()(selector()(src, dest));
+					}
+				};
+
+				/**
+				 * selectorを利用して対象からalpha値を取り出し、逆数を返す
+				 * @param
+				 */
+				template <typename selector,
+						  typename method_selector>
+				class inverse_alpha_factor
+				{
+				private:
+					__m128 base;
+				
+				public:
+					inverse_alpha_factor():
+						base(_mm_set1_ps(256.f))
+					{}
+
+					template <typename src_itor_t,
+							  typename dest_itor_t>
+					aligned_wideword_type
+					operator()(src_itor_t src,
+							   dest_itor_t dest) const
+					{
+						__m128 float_values = _mm_cvtepi32_ps(method_selector()(selector()(src, dest)));
+						__m128 invert_float_values = _mm_rcp_ps(float_values);
+						__m128 result = _mm_mul_ps(base, invert_float_values);
+						return _mm_cvttps_epi32(result);
+					}
+				};
+
+				template <risa_gl::uint32 min, risa_gl::uint32 max,
+						  risa_gl::uint32 projection_min, risa_gl::uint32 projection_max>
+				class scale_factor
+				{
+				private:
+					__m128i min_values;
+					__m128i projection_min_values;
+					__m128i projection_range_div_range;
+
+					__m128i compute(risa_gl::uint32 projection_range,
+									risa_gl::uint32 range) const
+					{
+						risa_gl::uint32 factor = projection_range / range;
+						return _mm_set1_epi32(factor);
+					}
+
+				public:
+					scale_factor():
+						min_values(_mm_set1_epi32(min)),
+						projection_min_values(_mm_set1_epi32(projection_min)),
+						projection_range_div_range(
+							compute(projection_max - projection_min,
+									max - min))
+					{}
+
+					aligned_wideword_type
+					operator()(aligned_wideword_type value) const
+					{
+						return
+							_mm_add_epi32(
+								_mm_mullo_epi16(_mm_sub_epi32(value, min_values),
+												projection_range_div_range),
+								projection_min_values);
+					}
+				};
+
+				/**
+				 * 写像スケーリングつきalpha_selector
+				 * @param min 元のalpha値の最小値
+				 * @param max 元のalpha値の最大値
+				 * @param projection_min alpha値の最小値
+				 * @param projection_max alpha値の最大値
+				 */
+				template <int min, int max, int projection_min, int projection_max,
+						  typename selector, typename method_selector>
+				class scaled_alpha_selector
+				{
+					typedef alpha_factor<selector, method_selector> stub_type;
+					typedef scale_factor<min, max, projection_min, projection_max>
+					scaler;
+
+				public:
+			
+					template <typename src_itor_t,
+							  typename dest_itor_t>
+					aligned_wideword_type
+					operator()(src_itor_t src,
+							   dest_itor_t dest) const
+					{
+						return scaler()(stub_type()(src, dest));
+					}
+				};
+
+				/**
+				 * 対象の補値をアルファ値として扱うアルファファクタ
+				 * @param selector srcかdestを指定するselector
+				 * @param method_selector アルファ値を取り出すmethod_selector
+				 */
+				template <typename selector,
+						  typename method_selector>
+				class invert_alpha_factor
+				{
+				private:
+					aligned_wideword_type base;
+
+				public:
+					invert_alpha_factor():
+						base(_mm_set1_epi32(257))
+					{}
+
+					template <typename src_itor_t,
+							  typename dest_itor_t>
+					aligned_wideword_type operator()(src_itor_t src,
+													 dest_itor_t dest) const
+					{
+						return _mm_sub_epi32(base, method_selector()(selector()(src, dest)));
+					}
+				};
+
+				/**
+				 * 写像スケーリングつきinvert_alpha_selector
+				 * @param min 元のalpha値の最小値
+				 * @param max 元のalpha値の最大値
+				 * @param projection_min alpha値の最小値
+				 * @param projection_max alpha値の最大値
+				 */
+				template <int min, int max, int projection_min, int projection_max,
+						  typename selector, typename method_selector>
+				class scaled_invert_alpha_selector
+				{
+					typedef invert_alpha_factor<selector, method_selector> stub_type;
+					typedef scale_factor<min, max, projection_min, projection_max>
+					scaler;
+				public:
+			
+					template <typename src_itor_t,
+							  typename dest_itor_t>
+					aligned_wideword_type
+					operator()(src_itor_t src,
+							   dest_itor_t dest) const
+					{
+						return scaler()(stub_type()(src, dest));
+					}
+				};
+
+				class full_transparent_alpha_factor
+				{
+				public:
+					template <typename src_itor_t,
+							  typename dest_itor_t>
+					aligned_wideword_type
+					operator()(src_itor_t,
+							   dest_itor_t) const
+					{
+						return _mm_set1_epi32(1);
+					}
+				};
+
+				/**
+				 * 実行時にセットされた定数を返すalpha factor
+				 */
+				// {{{ constant_alpha_factor
+				class constant_alpha_factor
+				{
+				private:
+					const __m128i value;
+
+				public:
+					constant_alpha_factor():
+						value(_mm_set1_epi32(256))
+					{}
+
+					constant_alpha_factor(const int value_):
+					value(_mm_set1_epi32(value_))
+					{}
+
+					template <typename src_itor_t,
+							  typename dest_itor_t>
+					aligned_wideword_type
+					operator()(src_itor_t,
+							   dest_itor_t) const
+					{
+						return value;
+					}
+				};
+				// }}}
+
+				/**
+				 * 実行時にセットされた定数の補数を返すalpha factor
+				 */
+				// {{{ invert_constant_alpha_factor
+				class invert_constant_alpha_factor :
+					public constant_alpha_factor
+				{
+				public:
+					invert_constant_alpha_factor():
+						constant_alpha_factor(1)
+					{}
+
+					invert_constant_alpha_factor(const int value_):
+					constant_alpha_factor(257 - value_)
+					{}
+				};
+				// }}}
+
+
 				template <typename selector_type,
 						  typename bit_get_method_type>
 				class alpha_getter
